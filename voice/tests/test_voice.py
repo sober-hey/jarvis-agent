@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import importlib.util
+import shutil
 import sys
 import unittest
 import wave
@@ -34,6 +35,13 @@ def write_wav(path: Path, seconds: float) -> None:
         stream.setframerate(16000)
         stream.writeframes(b"\x00\x00" * int(seconds * 16000))
 
+
+
+# 音频转换走系统 ffmpeg。没有它的机器（CI runner、干净容器）跳过，而不是报失败——
+# 这不是产品缺陷，是环境缺件。
+NEEDS_FFMPEG = unittest.skipUnless(
+    shutil.which("ffmpeg"), "需要系统 ffmpeg 做音频转换"
+)
 
 class FakeASR:
     name: str = "fake-asr"
@@ -228,6 +236,7 @@ class AdapterTests(unittest.TestCase):
             backend.transcribe_chunk(Path("unused.wav"))
         self.assertNotIn("unused.wav", str(caught.exception))
 
+    @NEEDS_FFMPEG
     def test_stereo_resampling(self) -> None:
         with TemporaryDirectory(prefix="jarvis-voice-test-") as root:
             path = Path(root) / "stereo.wav"
@@ -239,6 +248,7 @@ class AdapterTests(unittest.TestCase):
             result = voice.transcribe(path, backend=FakeASR())
             self.assertAlmostEqual(result["duration"], 0.1)
 
+    @NEEDS_FFMPEG
     def test_corrupt_audio_is_explicit_error(self) -> None:
         with TemporaryDirectory(prefix="jarvis-voice-test-") as root:
             path = Path(root) / "broken.wav"

@@ -22,10 +22,6 @@ jobs:
         with:
           python-version: "3.12"
 
-      # 语音层用 ffmpeg 做音频转换，缺了会有 2 条用例失败（不是跳过）。
-      - name: 装系统依赖
-        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
-
       - name: 装依赖
         run: |
           python -m pip install --upgrade pip
