@@ -81,6 +81,7 @@ JSON
 printf '%s' '你的模型 API Key' > ~/.jarvis/api.key && chmod 600 ~/.jarvis/api.key
 
 # 3. 跑测试，确认环境没问题
+mkdir -p ~/.tmp-pytest
 TMPDIR=$HOME/.tmp-pytest PYTHONPATH=packaging .venv/bin/python3 -m pytest packaging/ -q
 PYTHONPATH=voice:packaging .venv/bin/python3 -m pytest voice/tests -q
 
@@ -145,8 +146,14 @@ scripts/        运维与生成脚本
 
 ## 测试
 
+先把临时目录建好（**必须**）：数据根校验要求父目录属于当前用户且非共享，
+所以测试不用系统 `/tmp`，而用 home 下的私有目录。不建这个目录，用例会报
+`No such file or directory: ~/.tmp-pytest/jarvis-run-...`。
+
 ```sh
-# 内核层与契约（快）
+mkdir -p ~/.tmp-pytest
+
+# 内核层与契约（快，约 40 秒）
 TMPDIR=$HOME/.tmp-pytest PYTHONPATH=src:packaging:. .venv/bin/python3 -m pytest tests -q
 
 # 运行时全量（约 20 分钟，别并行跑两份）

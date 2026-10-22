@@ -30,4 +30,5 @@
 
 - 不要在未过门禁前把它接到生产路径上（`packaging/` 与 `voice/` 里出现 `from jarvis import ...` 就是越线）。
 - 改这里的语义要同步 `contracts/` 与 ADR；只改代码不改契约，下一轮评审会被打回。
-- 测试：`TMPDIR=$HOME/.tmp-pytest PYTHONPATH=src:packaging:. .venv/bin/python3 -m pytest tests -q`
+- 测试：`mkdir -p ~/.tmp-pytest
+TMPDIR=$HOME/.tmp-pytest PYTHONPATH=src:packaging:. .venv/bin/python3 -m pytest tests -q`

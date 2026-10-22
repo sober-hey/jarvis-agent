@@ -78,15 +78,18 @@ launchd 单元在 `~/Library/LaunchAgents/com.jarvis.*.plist`；Linux 上的对�
 
 ```sh
 # Python 侧全部（约 25 分钟，满载会超时，别并行跑两份）
+mkdir -p ~/.tmp-pytest
 TMPDIR=$HOME/.tmp-pytest PYTHONPATH=packaging .venv/bin/python3 -m pytest packaging/ -q
 
 # 单元测试（快）
+mkdir -p ~/.tmp-pytest
 TMPDIR=$HOME/.tmp-pytest PYTHONPATH=src:packaging:. .venv/bin/python3 -m pytest tests -q
 
 # 语音子系统（快，213 条）
 PYTHONPATH=voice:packaging .venv/bin/python3 -m pytest voice/tests -q
 
 # 契约测试
+mkdir -p ~/.tmp-pytest
 TMPDIR=$HOME/.tmp-pytest PYTHONPATH=packaging .venv/bin/python3 -m pytest packaging/test_integration_contract.py -q
 ```
 
@@ -125,7 +128,7 @@ deploy/         systemd 单元与部署说明
 docs/           文档（索引 docs/README.md）
   design/       K0 设计稿（草案，非规格）
   adr/          架构决策记录
-  planning/     目标、总规划、待决策、backlog
+  planning/     目标、总规划、待决策项
   reports/      验收报告与生产缺口
   guides/       操作手册
   research/     外部方案调研

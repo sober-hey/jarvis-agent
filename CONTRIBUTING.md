@@ -17,9 +17,11 @@
 
 ```sh
 # 内核层与契约
+mkdir -p ~/.tmp-pytest
 TMPDIR=$HOME/.tmp-pytest PYTHONPATH=src:packaging:. .venv/bin/python3 -m pytest tests -q
 
 # 运行时（全量约 20 分钟；别并行跑两份，会互相拖慢）
+mkdir -p ~/.tmp-pytest
 TMPDIR=$HOME/.tmp-pytest PYTHONPATH=packaging .venv/bin/python3 -m pytest packaging/ -q
 
 # 语音子系统

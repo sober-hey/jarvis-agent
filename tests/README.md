@@ -4,6 +4,7 @@
 运行时测试在 `packaging/test_*.py`，语音测试在 `voice/tests/`。
 
 ```sh
+mkdir -p ~/.tmp-pytest
 TMPDIR=$HOME/.tmp-pytest PYTHONPATH=src:packaging:. .venv/bin/python3 -m pytest tests -q
 ```
 

@@ -25,7 +25,7 @@
 
 - [planning/JARVIS_GOAL.md](planning/JARVIS_GOAL.md)：长期目标
 - [planning/JARVIS_Engineering_Master_Plan_v1.1.2.md](planning/JARVIS_Engineering_Master_Plan_v1.1.2.md)：当前有效总规划
-- [planning/](planning/)：历史版本、待决策项、backlog
+- [planning/](planning/)：长期目标、当前总规划、待决策项
 
 ## 架构决策（改设计前必读）
 
