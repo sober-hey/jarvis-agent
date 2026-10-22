@@ -1,5 +1,9 @@
 # JARVIS Engineering Backlog
 
+> **说明**：本文是项目内部的待办台账，部分链接指向未随本仓库公开的内部文档
+> （授权记录、3D 子项目等）。看不到的条目请忽略。
+
+
 > **相对路径按 2026-10-13 的布局写的，仓库重组后多数已失效。**
 > `decisions/` 现为 `docs/planning/`，`subprojects/` 在仓库根，K0 设计稿在 `docs/design/`。
 

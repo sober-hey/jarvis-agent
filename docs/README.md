@@ -8,7 +8,6 @@
 |---|---|
 | [README.md](../README.md) | 项目是什么、怎么跑、目录结构、设计约束 |
 | [ARCHITECTURE.md](../ARCHITECTURE.md) | 进程拓扑、一轮语音的数据流、模块边界、数据账本 |
-| [AGENTS.md](../AGENTS.md) | 接手者必读：恢复顺序、阶段门禁、禁止事项 |
 | [FRAMEWORK.md](FRAMEWORK.md) | 代码框架：分层、四个入口、加功能放哪、测试怎么跑（**先看这个再读代码**） |
 | [CODE_MAP.md](CODE_MAP.md) | 代码地图：每个模块负责什么、多少行（`scripts/gen_code_map.py` 自动生成） |
 | [../voice/README.md](../voice/README.md) | 语音子系统（已隔离）：十个模块各自管什么、怎么跑、客户端在哪 |
@@ -17,10 +16,8 @@
 
 | 文档 | 内容 |
 |---|---|
-| [PRODUCTION_READINESS.md](PRODUCTION_READINESS.md) | 上线就绪度总览 |
-| [reports/](reports/) | 生产缺口清单、验收报告、评审记录（最近的在前） |
-| [../PROJECT_STATE.md](../PROJECT_STATE.md) | 工程状态快照 |
-| [HANDOFF_DIRECTION.md](HANDOFF_DIRECTION.md) | 历次交接记录（活文档） |
+| [../README.md](../README.md)「还没做 / 没验证」 | 当前未实现与未验证的能力清单 |
+| [adr/](adr/) | 已做过的架构取舍 |
 
 ## 目标与规划
 
@@ -61,7 +58,7 @@ K0 内核层的设计推演在 [design/](design/)：领域契约、文件系统�
 
 ## 验收与证据
 
-- [reports/](reports/)：ADR 验证、长跑报告、评审记录
+- [adr/](adr/)：每条架构决策的理由与取舍
 - `evidence/runs/`：长跑原始证据（不进 git）
 - `~/.jarvis/loop-data/*.db`：运行账本
 
@@ -90,5 +87,5 @@ K0 内核层的设计推演在 [design/](design/)：领域契约、文件系统�
 
 ## 归档
 
-历史快照、设计草案、逐增量评审、实验产物都在 [../archive/](../archive/)，
-不参与构建，也不代表当前行为。索引见 [../archive/README.md](../archive/README.md)。
+历史快照、设计草案、逐增量评审、实验产物不随本仓库公开（保留在项目本地），
+它们不参与构建，也不代表当前行为。
