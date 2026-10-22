@@ -1,3 +1,6 @@
+！！！兄弟们姐妹们，copy之后开发新的东西一定要pull request 啊！！！！我们共同开发一个更好的jarvis
+
+
 # JARVIS
 
 [![checks](https://github.com/sober-hey/jarvis-agent/actions/workflows/checks.yml/badge.svg)](https://github.com/sober-hey/jarvis-agent/actions/workflows/checks.yml)
