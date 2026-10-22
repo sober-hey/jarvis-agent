@@ -5,7 +5,7 @@
 ## 使用
 
 ```sh
-open '/Volumes/扩展硬盘/jarvis/apps/mac/JarvisMac/Output/JARVIS.app'
+open '仓库根/apps/mac/JarvisMac/Output/JARVIS.app'
 ```
 
 1. App 只在菜单栏显示，没有 Dock 主窗口；默认连接 `ws://127.0.0.1:8765`。
@@ -41,8 +41,8 @@ open '/Volumes/扩展硬盘/jarvis/apps/mac/JarvisMac/Output/JARVIS.app'
 ## 重建
 
 ```sh
-cd '/Volumes/扩展硬盘/jarvis/apps/mac/JarvisMac'
-/Volumes/扩展硬盘/jarvis/.venv/bin/python scripts/acceptance_e2e.py --prepare
+cd '仓库根/apps/mac/JarvisMac'
+仓库根/.venv/bin/python scripts/acceptance_e2e.py --prepare
 GEM_HOME='/Volumes/扩展硬盘/hermes/默认项目/JarvisMacApp/.build/gems' \
 GEM_PATH='/Volumes/扩展硬盘/hermes/默认项目/JarvisMacApp/.build/gems' \
   ruby scripts/generate_integrated.rb
@@ -58,7 +58,7 @@ python3 scripts/build_app.py
 # 原模块全部测试 + 2 个集成控制回归；会调用原来的 AX 请求 API，但不替用户授权。
 python3 scripts/verify_integrated_modules.py
 # 确认 8765 未被生产网关占用；脚本遇到端口占用直接失败，不杀别的服务。
-/Volumes/扩展硬盘/jarvis/.venv/bin/python scripts/acceptance_e2e.py
+仓库根/.venv/bin/python scripts/acceptance_e2e.py
 ```
 
 `AllModuleTests` 不跳过原来的 4 个 AudioAccessibility XCTest。`ModuleTests`/默认 App scheme 仍排除显式权限请求用例，避免普通调试触发授权 API。模块测试优先复用 `/tmp/jarvis-mac-final-derived/SourcePackages` 的精确 Starscream checkout，并禁自动更新；它不是绕过签名或修改代理，源缓存丢失时需先重新 resolve/build。

@@ -58,7 +58,7 @@ env TMPDIR=/tmp DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
   CODE_SIGNING_ALLOWED=NO test
 
 python3 scripts/wscat_acceptance.py
-/Volumes/扩展硬盘/jarvis/.venv/bin/python scripts/integration.py
+仓库根/.venv/bin/python scripts/integration.py
 ```
 
 本机中文 TMPDIR 会导致 swift-driver/xcodebuild SIGTRAP，按主脑实测用 `TMPDIR=/tmp`。CLT-only 备用验收脚本 `scripts/test.py` 使用真实 swift-frontend+clang，未模拟 Swift/Combine/Starscream。

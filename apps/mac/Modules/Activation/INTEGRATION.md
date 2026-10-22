@@ -1,6 +1,6 @@
 # Module ③ integration contract
 
-- Package directory: `/Volumes/扩展硬盘/jarvis/apps/mac/Modules/Activation/`; local SwiftPM package/product `JarvisActivation` or directly include `Sources/JarvisActivation/*.swift`.
+- Package directory: `仓库根/apps/mac/Modules/Activation/`; local SwiftPM package/product `JarvisActivation` or directly include `Sources/JarvisActivation/*.swift`.
 - Entry: `try ActivationDetector(configuration: ..., scorer: ...)`.
 - Unified callback: `onActivation: (ActivationEvent) -> Void`, kinds `.wakeWord`, `.doubleClap`, `.fingerSnap`; opt-in diagnostic `.voiceActivityFallback` must **not** be relabeled Jarvis recognition.
 - Audio input: call `try detector.process(buffer: AVAudioPCMBuffer, timestamp: seconds)` or `process(samples: [Float], sampleRate: Double, timestamp: seconds)` on one serial non-realtime worker. Timestamp = monotonic start of the input block, not dispatch completion time.

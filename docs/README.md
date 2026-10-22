@@ -17,6 +17,8 @@
 | 文档 | 内容 |
 |---|---|
 | [../README.md](../README.md)「还没做 / 没验证」 | 当前未实现与未验证的能力清单 |
+| [PRODUCTION_READINESS.md](PRODUCTION_READINESS.md) | 上线就绪度总览 |
+| [reports/PRODUCTION_GAP_INVENTORY_20261021.md](reports/PRODUCTION_GAP_INVENTORY_20261021.md) | 上线缺口清单，按阻断程度分类，每条带证据等级 |
 | [adr/](adr/) | 已做过的架构取舍 |
 
 ## 目标与规划

@@ -48,10 +48,10 @@ All Swift invocations use `env TMPDIR=/tmp DEVELOPER_DIR=/Applications/Xcode.app
 
 ```sh
 env TMPDIR=/tmp DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
-  /Volumes/扩展硬盘/jarvis/.venv/bin/python3 Scripts/verify.py
+  仓库根/.venv/bin/python3 Scripts/verify.py
 
 env TMPDIR=/tmp DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
-  /Volumes/扩展硬盘/jarvis/.venv/bin/python3 Scripts/verify_watchos.py \
+  仓库根/.venv/bin/python3 Scripts/verify_watchos.py \
   --simulator-id 54D78C1B-FFC9-40B8-8DE5-BC1B5E822B66
 ```
 

@@ -67,7 +67,7 @@
 离线候选检查（不是安全批准/冻结门禁）：
 
 ```sh
-PYTHONDONTWRITEBYTECODE=1 /Volumes/扩展硬盘/jarvis/.venv/bin/python -m pytest docs/verification/test_k0002_contract_refinement.py -q --tb=line -p no:cacheprovider
+PYTHONDONTWRITEBYTECODE=1 仓库根/.venv/bin/python -m pytest docs/verification/test_k0002_contract_refinement.py -q --tb=line -p no:cacheprovider
 ```
 
 工作树回归必须使用 `PYTHONPATH=src:packaging`：单独 `PYTHONPATH=packaging` 会令

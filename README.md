@@ -112,6 +112,21 @@ PYTHONPATH=packaging .venv/bin/python3 packaging/jarvis_daemon.py \
 
 密钥一律放 `~/.jarvis/*.key`（600）或环境变量，**不要写进代码**。
 
+## 仓库里有什么、没有什么
+
+**在**：全部运行时代码（`voice/`、`packaging/`、`src/`）、测试、契约、部署单元、
+架构决策（ADR）、设计稿、调研、验收与缺口报告、客户端工程、视觉参考素材。
+
+**不在**（体积、许可或个人数据原因）：
+
+| 内容 | 原因 | 怎么补 |
+|---|---|---|
+| `packaging/runtime/engine-venv` | 独立 Python 3.14 环境，几百 MB | 按 `packaging/runtime/BUILD_MANIFEST.json` 自建 |
+| 上游 agent engine（Hermes Agent，MIT） | 第三方代码，246 MB | 自行获取后装进引擎 venv |
+| 3D 形象子项目 | 3.2 GB，含商业第三方 SDK（KeenTools） | 不公开；`assets/avatar/` 有外观参考图 |
+| 构建日志、真机验收证据 | 含设备 ID、签名身份等个人信息 | 不入库；需要时在本地复跑 |
+| 语音样本、健康与消息数据 | 个人数据 | 一律不入库 |
+
 ## 目录结构
 
 ```

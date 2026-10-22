@@ -32,7 +32,7 @@
 | 文件 | 职责 | 行数 |
 |---|---|---|
 | `packaging/curiosity.py` | Generic belief bookkeeping and deterministic value-of-information scheduling. | 1266 |
-| `packaging/daemon_wiring.py` | Product adapters for the resident scheduler; no work starts at import. | 2531 |
+| `packaging/daemon_wiring.py` | Product adapters for the resident scheduler; no work starts at import. | 2533 |
 | `packaging/inner_loop.py` | Bounded, append-only product mind. No background service is installed. | 449 |
 | `packaging/inner_loop_fts.py` | Local, disposable lexical recall projection; never edits source evidence. | 688 |
 | `packaging/inner_model.py` | Single-call mind adapter using the existing launcher's verified FD bootstrap. | 140 |
@@ -120,7 +120,7 @@
 | `packaging/linux_preflight.py` | Read-only environment preflight; standard library only, Python >= 3.12. | 292 |
 | `packaging/mcp_bridge.py` | Synchronous MCP stdio client for explicitly configured local servers. | 462 |
 | `packaging/migrate_beliefs.py` | One-shot, idempotent Sir-belief migration; never modifies mind.db. | 50 |
-| `packaging/outreach.py` | Durable, local-only outreach queue with replayable SSE and draft email. | 1258 |
+| `packaging/outreach.py` | Durable, local-only outreach queue with replayable SSE and draft email. | 1265 |
 | `packaging/product_config.py` | JARVIS-owned non-secret route configuration and credential boundary. | 423 |
 | `packaging/product_memory.py` | Product-owned SQLite facts, provenance, tombstones and Chinese trigram search. | 301 |
 | `packaging/replay_harness.py` | Deterministic, offline frozen replay harness for copied JARVIS SQLite data. | 478 |

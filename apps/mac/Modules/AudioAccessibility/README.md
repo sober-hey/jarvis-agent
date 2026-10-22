@@ -10,7 +10,7 @@
 
 ```sh
 env TMPDIR=/Users/sober/.cache/jarvis-swift-tmp DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
-  xcodebuild -project /Volumes/扩展硬盘/jarvis/apps/mac/Modules/AudioAccessibility/AudioAccessibility.xcodeproj \
+  xcodebuild -project 仓库根/apps/mac/Modules/AudioAccessibility/AudioAccessibility.xcodeproj \
   -scheme AudioAccessibility -destination 'platform=macOS,arch=arm64' \
   -derivedDataPath /Volumes/扩展硬盘/hermes/.hermes/cache/scratch/audio-accessibility-xcode-derived \
   CODE_SIGNING_ALLOWED=NO test
@@ -59,7 +59,7 @@ audio.stop()
 从指定工作目录运行：
 
 ```sh
-/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/bin/python3 /Volumes/扩展硬盘/jarvis/apps/mac/Modules/AudioAccessibility/run_checks.py
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/bin/python3 仓库根/apps/mac/Modules/AudioAccessibility/run_checks.py
 ```
 
 脚本用 ffmpeg 本地生成 1s 正弦 MP3/WAV 夹具（测试音量 0，不干扰用户），无网络/密钥；优先完整 Xcode swiftc，固定 ASCII TMPDIR，编译 Swift 6 `-warnings-as-errors` 后执行两个原生二进制。最早 CLT frontend 的运行证据亦保留，但不再把驱动 SIGTRAP 误判为工具链不可用。完整 xcodebuild test 结果见文首；没有安装任何工具。

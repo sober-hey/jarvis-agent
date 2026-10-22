@@ -86,7 +86,7 @@ Apple 参考：
 运行 macOS 核心/网络验收（日志、退出码、源码 SHA-256 与明确未验项写入新建 `Validation/<UTC时间>/RESULTS.json`；不覆盖历史；watchOS 构建/模拟器由下文独立脚本执行）：
 
 ```sh
-/Volumes/扩展硬盘/jarvis/.venv/bin/python3 Scripts/verify.py
+仓库根/.venv/bin/python3 Scripts/verify.py
 ```
 
 ### 当前可运行：macOS 纯 Swift 编译 + 真实记录回放
@@ -103,7 +103,7 @@ python3 Scripts/test_core.py
 ## macOS 网络集成测试（已实际运行，不等于 Watch 无线网络验收）
 
 ```sh
-/Volumes/扩展硬盘/jarvis/.venv/bin/python3 Scripts/test_connection.py
+仓库根/.venv/bin/python3 Scripts/test_connection.py
 ```
 
 依赖 Python `websockets`（项目现有 `.venv` 已有）；测试将相同的 `Core/WatchCore.swift` + `App/WatchConnection.swift` 用完整 Xcode `swiftc` 编译为 macOS 可执行程序，并真实通过 loopback URLSessionWebSocketTask 完成 hello → device_state → 裸 PCM/audio_end → text/MP3 → playback_done → interrupt/suppressed/selected → 新完整一轮。服务器仅为协议夹具；ffmpeg 生成有效的 synthetic MP3，Python 核对 PCM 与 bearer fixture，Swift 核对组装字节；不访问生产/模型/真实 Keychain，不等于网关已接 BRAIN。
@@ -128,7 +128,7 @@ env TMPDIR=/tmp DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
 可复跑的完整构建/测试并落盘命令：
 
 ```sh
-/Volumes/扩展硬盘/jarvis/.venv/bin/python3 Scripts/verify_watchos.py \
+仓库根/.venv/bin/python3 Scripts/verify_watchos.py \
   --simulator-id 54D78C1B-FFC9-40B8-8DE5-BC1B5E822B66
 ```
 

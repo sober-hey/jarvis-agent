@@ -22,14 +22,16 @@ evidence/
 .runs_01/
 logs/
 
-# 凭据
+# 凭据（按文件名/后缀拦，不要用 *credentials* —— 会误伤 test_api_credentials.py 这类真代码）
 .env
 .env.*
 *.key
 *.pem
 *.p12
 *.token
-*credentials*
+credentials.json
+*_credentials.json
+!.env.example
 
 # Swift / Xcode 构建产物
 .build/

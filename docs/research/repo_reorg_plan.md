@@ -1,6 +1,6 @@
 # JARVIS 仓库重组迁移映射表（只读盘点 + 风险 + 分阶段命令）
 
-盘点：2026-10-21 17:52–18:05（CST）　仓库：`/Volumes/扩展硬盘/jarvis`，`main`，13 GB
+盘点：2026-10-21 17:52–18:05（CST）　仓库：`仓库根/`，`main`，13 GB
 
 ---
 
@@ -151,11 +151,11 @@
 
 ### B-7 子项目硬编码绝对路径（移 avatar 必断）
 
-`subprojects/jarvis-avatar/scripts/live_preview.py:25` 与 `live_preview_bootstrap.py:10` 均写死 `Path("/Volumes/扩展硬盘/jarvis/subprojects/jarvis-avatar")`，移前改 `Path(__file__).resolve().parents[1]`。
+`subprojects/jarvis-avatar/scripts/live_preview.py:25` 与 `live_preview_bootstrap.py:10` 均写死 `Path("仓库根/subprojects/jarvis-avatar")`，移前改 `Path(__file__).resolve().parents[1]`。
 
 ### B-8 历史证据里的绝对路径别当配置改
 
-`packaging/runtime/BUILD_MANIFEST.json:23-263` 有数十条 `/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/…`。这是**构建当时的证据**，改写即伪造；整文件移 `evidence/` 即可，接受它记录的是旧路径。
+`packaging/runtime/BUILD_MANIFEST.json:23-263` 有数十条 `仓库根/.runs_01/b01-build-20261014/…`。这是**构建当时的证据**，改写即伪造；整文件移 `evidence/` 即可，接受它记录的是旧路径。
 
 ### B-9 打包与门禁元数据锁定根结构
 
@@ -173,7 +173,7 @@
 
 ### Phase 1 — 修 contracts（二选一，推荐 1a）
 ```sh
-cd "/Volumes/扩展硬盘/jarvis"
+cd "仓库根/"
 git mv docs/contracts contracts            # 1a 回滚到顶层
 git commit -m "revert: contracts 回到顶层，文档才进 docs/"
 # 1b 若坚持 docs/contracts：改 B-1 表 9 行
