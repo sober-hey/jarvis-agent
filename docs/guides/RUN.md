@@ -137,7 +137,7 @@ launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.jarvis.daemon.plist
 
 ### 服务器部署（Linux）
 
-见 [../deploy/README.md](../deploy/README.md)：systemd 单元、目录约定、密钥用 `LoadCredential` 注入。
+见 [../deploy/README.md](../../deploy/README.md)：systemd 单元、目录约定、密钥用 `LoadCredential` 注入。
 
 ## 6. 接设备
 
