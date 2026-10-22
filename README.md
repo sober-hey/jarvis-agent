@@ -1,9 +1,8 @@
-！！！兄弟们姐妹们，copy之后开发新的东西一定要pull request 啊！！！！我们共同开发一个更好的jarvis
-
-
 # JARVIS
 
 [![checks](https://github.com/sober-hey/jarvis-agent/actions/workflows/checks.yml/badge.svg)](https://github.com/sober-hey/jarvis-agent/actions/workflows/checks.yml)
+
+> ！！！兄弟们姐妹们，copy 之后开发新的东西一定要 pull request 啊！！！！我们共同开发一个更好的 jarvis
 
 一个常驻在自己电脑上的个人智能体：语音是主入口，长期记忆是底，模型负责思考与说话。
 不是聊天框套壳——它有自己的心跳、自己的账本、自己的作息。
