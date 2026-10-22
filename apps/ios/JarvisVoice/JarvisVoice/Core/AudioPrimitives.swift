@@ -72,7 +72,7 @@ enum EndpointPolicy {
         let tailscale = numbers.count == 4 && numbers.allSatisfy { (0...255).contains($0) }
             && numbers[0] == 100 && (64...127).contains(numbers[1])
         let loopback = host == "127.0.0.1" || host == "localhost" || host == "::1" || host == "[::1]"
-        let configuredHost = ["SoberdeMacBook-Air.local", "192.168.1.5", "100.67.229.1"].contains(host)
+        let configuredHost = ["SoberdeMacBook-Air.local", "192.168.1.5", "100.64.0.1"].contains(host)
         return tailscale || loopback || configuredHost ? url : nil
     }
 }

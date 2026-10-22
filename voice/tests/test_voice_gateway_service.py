@@ -37,7 +37,7 @@ def test_token_file_requires_exact_private_owned_regular_file(tmp_path):
 
 def test_en0_address_discovery_is_explicit_and_safe():
     with patch.object(vg.subprocess, "run", return_value=SimpleNamespace(stdout="192.168.1.5\n")):
-        assert vg.configured_bind_hosts() == ("127.0.0.1", "100.67.229.1", "192.168.1.5")
+        assert vg.configured_bind_hosts() == ("127.0.0.1", "100.64.0.1", "192.168.1.5")
     for address in ("0.0.0.0", "8.8.8.8", "not-an-address", ""):
         with patch.object(vg.subprocess, "run", return_value=SimpleNamespace(stdout=address)):
             assert vg.configured_bind_hosts() == (vg.HOST, vg.TAILSCALE_HOST)

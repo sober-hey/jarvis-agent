@@ -296,7 +296,7 @@ private struct WatchSettings: View {
     @ObservedObject var motion: MotionMonitor
     @ObservedObject var connection: WatchConnection
     @ObservedObject var runtime: WorkoutRuntime
-    @AppStorage("gateway_endpoint") private var endpoint = "ws://100.67.229.1:8765"
+    @AppStorage("gateway_endpoint") private var endpoint = "ws://100.64.0.1:8765"
     @State private var token = ""
     @State private var workoutPrompt = false
     @State private var operationPending = false
@@ -378,7 +378,7 @@ private struct WatchSettings: View {
 
     private var credentials: some View {
         Form {
-            TextField("ws://100.67.229.1:8765", text: $endpoint)
+            TextField("ws://100.64.0.1:8765", text: $endpoint)
                 .textInputAutocapitalization(.never).autocorrectionDisabled()
             SecureField("网关令牌（仅本机保存）", text: $token)
             Button("保存令牌") {

@@ -57,7 +57,7 @@ struct WatchCoreSuite {
         _ = raise.consume(timestamp: 2.1, gravityZ: -1, rotation: 0)
         check("stable face up heuristic", raise.consume(timestamp: 2.3, gravityZ: -1, rotation: 0))
         check("held up not repeat", !raise.consume(timestamp: 3, gravityZ: -1, rotation: 0))
-        for url in ["wss://jarvis.example/watch", "ws://localhost:8765/watch", "ws://127.0.0.1:8765/watch", "ws://100.67.229.1:8765", "ws://192.168.1.5:8765"] {
+        for url in ["wss://jarvis.example/watch", "ws://localhost:8765/watch", "ws://127.0.0.1:8765/watch", "ws://100.64.0.1:8765", "ws://192.168.1.5:8765"] {
             check("endpoint accepted \(url)", WatchWire.validatedEndpoint(url) != nil)
         }
         for url in ["http://example.com", "ws://example.com", "wss://x?token=secret", "wss://u:p@x", "wss://x/#y", "", "wss:///bad"] {

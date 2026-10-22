@@ -17,7 +17,7 @@ The script passes `--token-file ~/.jarvis/voice-gateway.token`; the token must b
 owner-owned regular file with mode 0600 and one non-whitespace ASCII line. It is never
 printed or logged. `--config` remains the existing `~/.jarvis/config.json`.
 
-At startup the gateway binds exactly `127.0.0.1:8765`, `100.67.229.1:8765`, and the
+At startup the gateway binds exactly `127.0.0.1:8765`, `100.64.0.1:8765`, and the
 current private IPv4 address read from `en0` (currently `192.168.1.5`). A missing
 Tailscale or en0 address is skipped; loopback remains required. No wildcard bind is
 allowed. Every non-loopback listener requires the Bearer token; wrong/missing/duplicate

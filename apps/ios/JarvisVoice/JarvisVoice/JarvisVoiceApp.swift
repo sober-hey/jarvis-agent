@@ -101,7 +101,7 @@ private struct SettingsView: View {
                 Section("连接") {
                     LabeledContent("状态", value: voice.connected ? "已连接" : "未连接")
                     LabeledContent("当前地址") { Text(voice.endpoint).font(.caption.monospaced()) }
-                    TextField("ws://100.67.229.1:8765", text: $address)
+                    TextField("ws://100.64.0.1:8765", text: $address)
                         .textInputAutocapitalization(.never)
                         .autocorrectionDisabled()
                         .keyboardType(.URL)

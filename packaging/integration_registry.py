@@ -1702,7 +1702,7 @@ _DECLARATIONS = (
         None,
         ("voice_user", "voice_assistant", "voice_playback"),
         (),
-        "WebSocket:127.0.0.1:8765,100.67.229.1:8765",
+        "WebSocket:127.0.0.1:8765,100.64.0.1:8765",
         (
             "test_voice_gateway.py",
             "test_voice_gateway_integration.py",

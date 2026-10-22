@@ -6,7 +6,7 @@ struct GatewayEndpoints {
     /// address, which the gateway does not listen on.
     static let defaults = [
         "ws://192.168.1.5:8765",
-        "ws://100.67.229.1:8765"
+        "ws://100.64.0.1:8765"
     ]
     private static let customKey = "gatewayCustomEndpoint"
     /// User-entered address from Settings; tried first, built-ins remain fallback.

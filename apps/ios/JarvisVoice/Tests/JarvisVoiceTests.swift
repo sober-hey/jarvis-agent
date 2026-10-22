@@ -7,7 +7,7 @@ final class JarvisVoiceTests: XCTestCase {
         var endpoints = GatewayEndpoints()
         XCTAssertEqual(endpoints.current, "ws://192.168.1.5:8765")
         endpoints.failed()
-        XCTAssertEqual(endpoints.current, "ws://100.67.229.1:8765")
+        XCTAssertEqual(endpoints.current, "ws://100.64.0.1:8765")
         endpoints.failed()
         XCTAssertEqual(endpoints.current, GatewayEndpoints.addresses[0])
         endpoints.failed(); endpoints.reset()
