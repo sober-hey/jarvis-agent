@@ -4,7 +4,7 @@ Credentials are read only from ~/.jarvis/dashscope.key (owner-only 0600).
 ASR input: raw mono signed little-endian PCM16, 16 kHz (not WAV/MP3).
 The PCM is wrapped in a WAV container before upload, so rate/width are explicit.
 Network requests use the verified Beijing public endpoints; no workspace ID.
-Streaming APIs are intentionally deferred. See docs/voice-docs/dashscope_probe.md.
+Streaming APIs are intentionally deferred. See docs/voice/dashscope_probe.md.
 """
 
 from __future__ import annotations

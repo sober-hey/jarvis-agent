@@ -132,7 +132,7 @@ docs/           文档（索引 docs/README.md）
   reports/      验收报告与生产缺口
   guides/       操作手册
   research/     外部方案调研
-  voice-docs/   语音协议与实测
+  voice/   语音协议与实测
 scripts/        运维与生成脚本
 tests/          内核层与契约测试
 archive/        历史快照与遗留（不参与构建，见 archive/README.md）

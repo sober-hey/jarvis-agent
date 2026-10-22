@@ -157,11 +157,11 @@
   等级：实测（静态源码）＋文档称。HANDOFF:453 已扩大开发授权，不能再把“还没准许碰真实凭据”当唯一阻塞；缺的是实现与目标 OS 证据，密钥仍不得进聊天/日志/argv/提交。
 
 - E2. Web 没有生产身份认证，语音有共享 Bearer 但网关直连无 TLS，不能直接放到公网。
-  证据：`packaging/web_server.py:1-5,442-450,1081-1082` 只允许 loopback、Host/Origin 校验不等于认证；`packaging/voice_gateway.py:984-993,1014-1024` 有 Bearer、serve 未配置 SSL；`docs/voice-docs/voice_gateway.md:20-26` 要各设备共用 token。
+  证据：`packaging/web_server.py:1-5,442-450,1081-1082` 只允许 loopback、Host/Origin 校验不等于认证；`packaging/voice_gateway.py:984-993,1014-1024` 有 Bearer、serve 未配置 SSL；`docs/voice/voice_gateway.md:20-26` 要各设备共用 token。
   等级：实测（静态源码）＋推断。需私网/Tailscale或经过验证的 TLS/认证入口、设备撤权与令牌轮换方案；尾网可加密不代表 LAN 明文路径也安全。
 
 - E3. systemd 模板和现有端口约定未整合，照旧模板部署可能冲突，且语音启动脚本仍依赖 Mac 宿主。
-  证据：`packaging/deploy/jarvis.service:1,17` 明示模板且 Web 指向 8765；`docs/voice-docs/voice_gateway.md:14-15,28-35` 语音使用宿主脚本与 8765、Web 改 8767。README-supervisor 旧“假 Worker”说明与 `packaging/supervisor_components.py:153-176` 的真实 daemon 接线已不一致。
+  证据：`packaging/deploy/jarvis.service:1,17` 明示模板且 Web 指向 8765；`docs/voice/voice_gateway.md:14-15,28-35` 语音使用宿主脚本与 8765、Web 改 8767。README-supervisor 旧“假 Worker”说明与 `packaging/supervisor_components.py:153-176` 的真实 daemon 接线已不一致。
   等级：实测（静态配置）＋推断。需要可重建安装清单、依赖/路径/端口/开机顺序，不是复制 launchd plist 到 Linux。
 
 - E4. 监督器自己被强杀后的孤儿接管还没实现，子组件能被拉起不等于整机/服务故障恢复完成。

@@ -6,6 +6,8 @@
 
 | 文档 | 内容 |
 |---|---|
+| [../INTRO.md](../INTRO.md) | 项目介绍：是什么、能做什么、现在什么状态、不做什么 |
+| [../INDEX.md](../INDEX.md) | 目录索引：每个文件夹在哪、干什么（含机器可读 YAML） |
 | [README.md](../README.md) | 项目是什么、怎么跑、目录结构、设计约束 |
 | [ARCHITECTURE.md](../ARCHITECTURE.md) | 进程拓扑、一轮语音的数据流、模块边界、数据账本 |
 | [FRAMEWORK.md](FRAMEWORK.md) | 代码框架：分层、四个入口、加功能放哪、测试怎么跑（**先看这个再读代码**） |
@@ -56,7 +58,7 @@ K0 内核层的设计推演在 [design/](design/)：领域契约、文件系统�
 
 - [../voice/README.md](../voice/README.md)：模块职责、依赖方向、跑法、已知边界（**先看这个**）
 - [guides/VOICE.md](guides/VOICE.md)：出故障时怎么取证、参数与出处
-- [voice-docs/](voice-docs/)：网关协议、流式 TTS、百炼实测结论、小爱音箱通道、适配器验证报告
+- [voice/](voice/)：网关协议、流式 TTS、百炼实测结论、小爱音箱通道、适配器验证报告
 
 ## 验收与证据
 

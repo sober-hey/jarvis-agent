@@ -19,7 +19,7 @@
 ## 与服务端的契约
 
 客户端连 `ws://<主机>:8765`，用 Bearer 令牌鉴权。消息类型、一轮对话的状态迁移见
-`docs/voice-docs/voice_gateway.md`；令牌轮换见 `scripts/rotate_gateway_token.sh`。
+`docs/voice/voice_gateway.md`；令牌轮换见 `scripts/rotate_gateway_token.sh`。
 
 ## 真机装机
 
