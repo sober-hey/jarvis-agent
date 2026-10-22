@@ -45,8 +45,8 @@
 
 `contracts/` 下是数据与领域契约，目前状态 DRAFT / NOT_FROZEN：
 
-- `database_constraints.yaml`：SQLite 约束
-- `domain_relationships.yaml`：领域对象关系
+- `contracts/database_constraints.yaml`：SQLite 约束
+- `contracts/domain_relationships.yaml`：领域对象关系
 - `draft/`：候选契约（未冻结）
 
 K0 内核层的设计推演在 [design/](design/)：领域契约、文件系统协议、恢复协议、重试决策、
