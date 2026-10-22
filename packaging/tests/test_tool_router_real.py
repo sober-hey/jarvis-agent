@@ -230,7 +230,7 @@ class ToolRouterRealTests(unittest.TestCase):
             tools = router.to_openai_tools()
         self.assertEqual(
             router.allowed_roots,
-            [Path("/Volumes/扩展硬盘/jarvis"), Path.home() / ".jarvis/workspace"],
+            [Path("仓库根/"), Path.home() / ".jarvis/workspace"],
         )
         self.assertIsNone(router.mind_store)
         tools[0]["function"]["parameters"]["properties"].clear()

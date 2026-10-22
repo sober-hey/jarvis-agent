@@ -135,7 +135,7 @@ class ToolRouter:
         self.allowed_roots = [
             Path(p).expanduser()
             for p in (
-                [Path("/Volumes/扩展硬盘/jarvis"), Path.home() / ".jarvis/workspace"]
+                [Path("仓库根/"), Path.home() / ".jarvis/workspace"]
                 if allowed_roots is None
                 else allowed_roots
             )

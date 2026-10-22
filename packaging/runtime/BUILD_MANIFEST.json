@@ -20,13 +20,13 @@
   },
   "budget_bytes": 524288000,
   "environment": {
-    "HOME": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/home",
+    "HOME": "仓库根/.runs_01/b01-build-20261014/home",
     "PATH": "/usr/bin:/bin",
-    "TMPDIR": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/tmp",
-    "XDG_CACHE_HOME": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/cache",
-    "XDG_CONFIG_HOME": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/xdg-config",
-    "UV_CACHE_DIR": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/uv-cache",
-    "UV_PROJECT_ENVIRONMENT": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv",
+    "TMPDIR": "仓库根/.runs_01/b01-build-20261014/tmp",
+    "XDG_CACHE_HOME": "仓库根/.runs_01/b01-build-20261014/cache",
+    "XDG_CONFIG_HOME": "仓库根/.runs_01/b01-build-20261014/xdg-config",
+    "UV_CACHE_DIR": "仓库根/.runs_01/b01-build-20261014/uv-cache",
+    "UV_PROJECT_ENVIRONMENT": "仓库根/packaging/runtime/engine-venv",
     "UV_PYTHON_DOWNLOADS": "never",
     "UV_HTTP_TIMEOUT": "40",
     "UV_HTTP_RETRIES": "1",
@@ -45,8 +45,8 @@
       ],
       "exit_code": 0,
       "elapsed_seconds": 0.504,
-      "stdout": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/uv-version.stdout.log",
-      "stderr": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/uv-version.stderr.log",
+      "stdout": "仓库根/.runs_01/b01-build-20261014/uv-version.stdout.log",
+      "stderr": "仓库根/.runs_01/b01-build-20261014/uv-version.stderr.log",
       "stop_reason": null
     },
     {
@@ -58,8 +58,8 @@
       ],
       "exit_code": 0,
       "elapsed_seconds": 0.509,
-      "stdout": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/uv-sync-help.stdout.log",
-      "stderr": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/uv-sync-help.stderr.log",
+      "stdout": "仓库根/.runs_01/b01-build-20261014/uv-sync-help.stdout.log",
+      "stderr": "仓库根/.runs_01/b01-build-20261014/uv-sync-help.stderr.log",
       "stop_reason": null
     },
     {
@@ -74,8 +74,8 @@
       ],
       "exit_code": 0,
       "elapsed_seconds": 0.508,
-      "stdout": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/python-source.stdout.log",
-      "stderr": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/python-source.stderr.log",
+      "stdout": "仓库根/.runs_01/b01-build-20261014/python-source.stdout.log",
+      "stderr": "仓库根/.runs_01/b01-build-20261014/python-source.stderr.log",
       "stop_reason": null
     },
     {
@@ -88,12 +88,12 @@
         "venv",
         "--without-pip",
         "--copies",
-        "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv"
+        "仓库根/packaging/runtime/engine-venv"
       ],
       "exit_code": 0,
       "elapsed_seconds": 0.504,
-      "stdout": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/venv-create.stdout.log",
-      "stderr": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/venv-create.stderr.log",
+      "stdout": "仓库根/.runs_01/b01-build-20261014/venv-create.stdout.log",
+      "stderr": "仓库根/.runs_01/b01-build-20261014/venv-create.stderr.log",
       "stop_reason": null
     },
     {
@@ -101,7 +101,7 @@
       "argv": [
         "/Users/sober/.local/bin/uv",
         "--directory",
-        "/Volumes/扩展硬盘/jarvis/components/agent_engine/upstream",
+        "仓库根/components/agent_engine/upstream",
         "sync",
         "--locked",
         "--no-install-project",
@@ -114,7 +114,7 @@
         "--link-mode",
         "copy",
         "--cache-dir",
-        "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/uv-cache",
+        "仓库根/.runs_01/b01-build-20261014/uv-cache",
         "--color",
         "never",
         "--offline",
@@ -122,8 +122,8 @@
       ],
       "exit_code": 0,
       "elapsed_seconds": 1.011,
-      "stdout": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/locked-dry-run.stdout.log",
-      "stderr": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/locked-dry-run.stderr.log",
+      "stdout": "仓库根/.runs_01/b01-build-20261014/locked-dry-run.stdout.log",
+      "stderr": "仓库根/.runs_01/b01-build-20261014/locked-dry-run.stderr.log",
       "stop_reason": null
     },
     {
@@ -131,7 +131,7 @@
       "argv": [
         "/Users/sober/.local/bin/uv",
         "--directory",
-        "/Volumes/扩展硬盘/jarvis/components/agent_engine/upstream",
+        "仓库根/components/agent_engine/upstream",
         "sync",
         "--locked",
         "--no-install-project",
@@ -144,21 +144,21 @@
         "--link-mode",
         "copy",
         "--cache-dir",
-        "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/uv-cache",
+        "仓库根/.runs_01/b01-build-20261014/uv-cache",
         "--color",
         "never",
         "--offline"
       ],
       "exit_code": 0,
       "elapsed_seconds": 0.613,
-      "stdout": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/locked-sync-reconcile.stdout.log",
-      "stderr": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/locked-sync-reconcile.stderr.log",
+      "stdout": "仓库根/.runs_01/b01-build-20261014/locked-sync-reconcile.stdout.log",
+      "stderr": "仓库根/.runs_01/b01-build-20261014/locked-sync-reconcile.stderr.log",
       "stop_reason": null
     },
     {
       "label": "package-metadata",
       "argv": [
-        "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/bin/python3",
+        "仓库根/packaging/runtime/engine-venv/bin/python3",
         "-I",
         "-S",
         "-B",
@@ -167,8 +167,8 @@
       ],
       "exit_code": 0,
       "elapsed_seconds": 1.013,
-      "stdout": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/package-metadata.stdout.log",
-      "stderr": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/package-metadata.stderr.log",
+      "stdout": "仓库根/.runs_01/b01-build-20261014/package-metadata.stdout.log",
+      "stderr": "仓库根/.runs_01/b01-build-20261014/package-metadata.stderr.log",
       "stop_reason": null
     },
     {
@@ -181,8 +181,8 @@
       ],
       "exit_code": 0,
       "elapsed_seconds": 0.507,
-      "stdout": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/uv-pip-check-help.stdout.log",
-      "stderr": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/uv-pip-check-help.stderr.log",
+      "stdout": "仓库根/.runs_01/b01-build-20261014/uv-pip-check-help.stdout.log",
+      "stderr": "仓库根/.runs_01/b01-build-20261014/uv-pip-check-help.stderr.log",
       "stop_reason": null
     },
     {
@@ -192,15 +192,15 @@
         "pip",
         "check",
         "--python",
-        "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/bin/python3",
+        "仓库根/packaging/runtime/engine-venv/bin/python3",
         "--offline",
         "--cache-dir",
-        "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/uv-cache"
+        "仓库根/.runs_01/b01-build-20261014/uv-cache"
       ],
       "exit_code": 0,
       "elapsed_seconds": 0.507,
-      "stdout": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/dependency-check.stdout.log",
-      "stderr": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/dependency-check.stderr.log",
+      "stdout": "仓库根/.runs_01/b01-build-20261014/dependency-check.stdout.log",
+      "stderr": "仓库根/.runs_01/b01-build-20261014/dependency-check.stderr.log",
       "stop_reason": null
     },
     {
@@ -208,7 +208,7 @@
       "argv": [
         "/Users/sober/.local/bin/uv",
         "--directory",
-        "/Volumes/扩展硬盘/jarvis/components/agent_engine/upstream",
+        "仓库根/components/agent_engine/upstream",
         "sync",
         "--locked",
         "--no-install-project",
@@ -221,7 +221,7 @@
         "--link-mode",
         "copy",
         "--cache-dir",
-        "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/uv-cache",
+        "仓库根/.runs_01/b01-build-20261014/uv-cache",
         "--color",
         "never",
         "--offline",
@@ -229,14 +229,14 @@
       ],
       "exit_code": 0,
       "elapsed_seconds": 0.506,
-      "stdout": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/locked-sync-check.stdout.log",
-      "stderr": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/locked-sync-check.stderr.log",
+      "stdout": "仓库根/.runs_01/b01-build-20261014/locked-sync-check.stdout.log",
+      "stderr": "仓库根/.runs_01/b01-build-20261014/locked-sync-check.stderr.log",
       "stop_reason": null
     },
     {
       "label": "core-import-smoke",
       "argv": [
-        "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/bin/python3",
+        "仓库根/packaging/runtime/engine-venv/bin/python3",
         "-I",
         "-B",
         "-c",
@@ -244,8 +244,8 @@
       ],
       "exit_code": 0,
       "elapsed_seconds": 2.022,
-      "stdout": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/core-import-smoke.stdout.log",
-      "stderr": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/core-import-smoke.stderr.log",
+      "stdout": "仓库根/.runs_01/b01-build-20261014/core-import-smoke.stdout.log",
+      "stderr": "仓库根/.runs_01/b01-build-20261014/core-import-smoke.stderr.log",
       "stop_reason": null
     },
     {
@@ -254,14 +254,14 @@
         "/Users/sober/.local/share/uv/python/cpython-3.12.14-macos-aarch64-none/bin/python3.12",
         "-I",
         "-B",
-        "/Volumes/扩展硬盘/jarvis/packaging/jarvis.py",
+        "仓库根/packaging/jarvis.py",
         "check",
         "--json"
       ],
       "exit_code": 2,
       "elapsed_seconds": 0.507,
-      "stdout": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/release-launcher-check.stdout.log",
-      "stderr": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/release-launcher-check.stderr.log",
+      "stdout": "仓库根/.runs_01/b01-build-20261014/release-launcher-check.stdout.log",
+      "stderr": "仓库根/.runs_01/b01-build-20261014/release-launcher-check.stderr.log",
       "stop_reason": null
     },
     {
@@ -270,14 +270,14 @@
         "/Users/sober/.local/share/uv/python/cpython-3.12.14-macos-aarch64-none/bin/python3.12",
         "-I",
         "-B",
-        "/Volumes/扩展硬盘/jarvis/packaging/bootstrap.py",
+        "仓库根/packaging/bootstrap.py",
         "--check",
         "--json"
       ],
       "exit_code": 2,
       "elapsed_seconds": 0.507,
-      "stdout": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/release-bootstrap-check.stdout.log",
-      "stderr": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/release-bootstrap-check.stderr.log",
+      "stdout": "仓库根/.runs_01/b01-build-20261014/release-bootstrap-check.stdout.log",
+      "stderr": "仓库根/.runs_01/b01-build-20261014/release-bootstrap-check.stderr.log",
       "stop_reason": null
     },
     {
@@ -286,7 +286,7 @@
         "/Users/sober/.local/share/uv/python/cpython-3.12.14-macos-aarch64-none/bin/python3.12",
         "-I",
         "-B",
-        "/Volumes/扩展硬盘/jarvis/packaging/jarvis.py",
+        "仓库根/packaging/jarvis.py",
         "check",
         "--home",
         "/Users/sober/.jarvis",
@@ -294,8 +294,8 @@
       ],
       "exit_code": 0,
       "elapsed_seconds": 2.02,
-      "stdout": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/release-launcher-independent-home.stdout.log",
-      "stderr": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/release-launcher-independent-home.stderr.log",
+      "stdout": "仓库根/.runs_01/b01-build-20261014/release-launcher-independent-home.stdout.log",
+      "stderr": "仓库根/.runs_01/b01-build-20261014/release-launcher-independent-home.stderr.log",
       "stop_reason": null
     },
     {
@@ -304,7 +304,7 @@
         "/Users/sober/.local/share/uv/python/cpython-3.12.14-macos-aarch64-none/bin/python3.12",
         "-I",
         "-B",
-        "/Volumes/扩展硬盘/jarvis/packaging/bootstrap.py",
+        "仓库根/packaging/bootstrap.py",
         "--check",
         "--home",
         "/Users/sober/.jarvis",
@@ -312,8 +312,8 @@
       ],
       "exit_code": 0,
       "elapsed_seconds": 1.012,
-      "stdout": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/release-bootstrap-independent-home.stdout.log",
-      "stderr": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/release-bootstrap-independent-home.stderr.log",
+      "stdout": "仓库根/.runs_01/b01-build-20261014/release-bootstrap-independent-home.stdout.log",
+      "stderr": "仓库根/.runs_01/b01-build-20261014/release-bootstrap-independent-home.stderr.log",
       "stop_reason": null
     }
   ],
@@ -349,13 +349,13 @@
   "historical_monitor_error": "FileNotFoundError(2, 'No such file or directory')",
   "original_network_command_exit": "not captured: monitor exception; original logs preserved, offline reconcile proves final state",
   "verification_environment": {
-    "HOME": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/home",
+    "HOME": "仓库根/.runs_01/b01-build-20261014/home",
     "PATH": "/usr/bin:/bin",
-    "TMPDIR": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/tmp",
-    "XDG_CACHE_HOME": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/cache",
-    "XDG_CONFIG_HOME": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/xdg-config",
-    "UV_CACHE_DIR": "/Volumes/扩展硬盘/jarvis/.runs_01/b01-build-20261014/uv-cache",
-    "UV_PROJECT_ENVIRONMENT": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv",
+    "TMPDIR": "仓库根/.runs_01/b01-build-20261014/tmp",
+    "XDG_CACHE_HOME": "仓库根/.runs_01/b01-build-20261014/cache",
+    "XDG_CONFIG_HOME": "仓库根/.runs_01/b01-build-20261014/xdg-config",
+    "UV_CACHE_DIR": "仓库根/.runs_01/b01-build-20261014/uv-cache",
+    "UV_PROJECT_ENVIRONMENT": "仓库根/packaging/runtime/engine-venv",
     "UV_PYTHON_DOWNLOADS": "never",
     "UV_HTTP_TIMEOUT": "40",
     "UV_HTTP_RETRIES": "1",
@@ -368,11 +368,11 @@
   },
   "runtime": {
     "version": "3.14.7 (main, Aug  7 2026, 02:15:30) [Clang 22.1.3 ]",
-    "prefix": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv",
+    "prefix": "仓库根/packaging/runtime/engine-venv",
     "base_prefix": "/Users/sober/.local/share/uv/python/cpython-3.14.7-macos-aarch64-none",
-    "executable": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/bin/python3",
-    "real_executable": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/bin/python3",
-    "purelib": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages",
+    "executable": "仓库根/packaging/runtime/engine-venv/bin/python3",
+    "real_executable": "仓库根/packaging/runtime/engine-venv/bin/python3",
+    "purelib": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages",
     "sys_path": [
       "/Users/sober/.local/share/uv/python/cpython-3.14.7-macos-aarch64-none/lib/python314.zip",
       "/Users/sober/.local/share/uv/python/cpython-3.14.7-macos-aarch64-none/lib/python3.14",
@@ -384,7 +384,7 @@
         "name": "annotated-doc",
         "version": "0.0.5",
         "requires_dist": [],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/annotated_doc-0.0.5.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/annotated_doc-0.0.5.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: pdm-backend (2.4.9)\nRoot-Is-Purelib: true\nTag: py3-none-any\n",
         "direct_url": null
@@ -393,7 +393,7 @@
         "name": "annotated-types",
         "version": "0.8.0",
         "requires_dist": [],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/annotated_types-0.8.0.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/annotated_types-0.8.0.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: hatchling 1.31.0\nRoot-Is-Purelib: true\nTag: py3-none-any\n",
         "direct_url": null
@@ -407,7 +407,7 @@
           "typing_extensions>=4.5; python_version < \"3.13\"",
           "trio>=0.32.0; extra == \"trio\""
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/anyio-4.14.2.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/anyio-4.14.2.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: setuptools (83.0.0)\nRoot-Is-Purelib: true\nTag: py3-none-any\n\n",
         "direct_url": null
@@ -422,7 +422,7 @@
           "websockets==15.0.1",
           "mcp==2.1.1; extra == \"mcp\""
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/browser_harness-0.1.13.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/browser_harness-0.1.13.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: setuptools (84.0.0)\nRoot-Is-Purelib: true\nTag: py3-none-any\n\n",
         "direct_url": null
@@ -435,7 +435,7 @@
           "typing-extensions>=4.12.2",
           "websockets>=15.0.1"
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/cdp_use-1.4.5.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/cdp_use-1.4.5.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: hatchling 1.28.0\nRoot-Is-Purelib: true\nTag: py3-none-any\n",
         "direct_url": null
@@ -444,7 +444,7 @@
         "name": "certifi",
         "version": "2026.5.20",
         "requires_dist": [],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/certifi-2026.5.20.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/certifi-2026.5.20.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: setuptools (82.0.1)\nRoot-Is-Purelib: true\nTag: py3-none-any\n\n",
         "direct_url": null
@@ -455,7 +455,7 @@
         "requires_dist": [
           "pycparser; implementation_name != \"PyPy\""
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/cffi-2.1.1.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/cffi-2.1.1.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: setuptools (83.0.0)\nRoot-Is-Purelib: false\nTag: cp314-cp314-macosx_11_0_arm64\nGenerator: delocate 0.13.0\n\n",
         "direct_url": null
@@ -464,7 +464,7 @@
         "name": "charset-normalizer",
         "version": "3.5.1",
         "requires_dist": [],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/charset_normalizer-3.5.1.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/charset_normalizer-3.5.1.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: setuptools (84.0.0)\nRoot-Is-Purelib: false\nTag: cp314-cp314-macosx_10_15_universal2\nGenerator: delocate 0.13.0\n\n",
         "direct_url": null
@@ -475,7 +475,7 @@
         "requires_dist": [
           "colorama; platform_system == 'Windows'"
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/click-8.4.2.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/click-8.4.2.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: flit 3.12.0\nRoot-Is-Purelib: true\nTag: py3-none-any\n",
         "direct_url": null
@@ -487,7 +487,7 @@
           "python-dateutil",
           "pytz>2021.1"
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/croniter-6.0.0.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/croniter-6.0.0.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: setuptools (75.3.0)\nRoot-Is-Purelib: true\nTag: py2-none-any\nTag: py3-none-any\n\n",
         "direct_url": null
@@ -500,7 +500,7 @@
           "typing-extensions>=4.13.2 ; python_full_version < '3.11'",
           "bcrypt>=3.1.5 ; extra == 'ssh'"
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/cryptography-50.0.1.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/cryptography-50.0.1.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: maturin (1.14.1)\nRoot-Is-Purelib: false\nTag: cp311-abi3-macosx_11_0_arm64\n",
         "direct_url": null
@@ -509,7 +509,7 @@
         "name": "distro",
         "version": "1.9.0",
         "requires_dist": [],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/distro-1.9.0.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/distro-1.9.0.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: bdist_wheel (0.42.0)\nRoot-Is-Purelib: true\nTag: py3-none-any\n\n",
         "direct_url": null
@@ -550,7 +550,7 @@
           "pydantic-settings>=2.0.0; extra == \"all\"",
           "pydantic-extra-types>=2.0.0; extra == \"all\""
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/fastapi-0.133.1.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/fastapi-0.133.1.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: pdm-backend (2.4.7)\nRoot-Is-Purelib: true\nTag: py3-none-any\n",
         "direct_url": null
@@ -563,7 +563,7 @@
           "pytest>=8.0.0; extra == 'dev'",
           "ruff>=0.4.0; extra == 'dev'"
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/fetch_use-0.4.0.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/fetch_use-0.4.0.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: hatchling 1.29.0\nRoot-Is-Purelib: true\nTag: py3-none-any\n",
         "direct_url": null
@@ -583,7 +583,7 @@
           "hypothesis<6.136.0; extra == \"test\"",
           "levenshtein<=0.27.1; extra == \"test\""
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/fire-0.7.1.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/fire-0.7.1.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: setuptools (80.9.0)\nRoot-Is-Purelib: true\nTag: py3-none-any\n\n",
         "direct_url": null
@@ -592,7 +592,7 @@
         "name": "firecrawl-anydoc",
         "version": "0.2.4",
         "requires_dist": [],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/firecrawl_anydoc-0.2.4.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/firecrawl_anydoc-0.2.4.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: maturin (1.15.0)\nRoot-Is-Purelib: false\nTag: cp310-abi3-macosx_11_0_arm64\n",
         "direct_url": null
@@ -601,7 +601,7 @@
         "name": "h11",
         "version": "0.16.0",
         "requires_dist": [],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/h11-0.16.0.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/h11-0.16.0.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: setuptools (78.1.0)\nRoot-Is-Purelib: true\nTag: py3-none-any\n\n",
         "direct_url": null
@@ -617,7 +617,7 @@
           "socksio==1.*; extra == 'socks'",
           "trio<1.0,>=0.22.0; extra == 'trio'"
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/httpcore-1.0.9.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/httpcore-1.0.9.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: hatchling 1.27.0\nRoot-Is-Purelib: true\nTag: py3-none-any\n",
         "direct_url": null
@@ -626,7 +626,7 @@
         "name": "httptools",
         "version": "0.8.0",
         "requires_dist": [],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/httptools-0.8.0.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/httptools-0.8.0.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: setuptools (82.0.1)\nRoot-Is-Purelib: false\nTag: cp314-cp314-macosx_11_0_arm64\nGenerator: delocate 0.13.0\n\n",
         "direct_url": null
@@ -648,7 +648,7 @@
           "socksio==1.*; extra == 'socks'",
           "zstandard>=0.18.0; extra == 'zstd'"
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/httpx-0.28.1.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/httpx-0.28.1.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: hatchling 1.26.3\nRoot-Is-Purelib: true\nTag: py3-none-any\n",
         "direct_url": null
@@ -664,7 +664,7 @@
           "hypothesis >= 6.141.1 ; extra == \"all\"",
           "coverage >= 7.10.0 ; extra == \"all\""
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/idna-3.19.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/idna-3.19.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: flit 4.0.2\nRoot-Is-Purelib: true\nTag: py3-none-any\n",
         "direct_url": null
@@ -676,7 +676,7 @@
           "MarkupSafe>=2.0",
           "Babel>=2.7 ; extra == \"i18n\""
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/jinja2-3.1.6.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/jinja2-3.1.6.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: flit 3.11.0\nRoot-Is-Purelib: true\nTag: py3-none-any\n",
         "direct_url": null
@@ -685,7 +685,7 @@
         "name": "jiter",
         "version": "0.16.0",
         "requires_dist": [],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/jiter-0.16.0.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/jiter-0.16.0.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: maturin (1.14.1)\nRoot-Is-Purelib: false\nTag: cp314-cp314-macosx_11_0_arm64\n",
         "direct_url": null
@@ -704,7 +704,7 @@
           "mkdocs-section-index; extra == \"docs\"",
           "mkdocs-literate-nav; extra == \"docs\""
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/markdown-3.10.2.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/markdown-3.10.2.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: setuptools (82.0.0)\nRoot-Is-Purelib: true\nTag: py3-none-any\n\n",
         "direct_url": null
@@ -742,7 +742,7 @@
           "pytest-timeout ; extra == \"testing\"",
           "requests ; extra == \"testing\""
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/markdown_it_py-4.2.0.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/markdown_it_py-4.2.0.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: flit 3.12.0\nRoot-Is-Purelib: true\nTag: py3-none-any\n",
         "direct_url": null
@@ -751,7 +751,7 @@
         "name": "MarkupSafe",
         "version": "3.0.3",
         "requires_dist": [],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/markupsafe-3.0.3.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/markupsafe-3.0.3.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: setuptools (80.9.0)\nRoot-Is-Purelib: false\nTag: cp314-cp314-macosx_11_0_arm64\nGenerator: delocate 0.13.0\n\n",
         "direct_url": null
@@ -760,7 +760,7 @@
         "name": "mdurl",
         "version": "0.1.2",
         "requires_dist": [],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/mdurl-0.1.2.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/mdurl-0.1.2.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: flit 3.7.1\nRoot-Is-Purelib: true\nTag: py3-none-any\n",
         "direct_url": null
@@ -789,7 +789,7 @@
           "nemo-relay[langchain] ; extra == 'langgraph'",
           "langgraph>=1.2.9,<2.0.0 ; extra == 'langgraph'"
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/nemo_relay-0.10.0.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/nemo_relay-0.10.0.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: maturin (1.12.6)\nRoot-Is-Purelib: false\nTag: cp311-abi3-macosx_11_0_arm64\n",
         "direct_url": null
@@ -815,7 +815,7 @@
           "numpy>=2.0.2; extra == 'voice-helpers'",
           "sounddevice>=0.5.1; extra == 'voice-helpers'"
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/openai-2.24.0.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/openai-2.24.0.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: hatchling 1.26.3\nRoot-Is-Purelib: true\nTag: py3-none-any\n",
         "direct_url": null
@@ -824,7 +824,7 @@
         "name": "packaging",
         "version": "26.0",
         "requires_dist": [],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/packaging-26.0.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/packaging-26.0.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: flit 3.12.0\nRoot-Is-Purelib: true\nTag: py3-none-any\n",
         "direct_url": null
@@ -837,7 +837,7 @@
           "typing-extensions >=4 ; extra == \"optional\"",
           "google-re2 >=1.1 ; extra == \"re2\""
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/pathspec-1.1.1.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/pathspec-1.1.1.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: flit 3.12.0\nRoot-Is-Purelib: true\nTag: py3-none-any\n",
         "direct_url": null
@@ -872,7 +872,7 @@
           "trove-classifiers>=2024.10.12; extra == \"tests\"",
           "defusedxml; extra == \"xmp\""
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/pillow-12.3.0.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/pillow-12.3.0.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: setuptools (82.0.1)\nRoot-Is-Purelib: false\nTag: cp314-cp314-macosx_11_0_arm64\nGenerator: delocate 0.13.0\n\n",
         "direct_url": null
@@ -904,7 +904,7 @@
           "coverage; extra == \"dev\"",
           "setuptools; extra == \"dev\""
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/pillow_heif-1.6.0.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/pillow_heif-1.6.0.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: setuptools (84.0.0)\nRoot-Is-Purelib: false\nTag: cp314-cp314-macosx_11_0_arm64\nGenerator: delocate 0.13.0\n\n",
         "direct_url": null
@@ -915,7 +915,7 @@
         "requires_dist": [
           "wcwidth"
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/prompt_toolkit-3.0.52.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/prompt_toolkit-3.0.52.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: setuptools (80.9.0)\nRoot-Is-Purelib: true\nTag: py3-none-any\n\n",
         "direct_url": null
@@ -963,7 +963,7 @@
           "wheel ; (os_name == \"nt\" and implementation_name != \"pypy\") and extra == 'test'",
           "wmi ; (os_name == \"nt\" and implementation_name != \"pypy\") and extra == 'test'"
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/psutil-7.2.2.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/psutil-7.2.2.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: setuptools (75.3.3)\nRoot-Is-Purelib: false\nTag: cp36-abi3-macosx_11_0_arm64\n\n",
         "direct_url": null
@@ -972,7 +972,7 @@
         "name": "ptyprocess",
         "version": "0.7.0",
         "requires_dist": [],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/ptyprocess-0.7.0.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/ptyprocess-0.7.0.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: flit 3.0.0\nRoot-Is-Purelib: true\nTag: py2-none-any\nTag: py3-none-any\n",
         "direct_url": null
@@ -981,7 +981,7 @@
         "name": "pycparser",
         "version": "3.0",
         "requires_dist": [],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/pycparser-3.0.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/pycparser-3.0.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: setuptools (80.10.1)\nRoot-Is-Purelib: true\nTag: py3-none-any\n\n",
         "direct_url": null
@@ -997,7 +997,7 @@
           "email-validator>=2.0.0; extra == 'email'",
           "tzdata; (python_version >= '3.9' and platform_system == 'Windows') and extra == 'timezone'"
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/pydantic-2.13.4.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/pydantic-2.13.4.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: hatchling 1.29.0\nRoot-Is-Purelib: true\nTag: py3-none-any\n",
         "direct_url": null
@@ -1008,7 +1008,7 @@
         "requires_dist": [
           "typing-extensions>=4.14.1"
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/pydantic_core-2.46.4.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/pydantic_core-2.46.4.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: maturin (1.13.1)\nRoot-Is-Purelib: false\nTag: cp314-cp314-macosx_11_0_arm64\n",
         "direct_url": null
@@ -1019,7 +1019,7 @@
         "requires_dist": [
           "colorama>=0.4.6; extra == 'windows-terminal'"
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/pygments-2.21.0.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/pygments-2.21.0.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: hatchling 1.32.0\nRoot-Is-Purelib: true\nTag: py3-none-any\n",
         "direct_url": null
@@ -1031,7 +1031,7 @@
           "typing_extensions>=4.0; python_version < \"3.11\"",
           "cryptography>=3.4.0; extra == \"crypto\""
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/pyjwt-2.13.0.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/pyjwt-2.13.0.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: setuptools (82.0.1)\nRoot-Is-Purelib: true\nTag: py3-none-any\n\n",
         "direct_url": null
@@ -1042,7 +1042,7 @@
         "requires_dist": [
           "six >=1.5"
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/python_dateutil-2.9.0.post0.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/python_dateutil-2.9.0.post0.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: bdist_wheel (0.42.0)\nRoot-Is-Purelib: true\nTag: py2-none-any\nTag: py3-none-any\n\n",
         "direct_url": null
@@ -1053,7 +1053,7 @@
         "requires_dist": [
           "click>=5.0; extra == \"cli\""
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/python_dotenv-1.2.2.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/python_dotenv-1.2.2.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: setuptools (82.0.0)\nRoot-Is-Purelib: true\nTag: py3-none-any\n\n",
         "direct_url": null
@@ -1062,7 +1062,7 @@
         "name": "python-multipart",
         "version": "0.0.32",
         "requires_dist": [],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/python_multipart-0.0.32.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/python_multipart-0.0.32.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: hatchling 1.30.1\nRoot-Is-Purelib: true\nTag: py3-none-any\n",
         "direct_url": null
@@ -1071,7 +1071,7 @@
         "name": "pytz",
         "version": "2026.3.post1",
         "requires_dist": [],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/pytz-2026.3.post1.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/pytz-2026.3.post1.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: bdist_wheel (0.42.0)\nRoot-Is-Purelib: true\nTag: py2-none-any\nTag: py3-none-any\n\n",
         "direct_url": null
@@ -1093,7 +1093,7 @@
           "PySocks!=1.5.7,>=1.5.6; extra == \"test\"",
           "pytest>=3; extra == \"test\""
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/requests-2.33.0.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/requests-2.33.0.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: setuptools (82.0.1)\nRoot-Is-Purelib: true\nTag: py3-none-any\n\n",
         "direct_url": null
@@ -1102,7 +1102,7 @@
         "name": "resvg_py",
         "version": "0.4.0",
         "requires_dist": [],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/resvg_py-0.4.0.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/resvg_py-0.4.0.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: maturin (1.14.1)\nRoot-Is-Purelib: false\nTag: cp310-abi3-macosx_11_0_arm64\n",
         "direct_url": null
@@ -1115,7 +1115,7 @@
           "markdown-it-py (>=2.2.0)",
           "pygments (>=2.13.0,<3.0.0)"
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/rich-14.3.3.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/rich-14.3.3.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: poetry-core 2.3.1\nRoot-Is-Purelib: true\nTag: py3-none-any\n",
         "direct_url": null
@@ -1129,7 +1129,7 @@
           "ryd; extra == \"docs\"",
           "mercurial>5.7; extra == \"docs\""
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/ruamel.yaml-0.18.16.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/ruamel.yaml-0.18.16.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: develop (0.18.16)\nRoot-Is-Purelib: true\nTag: py3-none-any\n\n",
         "direct_url": null
@@ -1138,7 +1138,7 @@
         "name": "six",
         "version": "1.17.0",
         "requires_dist": [],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/six-1.17.0.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/six-1.17.0.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: setuptools (75.6.0)\nRoot-Is-Purelib: true\nTag: py2-none-any\nTag: py3-none-any\n\n",
         "direct_url": null
@@ -1147,7 +1147,7 @@
         "name": "sniffio",
         "version": "1.3.1",
         "requires_dist": [],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/sniffio-1.3.1.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/sniffio-1.3.1.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: bdist_wheel (0.42.0)\nRoot-Is-Purelib: true\nTag: py3-none-any\n\n",
         "direct_url": null
@@ -1156,7 +1156,7 @@
         "name": "snowballstemmer",
         "version": "3.1.1",
         "requires_dist": [],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/snowballstemmer-3.1.1.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/snowballstemmer-3.1.1.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: setuptools (82.0.1)\nRoot-Is-Purelib: true\nTag: py3-none-any\n\n",
         "direct_url": null
@@ -1165,7 +1165,7 @@
         "name": "socksio",
         "version": "1.0.0",
         "requires_dist": [],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/socksio-1.0.0.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/socksio-1.0.0.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: flit 2.1.0\nRoot-Is-Purelib: true\nTag: py3-none-any\n",
         "direct_url": null
@@ -1183,7 +1183,7 @@
           "python-multipart>=0.0.18; extra == 'full'",
           "pyyaml; extra == 'full'"
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/starlette-1.3.1.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/starlette-1.3.1.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: hatchling 1.30.1\nRoot-Is-Purelib: true\nTag: py3-none-any\n",
         "direct_url": null
@@ -1198,7 +1198,7 @@
           "tornado>=4.5; extra == \"test\"",
           "typeguard; extra == \"test\""
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/tenacity-9.1.4.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/tenacity-9.1.4.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: setuptools (81.0.0)\nRoot-Is-Purelib: true\nTag: py3-none-any\n\n",
         "direct_url": null
@@ -1210,7 +1210,7 @@
           "pytest; extra == 'tests'",
           "pytest-cov; extra == 'tests'"
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/termcolor-3.3.0.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/termcolor-3.3.0.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: hatchling 1.28.0\nRoot-Is-Purelib: true\nTag: py3-none-any\n",
         "direct_url": null
@@ -1219,7 +1219,7 @@
         "name": "tomli_w",
         "version": "1.2.0",
         "requires_dist": [],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/tomli_w-1.2.0.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/tomli_w-1.2.0.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: flit 3.10.1\nRoot-Is-Purelib: true\nTag: py3-none-any\n",
         "direct_url": null
@@ -1237,7 +1237,7 @@
           "envwrap; extra == \"telegram\"",
           "ipywidgets>=6; extra == \"notebook\""
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/tqdm-4.70.0.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/tqdm-4.70.0.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: setuptools (83.0.0)\nRoot-Is-Purelib: true\nTag: py3-none-any\n\n",
         "direct_url": null
@@ -1246,7 +1246,7 @@
         "name": "truststore",
         "version": "0.10.4",
         "requires_dist": [],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/truststore-0.10.4.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/truststore-0.10.4.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: flit 3.12.0\nRoot-Is-Purelib: true\nTag: py3-none-any\n",
         "direct_url": null
@@ -1257,7 +1257,7 @@
         "requires_dist": [
           "typing-extensions>=4.15.0"
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/typing_inspection-0.4.4.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/typing_inspection-0.4.4.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: hatchling 1.32.0\nRoot-Is-Purelib: true\nTag: py3-none-any\n",
         "direct_url": null
@@ -1266,7 +1266,7 @@
         "name": "typing_extensions",
         "version": "4.16.0",
         "requires_dist": [],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/typing_extensions-4.16.0.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/typing_extensions-4.16.0.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: flit 3.12.0\nRoot-Is-Purelib: true\nTag: py3-none-any\n",
         "direct_url": null
@@ -1281,7 +1281,7 @@
           "pysocks!=1.5.7,<2.0,>=1.5.6; extra == 'socks'",
           "backports-zstd>=1.0.0; (python_version < '3.14') and extra == 'zstd'"
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/urllib3-2.7.0.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/urllib3-2.7.0.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: hatchling 1.29.0\nRoot-Is-Purelib: true\nTag: py3-none-any\n",
         "direct_url": null
@@ -1301,7 +1301,7 @@
           "watchfiles>=0.20; extra == 'standard'",
           "websockets>=10.4; extra == 'standard'"
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/uvicorn-0.41.0.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/uvicorn-0.41.0.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: hatchling 1.28.0\nRoot-Is-Purelib: true\nTag: py3-none-any\n",
         "direct_url": null
@@ -1312,7 +1312,7 @@
         "requires_dist": [
           "anyio>=3.0.0"
         ],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/watchfiles-1.2.0.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/watchfiles-1.2.0.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: maturin (1.13.3)\nRoot-Is-Purelib: false\nTag: cp314-cp314-macosx_11_0_arm64\n",
         "direct_url": null
@@ -1321,7 +1321,7 @@
         "name": "wcwidth",
         "version": "0.8.2",
         "requires_dist": [],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/wcwidth-0.8.2.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/wcwidth-0.8.2.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: hatchling 1.30.1\nRoot-Is-Purelib: true\nTag: py3-none-any\n",
         "direct_url": null
@@ -1330,7 +1330,7 @@
         "name": "websockets",
         "version": "15.0.1",
         "requires_dist": [],
-        "metadata_path": "/Volumes/扩展硬盘/jarvis/packaging/runtime/engine-venv/lib/python3.14/site-packages/websockets-15.0.1.dist-info",
+        "metadata_path": "仓库根/packaging/runtime/engine-venv/lib/python3.14/site-packages/websockets-15.0.1.dist-info",
         "installer": "uv",
         "wheel": "Wheel-Version: 1.0\nGenerator: setuptools (75.8.2)\nRoot-Is-Purelib: true\nTag: py3-none-any\n\n",
         "direct_url": null

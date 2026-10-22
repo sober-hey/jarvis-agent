@@ -99,7 +99,7 @@ async def heartbeat(binary):
     finally: ServerProtocol.recv_frame = original
 
 async def gateway(binary):
-    packaging = Path('/Volumes/扩展硬盘/jarvis/packaging')
+    packaging = Path('仓库根/packaging')
     sys.path.insert(0, str(packaging))
     import voice_gateway
     transcribed = []
