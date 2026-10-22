@@ -1,5 +1,7 @@
 # JARVIS
 
+[![checks](https://github.com/sober-hey/jarvis-agent/actions/workflows/checks.yml/badge.svg)](https://github.com/sober-hey/jarvis-agent/actions/workflows/checks.yml)
+
 一个常驻在自己电脑上的个人智能体：语音是主入口，长期记忆是底，模型负责思考与说话。
 不是聊天框套壳——它有自己的心跳、自己的账本、自己的作息。
 
