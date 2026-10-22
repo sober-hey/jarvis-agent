@@ -20,6 +20,10 @@ OUT = Path(tempfile.mkdtemp(prefix="jarvis-ios-core-", dir=os.environ.get("TMPDI
 TOOL = Path("/Library/Developer/CommandLineTools/usr/bin")
 SDK = Path("/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk")
 SOURCES = [ROOT / "Tests/main.swift", *sorted((ROOT / "JarvisVoice/Core").glob("*.swift"))]
+# VoiceCore 依赖 GatewayDiagnostics（白名单事件记录，纯 Foundation）。
+# 它不在 Core/ 下，早先漏在可执行文件的编译清单外，导致 test_core 直接编译失败；
+# 后面的 -parse 步骤会单独覆盖 JarvisVoice/*.swift，这里不能再重复加，否则 duplicate input。
+EXE_SOURCES = [*SOURCES, ROOT / "JarvisVoice/GatewayDiagnostics.swift"]
 records: list[dict[str, object]] = []
 
 
@@ -60,7 +64,7 @@ if probe.returncode == 0:
     run(
         [
             str(TOOL / "swiftc"),
-            *map(str, SOURCES),
+            *map(str, EXE_SOURCES),
             "-module-name",
             "JarvisCoreTests",
             "-sdk",
@@ -129,7 +133,10 @@ run(
 # be typechecked against public macOS equivalents without any UIKit stubs.
 shared = [
     ROOT / "JarvisVoice" / name
-    for name in ["MP3Playback.swift", "VoiceSocket.swift", "GatewayCredential.swift"]
+    # 只放能在 macOS 上独立类型检查的文件。
+    # MP3Playback / AudioCapture 依赖 AVAudioSession 等 iOS 专属 API，
+    # 由 CI 里的 xcodebuild（iOS 目标）覆盖，不在这里硬凑。
+    for name in ["VoiceSocket.swift", "GatewayCredential.swift", "GatewayDiagnostics.swift"]
 ]
 run(
     [

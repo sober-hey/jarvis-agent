@@ -81,6 +81,17 @@ jobs:
           cd apps/mac/Modules/Activation
           swift run -c release activation-regression
 
+      # 纯 Swift 核心逻辑测试（不需要模拟器）
+      - name: iOS 核心逻辑测试
+        run: |
+          cd apps/ios/JarvisVoice
+          TMPDIR="$RUNNER_TEMP" python3 scripts/test_core.py
+
+      - name: watchOS 核心逻辑测试
+        run: |
+          cd apps/watchos/JarvisWatch
+          TMPDIR="$RUNNER_TEMP" python3 Scripts/test_core.py
+
       # 客户端能编译就说明工程文件、协议、资源引用是完整的
       - name: 编译 iOS 客户端
         run: |

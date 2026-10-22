@@ -17,6 +17,21 @@ struct SpeechGate {
     private var silence = 0
     private var count = 0
 
+    // 显式给出初始化器：结构体里有 private 存储属性时，编译器合成的 memberwise init
+    // 在不同 Xcode/Swift 版本里可见性不一致（Xcode 27 能跨文件用，26.6 报
+    // "argument passed to call that takes no arguments"）。写死它，别依赖版本行为。
+    init(
+        threshold: Float = 0.018,
+        endSilenceFrames: Int = 45,
+        preRollFrames: Int = 10,
+        maxFrames: Int = 1250
+    ) {
+        self.threshold = threshold
+        self.endSilenceFrames = endSilenceFrames
+        self.preRollFrames = preRollFrames
+        self.maxFrames = maxFrames
+    }
+
     mutating func process(_ samples: [Float]) -> Result {
         guard !samples.isEmpty else { return Result() }
         let power = samples.reduce(Float(0)) { $0 + ($1.isFinite ? $1 * $1 : 0) }
