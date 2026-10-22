@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jarvis.invalid/contracts/draft/step.schema.json",
+  "schema_version": 1,
+  "status": "DRAFT",
+  "x-approval-status": "NOT_APPROVED",
+  "x-runtime-enabled": false,
+  "title": "step structural record (DRAFT)",
+  "description": "Structural domain/DDL projection only, not lifecycle validity or execution permission. Relationships require domain_relationships.yaml. Integer ranges are candidate representation constraints, not schema migration.",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "plan_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "ordinal": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "logical_effect_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "state": {
+      "enum": [
+        "PENDING",
+        "CLAIMED",
+        "PREPARING",
+        "EXECUTING",
+        "VERIFYING",
+        "NEEDS_RECONCILIATION",
+        "RETRY_WAIT",
+        "BLOCKED",
+        "COMPLETED",
+        "FAILED",
+        "CANCELED"
+      ],
+      "description": "Exact projection of step_states.yaml; offline checks detect drift."
+    },
+    "required": {
+      "type": "boolean",
+      "description": "Domain boolean; explicit DDL adapter maps false/true to 0/1, not implicit truthiness."
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 0
+    }
+  },
+  "required": [
+    "schema_version",
+    "id",
+    "task_id",
+    "plan_id",
+    "ordinal",
+    "logical_effect_id",
+    "state",
+    "required",
+    "version"
+  ],
+  "additionalProperties": false,
+  "x-unresolved": [
+    "D-08: input/type/precondition/expected-result/verification carrier unresolved, not added here",
+    "D-11: nullable logical_effect_id preserved; publication requires stable non-null identity"
+  ]
+}

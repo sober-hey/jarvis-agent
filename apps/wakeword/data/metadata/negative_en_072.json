@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_en_072",
+  "text": "Please start the coffee maker.",
+  "category": "negative_en",
+  "language_type": "English",
+  "split": "holdout",
+  "voice": "Ethan",
+  "voice_kind": "system",
+  "tempo": 1.0,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 30
+  },
+  "elapsed_seconds": 0.743,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_en_072.wav",
+  "audio": "wav/negative_en_072.wav",
+  "duration_seconds": 1.6,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "7775fd75f227481b5dcc932c6fe7c6d6fe969b2084a13a2c1c576b6a0f4c0769",
+  "sha256_audio": "203d5e3f549bf03448d94f70ef1dca43125be8ace765a17826bcc950aa4941f9"
+}

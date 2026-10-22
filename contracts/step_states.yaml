@@ -1,0 +1,23 @@
+schema_version: 1
+status: DRAFT
+object: STEP
+states:
+  - PENDING
+  - CLAIMED
+  - PREPARING
+  - EXECUTING
+  - VERIFYING
+  - NEEDS_RECONCILIATION
+  - RETRY_WAIT
+  - BLOCKED
+  - COMPLETED
+  - FAILED
+  - CANCELED
+terminal:
+  - COMPLETED
+  - FAILED
+  - CANCELED
+notes:
+  - 状态转换必须通过统一服务
+  - 状态更新与审计事件必须同事务
+  - 终态不得重新打开

@@ -1,0 +1,17 @@
+{
+  "dataset": "WISDM Smartphone and Smartwatch Activity and Biometrics",
+  "doi": "10.24432/C5HK59",
+  "source_url": "https://raw.githubusercontent.com/ma-shamshiri/Human-Activity-Recognition/f9a2cfc3d2a2d9598a09fd2383b6e5d2c031cb99/code/data/wisdm-dataset/raw/watch/accel/data_1600_accel_watch.txt",
+  "source_sha256": "09f74abecf9b6a690683ffc09ff7aa1da4d64dc03514cc692af5e16309c676c8",
+  "source_git_commit": "f9a2cfc3d2a2d9598a09fd2383b6e5d2c031cb99",
+  "subject": 1600,
+  "activity_code": "O",
+  "activity": "clapping",
+  "units": "m/s^2 (divide by 9.80665 for g)",
+  "timestamp_units": "nanoseconds (subtract first timestamp, divide by 1e9)",
+  "subset": "first 800 unchanged rows with activity O",
+  "samples": 800,
+  "device": "Android smartwatch in WISDM, NOT Apple Watch Series 8",
+  "license": "UCI dataset CC BY 4.0, see https://archive.ics.uci.edu/dataset/507",
+  "limitations": "Real-recorded regression only. No Series 8 or Sir-specific calibration; threshold rule cannot distinguish all accidental paired impacts."
+}

@@ -1,0 +1,9 @@
+{
+  "model": "cosyvoice-v3.5-flash",
+  "voice": "cosyvoice-v3.5-flash-jarvis-f7bec1631ddf4725841995ba9c711376",
+  "rate": 0.85,
+  "pitch": 1.05,
+  "format": "pcm",
+  "sample_rate": 16000,
+  "instruction": "像一位跟了多年的管家在跟主人说话：沉稳、克制、带一点温度，句尾略收，不急不拖"
+}

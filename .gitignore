@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+.pyright/
+.coverage
+htmlcov/
+
+# 运行时与个人数据：绝不入库
+*.db
+*.db-wal
+*.db-shm
+*.wav
+*.mp3
+*.m4a
+*.mp4
+*.mov
+*.npz
+evidence/
+.runs_01/
+logs/
+
+# 凭据
+.env
+.env.*
+*.key
+*.pem
+*.p12
+*.token
+*credentials*
+
+# Swift / Xcode 构建产物
+.build/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+*.xcresult
+apps/mac/JarvisMac/Output/
+
+# 系统噪音
+.DS_Store

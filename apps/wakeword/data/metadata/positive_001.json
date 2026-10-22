@@ -1,0 +1,25 @@
+{
+  "source_id": "positive_001",
+  "text": "Jarvis, open the study timer.",
+  "category": "positive",
+  "language_type": "English",
+  "split": "holdout",
+  "voice": "Serena",
+  "voice_kind": "system",
+  "tempo": 1.06,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 29
+  },
+  "elapsed_seconds": 1.134,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/positive_001.wav",
+  "audio": "wav/positive_001.wav",
+  "duration_seconds": 2.6396,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "7e3d26d07683353399ec86ee80b66cba2cd30da853747894fcf8491e3247a63e",
+  "sha256_audio": "b1fa85a01dd8fa94c3d72b02e38243ed15fd1a80c34e7d1384e0f06470a1fd11"
+}

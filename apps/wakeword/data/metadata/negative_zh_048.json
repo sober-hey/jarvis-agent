@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_zh_048",
+  "text": "播放一段舒缓的音乐。",
+  "category": "negative_zh",
+  "language_type": "Chinese",
+  "split": "calibration",
+  "voice": "Chelsie",
+  "voice_kind": "system",
+  "tempo": 1.0,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 19
+  },
+  "elapsed_seconds": 0.784,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_zh_048.wav",
+  "audio": "wav/negative_zh_048.wav",
+  "duration_seconds": 1.84,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "5a25c2630319d86f37e85d121b94a08bb407707915e5ddf94e224f4d4866052d",
+  "sha256_audio": "06a75e437cd3f0ec349356490b5d533cb2555d061d2b8d3b5a6693cea94b9f4b"
+}

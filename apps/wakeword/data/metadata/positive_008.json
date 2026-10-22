@@ -1,0 +1,25 @@
+{
+  "source_id": "positive_008",
+  "text": "Jarvis, play my evening playlist.",
+  "category": "positive",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Chelsie",
+  "voice_kind": "system",
+  "tempo": 0.94,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 33
+  },
+  "elapsed_seconds": 1.092,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/positive_008.wav",
+  "audio": "wav/positive_008.wav",
+  "duration_seconds": 3.2994,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "ad067148a310e50b8bb8e5b6ad8b1d53afe41a5bb6c710d5efc74e5142243712",
+  "sha256_audio": "50d6ed614ad86db63c42194c8b1160d61bbd5a45036883afe512b5e6f6da333a"
+}

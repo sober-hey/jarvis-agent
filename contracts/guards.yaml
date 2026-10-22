@@ -1,0 +1,6180 @@
+schema_version: 1
+status: DRAFT
+approval_status: NOT_APPROVED
+runtime_enabled: false
+verification_status: NOT_IMPLEMENTED
+contract_pack_status: NOT_FROZEN
+purpose: K0-003 formal requirements catalogue; mirrors existing candidate predicates without registering
+  a state machine or approving DP/ADR/A1–A6.
+predicate_registry: transition_guards.yaml
+expression_language_ref: transition_guards.yaml#expression_language
+predicate_authority: transition_guards.yaml is the single candidate expression source; this documentation
+  mirror must match byte-independent parsed structure.
+source_status_semantics:
+  SOURCE_IDENTIFIED: Requirement/candidate source found; NOT semantic approval or complete product evidence.
+  SOURCE_MISSING: At least one formal source, decision or required evidence carrier is missing; candidate
+    predicate retained, never filled with invented authorization.
+failure_policy: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES
+evaluation_requirements:
+- fact reads an exact declared flat key; no coercion; booleans are not integers; only literal true permits.
+  Missing, mistyped, unknown, cyclic or unevaluable input is UNKNOWN and denies. all/any use three-valued
+  logic; no eval().
+- same transaction for state/CAS/global epoch and cross-object invariants; prior durable evidence where
+  stated; post-commit success requires actual atomic commit
+- facts are produced by trusted transaction/verification adapters, never model-supplied or self-attested
+  grants; no such adapters are implemented here
+- Every edge requires ALL its named guards; FALSE or UNKNOWN denies, preserves source state and rolls
+  back all related writes/events.
+- Missing sources and unresolved dependencies remain blockers; synthetic facts can test expression wiring
+  but cannot close approval/evidence gaps.
+- A rejected edge does not select a fallback edge. Reconciliation/BLOCKED, if present, is evaluated separately
+  with its own guards.
+dp1_scope_note: DP-1 identifies 11 Step EDGES with no MP source, not 11 unique Guards. The existing registry
+  contains additional shared/composite/helper guards; all are documented below.
+known_traceability_limits:
+- This catalogue does not silently repair candidate registry predicates or assert that their expressions
+  fully implement every DP-1 row.
+- 'S06/S11/S32 currently use block_safe only: they stop starts and record a cause, but do not separately
+  require DP-1 conflict/precondition/retry-exhaustion evidence or decision=BLOCK. Candidate edge-specific
+  semantic closure remains SOURCE_MISSING.'
+- S23 uses block_safe plus block_pair but block_pair does not itself entail observation_bound. Binding
+  evidence is a DP-1 requirement, not proven by structure-only tests; the trusted evidence adapter is
+  absent.
+- Unresolved edge dependencies remain as published. All catalogue expressions, denials and synthetic checks
+  are design artifacts only.
+step_edges_with_missing_formal_source:
+- id: S05
+  from: CLAIMED
+  to: PENDING
+  source_status: SOURCE_MISSING
+  upstream_source_status: UNRESOLVED
+  approval_status: NOT_APPROVED
+  group: G1
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - claim_release_authorized
+  - no_started_effect
+  - no_active_attempt
+  - cancel_absent
+  - emergency_stop_inactive
+  formal_requirements_ref: docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S05; §4.3 G1
+  dp1_formal_definition_requirements: Trusted claim release authorization and a nonempty reason; positive
+    evidence no target effect could have started; all shared FC/S1/S2/S3 guards.
+  unresolved_formalization: OPEN-07 and the MP per-edge source are missing.
+  candidate_requirements:
+  - Target row still has the exact source state of this edge
+  - Target row version equals supplied optimistic version, checked in the write transaction
+  - Mutation targets this edge, not a different destination
+  - Conditional update includes id/source/version, increments version exactly once, affects exactly one
+    row; otherwise roll back
+  - Matching task/step/from/to/version event, related writes, and state update commit or roll back in
+    the same database transaction; timestamp is not ordering authority
+  - Post-write graph satisfies domain_relationships.yaml in this same transaction; no nontransactional
+    check-then-write
+  - No terminal Task/Step is reopened and no prior Plan/Step/Intent/Attempt or effect history is deleted
+    or replaced
+  - Classify actual writes, then authorized request-only OR fenced worker commit. Unknown/mixed/unclassified
+    never bypass fencing.
+  - Trusted claim release authorization with nonempty reason exists; no possible started target effect
+  - Positive durable evidence that no target effect ever started, not inferred from target absence
+  - No ACTIVE Attempt in this transition scope; Task scope includes historical Plans, Step scope its own
+    Attempts
+  - Task cancellation column is NULL in the committing transaction (parent Task for a Step)
+  - Global emergency_stop is exactly false at commit/start; unknown/missing control state denies
+  disposition: CANDIDATE_ONLY_PENDING_SOURCE_AND_DEPENDENCIES
+  missing_source: MP §8.1–8.3 has no per-edge authority; DP-1 and STEP_TRANSITION_SOURCE_PROPOSAL §2 are
+    candidate design only.
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - D-G1a
+  - OPEN-07
+- id: S06
+  from: CLAIMED
+  to: BLOCKED
+  source_status: SOURCE_MISSING
+  upstream_source_status: UNRESOLVED
+  approval_status: NOT_APPROVED
+  group: G1
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - block_safe
+  formal_requirements_ref: docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S06; §4.3 G1
+  dp1_formal_definition_requirements: Precondition checking found a conflict; decision=BLOCK; persist
+    the cause and satisfy shared FC/S1/S2/S3.
+  unresolved_formalization: Existing block_safe does not express the specific precondition-conflict evidence
+    or decision=BLOCK; D-08/OPEN-03 and per-edge source are missing.
+  candidate_requirements:
+  - Target row still has the exact source state of this edge
+  - Target row version equals supplied optimistic version, checked in the write transaction
+  - Mutation targets this edge, not a different destination
+  - Conditional update includes id/source/version, increments version exactly once, affects exactly one
+    row; otherwise roll back
+  - Matching task/step/from/to/version event, related writes, and state update commit or roll back in
+    the same database transaction; timestamp is not ordering authority
+  - Post-write graph satisfies domain_relationships.yaml in this same transaction; no nontransactional
+    check-then-write
+  - No terminal Task/Step is reopened and no prior Plan/Step/Intent/Attempt or effect history is deleted
+    or replaced
+  - Classify actual writes, then authorized request-only OR fenced worker commit. Unknown/mixed/unclassified
+    never bypass fencing.
+  - Record cause and stop new starts while preserving evidence, not treating BLOCK as a known outcome
+  disposition: CANDIDATE_ONLY_PENDING_SOURCE_AND_DEPENDENCIES
+  missing_source: MP §8.1–8.3 has no per-edge authority; DP-1 and STEP_TRANSITION_SOURCE_PROPOSAL §2 are
+    candidate design only.
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - D-G1a
+- id: S10
+  from: PREPARING
+  to: PENDING
+  source_status: SOURCE_MISSING
+  upstream_source_status: UNRESOLVED
+  approval_status: NOT_APPROVED
+  group: G1
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - intent_absent
+  - no_started_effect
+  - no_active_attempt
+  - cancel_absent
+  - emergency_stop_inactive
+  formal_requirements_ref: docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S10; §4.3 G1
+  dp1_formal_definition_requirements: Preparation-crash recovery with no committed Intent; do not assume
+    target effects occurred; no uncontrolled effect; shared FC/S1/S2/S3.
+  unresolved_formalization: No per-edge recovery authorization/scope exists in MP; §18 recovery ownership
+    must be settled.
+  candidate_requirements:
+  - Target row still has the exact source state of this edge
+  - Target row version equals supplied optimistic version, checked in the write transaction
+  - Mutation targets this edge, not a different destination
+  - Conditional update includes id/source/version, increments version exactly once, affects exactly one
+    row; otherwise roll back
+  - Matching task/step/from/to/version event, related writes, and state update commit or roll back in
+    the same database transaction; timestamp is not ordering authority
+  - Post-write graph satisfies domain_relationships.yaml in this same transaction; no nontransactional
+    check-then-write
+  - No terminal Task/Step is reopened and no prior Plan/Step/Intent/Attempt or effect history is deleted
+    or replaced
+  - Classify actual writes, then authorized request-only OR fenced worker commit. Unknown/mixed/unclassified
+    never bypass fencing.
+  - Recovery proves no Intent committed for this preparation and no target effect could start; do not
+    infer from inaccessible DB
+  - Positive durable evidence that no target effect ever started, not inferred from target absence
+  - No ACTIVE Attempt in this transition scope; Task scope includes historical Plans, Step scope its own
+    Attempts
+  - Task cancellation column is NULL in the committing transaction (parent Task for a Step)
+  - Global emergency_stop is exactly false at commit/start; unknown/missing control state denies
+  disposition: CANDIDATE_ONLY_PENDING_SOURCE_AND_DEPENDENCIES
+  missing_source: MP §8.1–8.3 has no per-edge authority; DP-1 and STEP_TRANSITION_SOURCE_PROPOSAL §2 are
+    candidate design only.
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - D-G1a
+- id: S11
+  from: PREPARING
+  to: BLOCKED
+  source_status: SOURCE_MISSING
+  upstream_source_status: UNRESOLVED
+  approval_status: NOT_APPROVED
+  group: G1
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - block_safe
+  formal_requirements_ref: docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S11; §4.3 G1
+  dp1_formal_definition_requirements: Preparation cannot finish or prerequisites are absent; decision=BLOCK
+    with a recorded reason; shared FC/S1/S2/S3.
+  unresolved_formalization: Existing block_safe omits the particular preparation failure/prerequisite
+    evidence and decision=BLOCK; D-08 and per-edge source are missing.
+  candidate_requirements:
+  - Target row still has the exact source state of this edge
+  - Target row version equals supplied optimistic version, checked in the write transaction
+  - Mutation targets this edge, not a different destination
+  - Conditional update includes id/source/version, increments version exactly once, affects exactly one
+    row; otherwise roll back
+  - Matching task/step/from/to/version event, related writes, and state update commit or roll back in
+    the same database transaction; timestamp is not ordering authority
+  - Post-write graph satisfies domain_relationships.yaml in this same transaction; no nontransactional
+    check-then-write
+  - No terminal Task/Step is reopened and no prior Plan/Step/Intent/Attempt or effect history is deleted
+    or replaced
+  - Classify actual writes, then authorized request-only OR fenced worker commit. Unknown/mixed/unclassified
+    never bypass fencing.
+  - Record cause and stop new starts while preserving evidence, not treating BLOCK as a known outcome
+  disposition: CANDIDATE_ONLY_PENDING_SOURCE_AND_DEPENDENCIES
+  missing_source: MP §8.1–8.3 has no per-edge authority; DP-1 and STEP_TRANSITION_SOURCE_PROPOSAL §2 are
+    candidate design only.
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - D-G1a
+- id: S16
+  from: EXECUTING
+  to: RETRY_WAIT
+  source_status: SOURCE_MISSING
+  upstream_source_status: UNRESOLVED
+  approval_status: NOT_APPROVED
+  group: G3
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - retry_safe
+  - g3_safety_decision_open
+  formal_requirements_ref: docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S16; §4.3 G3
+  dp1_formal_definition_requirements: Unconditionally deny before semantic approval; must not skip Reconciliation
+    or retry-safe proof; S15 is the existing alternative and must pass its own guards.
+  unresolved_formalization: OPEN-02, INV-005 interpretation and per-edge source remain missing.
+  candidate_requirements:
+  - Target row still has the exact source state of this edge
+  - Target row version equals supplied optimistic version, checked in the write transaction
+  - Mutation targets this edge, not a different destination
+  - Conditional update includes id/source/version, increments version exactly once, affects exactly one
+    row; otherwise roll back
+  - Matching task/step/from/to/version event, related writes, and state update commit or roll back in
+    the same database transaction; timestamp is not ordering authority
+  - Post-write graph satisfies domain_relationships.yaml in this same transaction; no nontransactional
+    check-then-write
+  - No terminal Task/Step is reopened and no prior Plan/Step/Intent/Attempt or effect history is deleted
+    or replaced
+  - Classify actual writes, then authorized request-only OR fenced worker commit. Unknown/mixed/unclassified
+    never bypass fencing.
+  - Only TARGET_ABSENT/RETRY_SAFE for K0 no-clobber publish with all strict prerequisites; target absence
+    alone never permits retry
+  - Always deny S16/S17/S22 while G3 semantic approval is absent. Other hypothetical prerequisites are
+    documented but do not permit this edge. Existing NRC edge is evaluated separately, never implicitly.
+  disposition: ALWAYS_DENY_PENDING_SAFETY_DECISION
+  missing_source: MP §8.1–8.3 has no per-edge authority; DP-1 and STEP_TRANSITION_SOURCE_PROPOSAL §2 are
+    candidate design only.
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - D-G1a
+  - OPEN-02
+  - OPEN-03
+  - D-05
+  - D-06
+- id: S17
+  from: EXECUTING
+  to: BLOCKED
+  source_status: SOURCE_MISSING
+  upstream_source_status: UNRESOLVED
+  approval_status: NOT_APPROVED
+  group: G3
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - block_safe
+  - observation_bound
+  - decision_block
+  - g3_safety_decision_open
+  - block_pair
+  formal_requirements_ref: docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S17; §4.3 G3
+  dp1_formal_definition_requirements: Unconditionally deny before semantic approval where an effect may
+    have happened; reconcile first; S15 is the existing alternative with independent guards.
+  unresolved_formalization: INV-005 safety decision and per-edge source are missing.
+  candidate_requirements:
+  - Target row still has the exact source state of this edge
+  - Target row version equals supplied optimistic version, checked in the write transaction
+  - Mutation targets this edge, not a different destination
+  - Conditional update includes id/source/version, increments version exactly once, affects exactly one
+    row; otherwise roll back
+  - Matching task/step/from/to/version event, related writes, and state update commit or roll back in
+    the same database transaction; timestamp is not ordering authority
+  - Post-write graph satisfies domain_relationships.yaml in this same transaction; no nontransactional
+    check-then-write
+  - No terminal Task/Step is reopened and no prior Plan/Step/Intent/Attempt or effect history is deleted
+    or replaced
+  - Classify actual writes, then authorized request-only OR fenced worker commit. Unknown/mixed/unclassified
+    never bypass fencing.
+  - Record cause and stop new starts while preserving evidence, not treating BLOCK as a known outcome
+  - Durable Observation is one of four reconciliation.schema.json values, bound to exact operation/paths/expected
+    digest and current observation; unknown itself is a valid observation, not success
+  - Decision for the bound original operation
+  - Always deny S16/S17/S22 while G3 semantic approval is absent. Other hypothetical prerequisites are
+    documented but do not permit this edge. Existing NRC edge is evaluated separately, never implicitly.
+  - 'Known K0 conservative BLOCK pairing: TARGET_ABSENT, CONFLICTING_EFFECT_PRESENT or INSUFFICIENT_EVIDENCE
+    with bound BLOCK. Expected effect with invalid identity/hash is insufficient evidence, not a free
+    BLOCK pairing.'
+  disposition: ALWAYS_DENY_PENDING_SAFETY_DECISION
+  missing_source: MP §8.1–8.3 has no per-edge authority; DP-1 and STEP_TRANSITION_SOURCE_PROPOSAL §2 are
+    candidate design only.
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - D-G1a
+- id: S21
+  from: VERIFYING
+  to: NEEDS_RECONCILIATION
+  source_status: SOURCE_MISSING
+  upstream_source_status: UNRESOLVED
+  approval_status: NOT_APPROVED
+  group: G2
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - reconciliation_needed
+  - observation_bound
+  formal_requirements_ref: docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S21; §4.3 G2
+  dp1_formal_definition_requirements: Bind a durable Observation of unknown/mismatched outcome in the
+    correct Intent/Step scope; shared FC/S1/S2/S3; conservative direction only.
+  unresolved_formalization: OPEN-03 and per-edge source are missing; candidate disposition is not approval.
+  candidate_requirements:
+  - Target row still has the exact source state of this edge
+  - Target row version equals supplied optimistic version, checked in the write transaction
+  - Mutation targets this edge, not a different destination
+  - Conditional update includes id/source/version, increments version exactly once, affects exactly one
+    row; otherwise roll back
+  - Matching task/step/from/to/version event, related writes, and state update commit or roll back in
+    the same database transaction; timestamp is not ordering authority
+  - Post-write graph satisfies domain_relationships.yaml in this same transaction; no nontransactional
+    check-then-write
+  - No terminal Task/Step is reopened and no prior Plan/Step/Intent/Attempt or effect history is deleted
+    or replaced
+  - Classify actual writes, then authorized request-only OR fenced worker commit. Unknown/mixed/unclassified
+    never bypass fencing.
+  - Execution/verification result is unknown or disagrees with expected effect; retain evidence and prohibit
+    blind retry
+  - Durable Observation is one of four reconciliation.schema.json values, bound to exact operation/paths/expected
+    digest and current observation; unknown itself is a valid observation, not success
+  disposition: CANDIDATE_ONLY_PENDING_SOURCE_AND_DEPENDENCIES
+  missing_source: MP §8.1–8.3 has no per-edge authority; DP-1 and STEP_TRANSITION_SOURCE_PROPOSAL §2 are
+    candidate design only.
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - D-G1a
+- id: S22
+  from: VERIFYING
+  to: RETRY_WAIT
+  source_status: SOURCE_MISSING
+  upstream_source_status: UNRESOLVED
+  approval_status: NOT_APPROVED
+  group: G3
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - retry_safe
+  - g3_safety_decision_open
+  formal_requirements_ref: docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S22; §4.3 G3
+  dp1_formal_definition_requirements: Unconditionally deny before retry-safe semantics are approved; S21
+    is the existing conservative alternative with its own guards.
+  unresolved_formalization: OPEN-02 and per-edge source remain missing.
+  candidate_requirements:
+  - Target row still has the exact source state of this edge
+  - Target row version equals supplied optimistic version, checked in the write transaction
+  - Mutation targets this edge, not a different destination
+  - Conditional update includes id/source/version, increments version exactly once, affects exactly one
+    row; otherwise roll back
+  - Matching task/step/from/to/version event, related writes, and state update commit or roll back in
+    the same database transaction; timestamp is not ordering authority
+  - Post-write graph satisfies domain_relationships.yaml in this same transaction; no nontransactional
+    check-then-write
+  - No terminal Task/Step is reopened and no prior Plan/Step/Intent/Attempt or effect history is deleted
+    or replaced
+  - Classify actual writes, then authorized request-only OR fenced worker commit. Unknown/mixed/unclassified
+    never bypass fencing.
+  - Only TARGET_ABSENT/RETRY_SAFE for K0 no-clobber publish with all strict prerequisites; target absence
+    alone never permits retry
+  - Always deny S16/S17/S22 while G3 semantic approval is absent. Other hypothetical prerequisites are
+    documented but do not permit this edge. Existing NRC edge is evaluated separately, never implicitly.
+  disposition: ALWAYS_DENY_PENDING_SAFETY_DECISION
+  missing_source: MP §8.1–8.3 has no per-edge authority; DP-1 and STEP_TRANSITION_SOURCE_PROPOSAL §2 are
+    candidate design only.
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - D-G1a
+  - OPEN-02
+  - OPEN-03
+  - D-05
+  - D-06
+- id: S23
+  from: VERIFYING
+  to: BLOCKED
+  source_status: SOURCE_MISSING
+  upstream_source_status: UNRESOLVED
+  approval_status: NOT_APPROVED
+  group: G2
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - block_safe
+  - observation_bound
+  - decision_block
+  - block_pair
+  formal_requirements_ref: docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S23; §4.3 G2
+  dp1_formal_definition_requirements: Bind Observation=CONFLICTING_EFFECT_PRESENT or decision=BLOCK to
+    this effect and evidence scope; shared FC/S1/S2/S3.
+  unresolved_formalization: block_pair does not entail observation_bound; evidence binding and OPEN-03/per-edge
+    source are missing.
+  candidate_requirements:
+  - Target row still has the exact source state of this edge
+  - Target row version equals supplied optimistic version, checked in the write transaction
+  - Mutation targets this edge, not a different destination
+  - Conditional update includes id/source/version, increments version exactly once, affects exactly one
+    row; otherwise roll back
+  - Matching task/step/from/to/version event, related writes, and state update commit or roll back in
+    the same database transaction; timestamp is not ordering authority
+  - Post-write graph satisfies domain_relationships.yaml in this same transaction; no nontransactional
+    check-then-write
+  - No terminal Task/Step is reopened and no prior Plan/Step/Intent/Attempt or effect history is deleted
+    or replaced
+  - Classify actual writes, then authorized request-only OR fenced worker commit. Unknown/mixed/unclassified
+    never bypass fencing.
+  - Record cause and stop new starts while preserving evidence, not treating BLOCK as a known outcome
+  - Durable Observation is one of four reconciliation.schema.json values, bound to exact operation/paths/expected
+    digest and current observation; unknown itself is a valid observation, not success
+  - Decision for the bound original operation
+  - 'Known K0 conservative BLOCK pairing: TARGET_ABSENT, CONFLICTING_EFFECT_PRESENT or INSUFFICIENT_EVIDENCE
+    with bound BLOCK. Expected effect with invalid identity/hash is insufficient evidence, not a free
+    BLOCK pairing.'
+  disposition: CANDIDATE_ONLY_PENDING_SOURCE_AND_DEPENDENCIES
+  missing_source: MP §8.1–8.3 has no per-edge authority; DP-1 and STEP_TRANSITION_SOURCE_PROPOSAL §2 are
+    candidate design only.
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - D-G1a
+- id: S31
+  from: RETRY_WAIT
+  to: PENDING
+  source_status: SOURCE_MISSING
+  upstream_source_status: UNRESOLVED
+  approval_status: NOT_APPROVED
+  group: G1
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - retry_safe
+  - retry_schedule_due
+  - step_in_active_plan
+  formal_requirements_ref: docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S31; §4.3 G1
+  dp1_formal_definition_requirements: Retry wait expired, maximum attempts not exceeded, no cancel/emergency
+    stop, shared FC/S1/S2/S3; repeat stable Intent rather than create a new effect.
+  unresolved_formalization: R-3 persisted backoff/limit carrier and per-edge source are missing.
+  candidate_requirements:
+  - Target row still has the exact source state of this edge
+  - Target row version equals supplied optimistic version, checked in the write transaction
+  - Mutation targets this edge, not a different destination
+  - Conditional update includes id/source/version, increments version exactly once, affects exactly one
+    row; otherwise roll back
+  - Matching task/step/from/to/version event, related writes, and state update commit or roll back in
+    the same database transaction; timestamp is not ordering authority
+  - Post-write graph satisfies domain_relationships.yaml in this same transaction; no nontransactional
+    check-then-write
+  - No terminal Task/Step is reopened and no prior Plan/Step/Intent/Attempt or effect history is deleted
+    or replaced
+  - Classify actual writes, then authorized request-only OR fenced worker commit. Unknown/mixed/unclassified
+    never bypass fencing.
+  - Only TARGET_ABSENT/RETRY_SAFE for K0 no-clobber publish with all strict prerequisites; target absence
+    alone never permits retry
+  - Persisted backoff deadline <= current scheduler time, attempts below persisted maximum, no active
+    predecessor; undefined R-3 deadline/budget carrier denies
+  - Step.plan_id equals parent Task.active_plan_id and that Plan belongs to same Task and is ACTIVE
+  disposition: CANDIDATE_ONLY_PENDING_SOURCE_AND_DEPENDENCIES
+  missing_source: MP §8.1–8.3 has no per-edge authority; DP-1 and STEP_TRANSITION_SOURCE_PROPOSAL §2 are
+    candidate design only.
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - D-G1a
+  - D-01
+  - OPEN-02
+  - OPEN-03
+  - D-05
+  - D-06
+  - R-3
+- id: S32
+  from: RETRY_WAIT
+  to: BLOCKED
+  source_status: SOURCE_MISSING
+  upstream_source_status: UNRESOLVED
+  approval_status: NOT_APPROVED
+  group: G1
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - block_safe
+  formal_requirements_ref: docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S32; §4.3 G1
+  dp1_formal_definition_requirements: Retry proved unsafe or repeatedly failed, decision=BLOCK, recorded
+    reason and shared FC/S1/S2/S3.
+  unresolved_formalization: Existing block_safe omits retry-specific negative evidence or decision=BLOCK;
+    OPEN-02/R-3/per-edge source remain missing.
+  candidate_requirements:
+  - Target row still has the exact source state of this edge
+  - Target row version equals supplied optimistic version, checked in the write transaction
+  - Mutation targets this edge, not a different destination
+  - Conditional update includes id/source/version, increments version exactly once, affects exactly one
+    row; otherwise roll back
+  - Matching task/step/from/to/version event, related writes, and state update commit or roll back in
+    the same database transaction; timestamp is not ordering authority
+  - Post-write graph satisfies domain_relationships.yaml in this same transaction; no nontransactional
+    check-then-write
+  - No terminal Task/Step is reopened and no prior Plan/Step/Intent/Attempt or effect history is deleted
+    or replaced
+  - Classify actual writes, then authorized request-only OR fenced worker commit. Unknown/mixed/unclassified
+    never bypass fencing.
+  - Record cause and stop new starts while preserving evidence, not treating BLOCK as a known outcome
+  disposition: CANDIDATE_ONLY_PENDING_SOURCE_AND_DEPENDENCIES
+  missing_source: MP §8.1–8.3 has no per-edge authority; DP-1 and STEP_TRANSITION_SOURCE_PROPOSAL §2 are
+    candidate design only.
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - D-G1a
+guards:
+  source_state_matches:
+    description: Target row still has the exact source state of this edge
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.source_state_matches
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 T1/S1; DP-1 §3.1.1 (MP §10.3) (candidate requirements
+      only)
+    missing_sources: []
+    inputs:
+      expected.from:
+        type: string
+        meaning: Target row still has the exact source state of this edge (right)
+      row.state:
+        type: string
+        meaning: Target row still has the exact source state of this edge (left)
+    guard_dependencies: []
+    preconditions:
+    - Target row still has the exact source state of this edge
+    - 'Required three-valued predicate result: EQ(row.state, expected.from) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - row.state
+    - - fact
+      - expected.from
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK:
+      - T01
+      - T02
+      - T03
+      - T04
+      - T05
+      - T06
+      - T07
+      - T08
+      - T09
+      - T10
+      - T11
+      - T12
+      - T13
+      - T14
+      - T15
+      - T16
+      - T17
+      - T18
+      - T19
+      - T20
+      - T21
+      - T22
+      - T23
+      - T24
+      - T25
+      - T26
+      - T27
+      - T28
+      - T29
+      - T30
+      - T31
+      STEP:
+      - S01
+      - S02
+      - S03
+      - S04
+      - S05
+      - S06
+      - S07
+      - S08
+      - S09
+      - S10
+      - S11
+      - S12
+      - S13
+      - S14
+      - S15
+      - S16
+      - S17
+      - S18
+      - S19
+      - S20
+      - S21
+      - S22
+      - S23
+      - S24
+      - S25
+      - S26
+      - S27
+      - S28
+      - S29
+      - S30
+      - S31
+      - S32
+      - S33
+      - S34
+      - S35
+      - S36
+      - S37
+    effective_transitions:
+      TASK:
+      - T01
+      - T02
+      - T03
+      - T04
+      - T05
+      - T06
+      - T07
+      - T08
+      - T09
+      - T10
+      - T11
+      - T12
+      - T13
+      - T14
+      - T15
+      - T16
+      - T17
+      - T18
+      - T19
+      - T20
+      - T21
+      - T22
+      - T23
+      - T24
+      - T25
+      - T26
+      - T27
+      - T28
+      - T29
+      - T30
+      - T31
+      STEP:
+      - S01
+      - S02
+      - S03
+      - S04
+      - S05
+      - S06
+      - S07
+      - S08
+      - S09
+      - S10
+      - S11
+      - S12
+      - S13
+      - S14
+      - S15
+      - S16
+      - S17
+      - S18
+      - S19
+      - S20
+      - S21
+      - S22
+      - S23
+      - S24
+      - S25
+      - S26
+      - S27
+      - S28
+      - S29
+      - S30
+      - S31
+      - S32
+      - S33
+      - S34
+      - S35
+      - S36
+      - S37
+    unresolved_dependencies:
+    - DP-1
+  version_matches:
+    description: Target row version equals supplied optimistic version, checked in the write transaction
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.version_matches
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 T1/S1; DP-1 §3.1.1 (MP §10.3) (candidate requirements
+      only)
+    missing_sources: []
+    inputs:
+      expected.version:
+        type: integer
+        meaning: Target row version equals supplied optimistic version, checked in the write transaction
+          (right)
+      row.version:
+        type: integer
+        meaning: Target row version equals supplied optimistic version, checked in the write transaction
+          (left)
+    guard_dependencies: []
+    preconditions:
+    - Target row version equals supplied optimistic version, checked in the write transaction
+    - 'Required three-valued predicate result: EQ(row.version, expected.version) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - row.version
+    - - fact
+      - expected.version
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK:
+      - T01
+      - T02
+      - T03
+      - T04
+      - T05
+      - T06
+      - T07
+      - T08
+      - T09
+      - T10
+      - T11
+      - T12
+      - T13
+      - T14
+      - T15
+      - T16
+      - T17
+      - T18
+      - T19
+      - T20
+      - T21
+      - T22
+      - T23
+      - T24
+      - T25
+      - T26
+      - T27
+      - T28
+      - T29
+      - T30
+      - T31
+      STEP:
+      - S01
+      - S02
+      - S03
+      - S04
+      - S05
+      - S06
+      - S07
+      - S08
+      - S09
+      - S10
+      - S11
+      - S12
+      - S13
+      - S14
+      - S15
+      - S16
+      - S17
+      - S18
+      - S19
+      - S20
+      - S21
+      - S22
+      - S23
+      - S24
+      - S25
+      - S26
+      - S27
+      - S28
+      - S29
+      - S30
+      - S31
+      - S32
+      - S33
+      - S34
+      - S35
+      - S36
+      - S37
+    effective_transitions:
+      TASK:
+      - T01
+      - T02
+      - T03
+      - T04
+      - T05
+      - T06
+      - T07
+      - T08
+      - T09
+      - T10
+      - T11
+      - T12
+      - T13
+      - T14
+      - T15
+      - T16
+      - T17
+      - T18
+      - T19
+      - T20
+      - T21
+      - T22
+      - T23
+      - T24
+      - T25
+      - T26
+      - T27
+      - T28
+      - T29
+      - T30
+      - T31
+      STEP:
+      - S01
+      - S02
+      - S03
+      - S04
+      - S05
+      - S06
+      - S07
+      - S08
+      - S09
+      - S10
+      - S11
+      - S12
+      - S13
+      - S14
+      - S15
+      - S16
+      - S17
+      - S18
+      - S19
+      - S20
+      - S21
+      - S22
+      - S23
+      - S24
+      - S25
+      - S26
+      - S27
+      - S28
+      - S29
+      - S30
+      - S31
+      - S32
+      - S33
+      - S34
+      - S35
+      - S36
+      - S37
+    unresolved_dependencies:
+    - DP-1
+  target_state_matches:
+    description: Mutation targets this edge, not a different destination
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.target_state_matches
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 T1/S1; DP-1 §3.1.1 (MP §10.3) (candidate requirements
+      only)
+    missing_sources: []
+    inputs:
+      expected.to:
+        type: string
+        meaning: Mutation targets this edge, not a different destination (right)
+      mutation.to:
+        type: string
+        meaning: Mutation targets this edge, not a different destination (left)
+    guard_dependencies: []
+    preconditions:
+    - Mutation targets this edge, not a different destination
+    - 'Required three-valued predicate result: EQ(mutation.to, expected.to) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - mutation.to
+    - - fact
+      - expected.to
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK:
+      - T01
+      - T02
+      - T03
+      - T04
+      - T05
+      - T06
+      - T07
+      - T08
+      - T09
+      - T10
+      - T11
+      - T12
+      - T13
+      - T14
+      - T15
+      - T16
+      - T17
+      - T18
+      - T19
+      - T20
+      - T21
+      - T22
+      - T23
+      - T24
+      - T25
+      - T26
+      - T27
+      - T28
+      - T29
+      - T30
+      - T31
+      STEP:
+      - S01
+      - S02
+      - S03
+      - S04
+      - S05
+      - S06
+      - S07
+      - S08
+      - S09
+      - S10
+      - S11
+      - S12
+      - S13
+      - S14
+      - S15
+      - S16
+      - S17
+      - S18
+      - S19
+      - S20
+      - S21
+      - S22
+      - S23
+      - S24
+      - S25
+      - S26
+      - S27
+      - S28
+      - S29
+      - S30
+      - S31
+      - S32
+      - S33
+      - S34
+      - S35
+      - S36
+      - S37
+    effective_transitions:
+      TASK:
+      - T01
+      - T02
+      - T03
+      - T04
+      - T05
+      - T06
+      - T07
+      - T08
+      - T09
+      - T10
+      - T11
+      - T12
+      - T13
+      - T14
+      - T15
+      - T16
+      - T17
+      - T18
+      - T19
+      - T20
+      - T21
+      - T22
+      - T23
+      - T24
+      - T25
+      - T26
+      - T27
+      - T28
+      - T29
+      - T30
+      - T31
+      STEP:
+      - S01
+      - S02
+      - S03
+      - S04
+      - S05
+      - S06
+      - S07
+      - S08
+      - S09
+      - S10
+      - S11
+      - S12
+      - S13
+      - S14
+      - S15
+      - S16
+      - S17
+      - S18
+      - S19
+      - S20
+      - S21
+      - S22
+      - S23
+      - S24
+      - S25
+      - S26
+      - S27
+      - S28
+      - S29
+      - S30
+      - S31
+      - S32
+      - S33
+      - S34
+      - S35
+      - S36
+      - S37
+    unresolved_dependencies:
+    - DP-1
+  one_row_cas:
+    description: Conditional update includes id/source/version, increments version exactly once, affects
+      exactly one row; otherwise roll back
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.one_row_cas
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 T1/S1; DP-1 §3.1.1 (MP §10.3) (candidate requirements
+      only)
+    missing_sources: []
+    inputs:
+      commit.cas_affects_one_row:
+        type: boolean
+        meaning: Conditional update includes id/source/version, increments version exactly once, affects
+          exactly one row; otherwise roll back
+    guard_dependencies: []
+    preconditions:
+    - Conditional update includes id/source/version, increments version exactly once, affects exactly
+      one row; otherwise roll back
+    - 'Required three-valued predicate result: EQ(commit.cas_affects_one_row, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - commit.cas_affects_one_row
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK:
+      - T01
+      - T02
+      - T03
+      - T04
+      - T05
+      - T06
+      - T07
+      - T08
+      - T09
+      - T10
+      - T11
+      - T12
+      - T13
+      - T14
+      - T15
+      - T16
+      - T17
+      - T18
+      - T19
+      - T20
+      - T21
+      - T22
+      - T23
+      - T24
+      - T25
+      - T26
+      - T27
+      - T28
+      - T29
+      - T30
+      - T31
+      STEP:
+      - S01
+      - S02
+      - S03
+      - S04
+      - S05
+      - S06
+      - S07
+      - S08
+      - S09
+      - S10
+      - S11
+      - S12
+      - S13
+      - S14
+      - S15
+      - S16
+      - S17
+      - S18
+      - S19
+      - S20
+      - S21
+      - S22
+      - S23
+      - S24
+      - S25
+      - S26
+      - S27
+      - S28
+      - S29
+      - S30
+      - S31
+      - S32
+      - S33
+      - S34
+      - S35
+      - S36
+      - S37
+    effective_transitions:
+      TASK:
+      - T01
+      - T02
+      - T03
+      - T04
+      - T05
+      - T06
+      - T07
+      - T08
+      - T09
+      - T10
+      - T11
+      - T12
+      - T13
+      - T14
+      - T15
+      - T16
+      - T17
+      - T18
+      - T19
+      - T20
+      - T21
+      - T22
+      - T23
+      - T24
+      - T25
+      - T26
+      - T27
+      - T28
+      - T29
+      - T30
+      - T31
+      STEP:
+      - S01
+      - S02
+      - S03
+      - S04
+      - S05
+      - S06
+      - S07
+      - S08
+      - S09
+      - S10
+      - S11
+      - S12
+      - S13
+      - S14
+      - S15
+      - S16
+      - S17
+      - S18
+      - S19
+      - S20
+      - S21
+      - S22
+      - S23
+      - S24
+      - S25
+      - S26
+      - S27
+      - S28
+      - S29
+      - S30
+      - S31
+      - S32
+      - S33
+      - S34
+      - S35
+      - S36
+      - S37
+    unresolved_dependencies:
+    - DP-1
+  event_same_transaction:
+    description: Matching task/step/from/to/version event, related writes, and state update commit or
+      roll back in the same database transaction; timestamp is not ordering authority
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_MISSING
+    source_refs:
+    - contracts/transition_guards.yaml#guards.event_same_transaction
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 T2/S2 (STATE-007/008/009) (candidate requirements
+      only)
+    missing_sources:
+    - 'event_same_transaction: OPEN-10/R-4/R-5/R-8: event identity/schema, stable correlation and payload
+      equivalence remain unclosed candidate inputs.'
+    inputs:
+      commit.event_same_transaction:
+        type: boolean
+        meaning: Matching task/step/from/to/version event, related writes, and state update commit or
+          roll back in the same database transaction; timestamp is not ordering authority
+    guard_dependencies: []
+    preconditions:
+    - Matching task/step/from/to/version event, related writes, and state update commit or roll back in
+      the same database transaction; timestamp is not ordering authority
+    - 'Required three-valued predicate result: EQ(commit.event_same_transaction, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - commit.event_same_transaction
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK:
+      - T01
+      - T02
+      - T03
+      - T04
+      - T05
+      - T06
+      - T07
+      - T08
+      - T09
+      - T10
+      - T11
+      - T12
+      - T13
+      - T14
+      - T15
+      - T16
+      - T17
+      - T18
+      - T19
+      - T20
+      - T21
+      - T22
+      - T23
+      - T24
+      - T25
+      - T26
+      - T27
+      - T28
+      - T29
+      - T30
+      - T31
+      STEP:
+      - S01
+      - S02
+      - S03
+      - S04
+      - S05
+      - S06
+      - S07
+      - S08
+      - S09
+      - S10
+      - S11
+      - S12
+      - S13
+      - S14
+      - S15
+      - S16
+      - S17
+      - S18
+      - S19
+      - S20
+      - S21
+      - S22
+      - S23
+      - S24
+      - S25
+      - S26
+      - S27
+      - S28
+      - S29
+      - S30
+      - S31
+      - S32
+      - S33
+      - S34
+      - S35
+      - S36
+      - S37
+    effective_transitions:
+      TASK:
+      - T01
+      - T02
+      - T03
+      - T04
+      - T05
+      - T06
+      - T07
+      - T08
+      - T09
+      - T10
+      - T11
+      - T12
+      - T13
+      - T14
+      - T15
+      - T16
+      - T17
+      - T18
+      - T19
+      - T20
+      - T21
+      - T22
+      - T23
+      - T24
+      - T25
+      - T26
+      - T27
+      - T28
+      - T29
+      - T30
+      - T31
+      STEP:
+      - S01
+      - S02
+      - S03
+      - S04
+      - S05
+      - S06
+      - S07
+      - S08
+      - S09
+      - S10
+      - S11
+      - S12
+      - S13
+      - S14
+      - S15
+      - S16
+      - S17
+      - S18
+      - S19
+      - S20
+      - S21
+      - S22
+      - S23
+      - S24
+      - S25
+      - S26
+      - S27
+      - S28
+      - S29
+      - S30
+      - S31
+      - S32
+      - S33
+      - S34
+      - S35
+      - S36
+      - S37
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-10
+  relationships_consistent:
+    description: Post-write graph satisfies domain_relationships.yaml in this same transaction; no nontransactional
+      check-then-write
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_MISSING
+    source_refs:
+    - contracts/transition_guards.yaml#guards.relationships_consistent
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 T3/S3 (STATE-001…010) (candidate requirements
+      only)
+    missing_sources:
+    - 'relationships_consistent: D-01/D-02/D-08: complete domain relationship/evidence graph relies on
+      draft Plan/Attempt/Step schema; no trusted transactional adapter exists.'
+    inputs:
+      commit.relationships_consistent:
+        type: boolean
+        meaning: Post-write graph satisfies domain_relationships.yaml in this same transaction; no nontransactional
+          check-then-write
+    guard_dependencies: []
+    preconditions:
+    - Post-write graph satisfies domain_relationships.yaml in this same transaction; no nontransactional
+      check-then-write
+    - 'Required three-valued predicate result: EQ(commit.relationships_consistent, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - commit.relationships_consistent
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK:
+      - T01
+      - T02
+      - T03
+      - T04
+      - T05
+      - T06
+      - T07
+      - T08
+      - T09
+      - T10
+      - T11
+      - T12
+      - T13
+      - T14
+      - T15
+      - T16
+      - T17
+      - T18
+      - T19
+      - T20
+      - T21
+      - T22
+      - T23
+      - T24
+      - T25
+      - T26
+      - T27
+      - T28
+      - T29
+      - T30
+      - T31
+      STEP:
+      - S01
+      - S02
+      - S03
+      - S04
+      - S05
+      - S06
+      - S07
+      - S08
+      - S09
+      - S10
+      - S11
+      - S12
+      - S13
+      - S14
+      - S15
+      - S16
+      - S17
+      - S18
+      - S19
+      - S20
+      - S21
+      - S22
+      - S23
+      - S24
+      - S25
+      - S26
+      - S27
+      - S28
+      - S29
+      - S30
+      - S31
+      - S32
+      - S33
+      - S34
+      - S35
+      - S36
+      - S37
+    effective_transitions:
+      TASK:
+      - T01
+      - T02
+      - T03
+      - T04
+      - T05
+      - T06
+      - T07
+      - T08
+      - T09
+      - T10
+      - T11
+      - T12
+      - T13
+      - T14
+      - T15
+      - T16
+      - T17
+      - T18
+      - T19
+      - T20
+      - T21
+      - T22
+      - T23
+      - T24
+      - T25
+      - T26
+      - T27
+      - T28
+      - T29
+      - T30
+      - T31
+      STEP:
+      - S01
+      - S02
+      - S03
+      - S04
+      - S05
+      - S06
+      - S07
+      - S08
+      - S09
+      - S10
+      - S11
+      - S12
+      - S13
+      - S14
+      - S15
+      - S16
+      - S17
+      - S18
+      - S19
+      - S20
+      - S21
+      - S22
+      - S23
+      - S24
+      - S25
+      - S26
+      - S27
+      - S28
+      - S29
+      - S30
+      - S31
+      - S32
+      - S33
+      - S34
+      - S35
+      - S36
+      - S37
+    unresolved_dependencies:
+    - DP-1
+  terminal_history_preserved:
+    description: No terminal Task/Step is reopened and no prior Plan/Step/Intent/Attempt or effect history
+      is deleted or replaced
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.terminal_history_preserved
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 T3/S3 (STATE-001…010) (candidate requirements
+      only)
+    missing_sources: []
+    inputs:
+      commit.terminal_history_preserved:
+        type: boolean
+        meaning: No terminal Task/Step is reopened and no prior Plan/Step/Intent/Attempt or effect history
+          is deleted or replaced
+    guard_dependencies: []
+    preconditions:
+    - No terminal Task/Step is reopened and no prior Plan/Step/Intent/Attempt or effect history is deleted
+      or replaced
+    - 'Required three-valued predicate result: EQ(commit.terminal_history_preserved, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - commit.terminal_history_preserved
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK:
+      - T01
+      - T02
+      - T03
+      - T04
+      - T05
+      - T06
+      - T07
+      - T08
+      - T09
+      - T10
+      - T11
+      - T12
+      - T13
+      - T14
+      - T15
+      - T16
+      - T17
+      - T18
+      - T19
+      - T20
+      - T21
+      - T22
+      - T23
+      - T24
+      - T25
+      - T26
+      - T27
+      - T28
+      - T29
+      - T30
+      - T31
+      STEP:
+      - S01
+      - S02
+      - S03
+      - S04
+      - S05
+      - S06
+      - S07
+      - S08
+      - S09
+      - S10
+      - S11
+      - S12
+      - S13
+      - S14
+      - S15
+      - S16
+      - S17
+      - S18
+      - S19
+      - S20
+      - S21
+      - S22
+      - S23
+      - S24
+      - S25
+      - S26
+      - S27
+      - S28
+      - S29
+      - S30
+      - S31
+      - S32
+      - S33
+      - S34
+      - S35
+      - S36
+      - S37
+    effective_transitions:
+      TASK:
+      - T01
+      - T02
+      - T03
+      - T04
+      - T05
+      - T06
+      - T07
+      - T08
+      - T09
+      - T10
+      - T11
+      - T12
+      - T13
+      - T14
+      - T15
+      - T16
+      - T17
+      - T18
+      - T19
+      - T20
+      - T21
+      - T22
+      - T23
+      - T24
+      - T25
+      - T26
+      - T27
+      - T28
+      - T29
+      - T30
+      - T31
+      STEP:
+      - S01
+      - S02
+      - S03
+      - S04
+      - S05
+      - S06
+      - S07
+      - S08
+      - S09
+      - S10
+      - S11
+      - S12
+      - S13
+      - S14
+      - S15
+      - S16
+      - S17
+      - S18
+      - S19
+      - S20
+      - S21
+      - S22
+      - S23
+      - S24
+      - S25
+      - S26
+      - S27
+      - S28
+      - S29
+      - S30
+      - S31
+      - S32
+      - S33
+      - S34
+      - S35
+      - S36
+      - S37
+    unresolved_dependencies:
+    - DP-1
+  commit_classified:
+    description: Actual write set has a trusted authority classification; mixed request/result writes
+      are worker commits, never request-only
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.commit_classified
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 FC; DP-5b (current global epoch, actual write-set
+      classification) (candidate requirements only)
+    missing_sources: []
+    inputs:
+      commit.write_set_classified:
+        type: boolean
+        meaning: Actual write set has a trusted authority classification; mixed request/result writes
+          are worker commits, never request-only
+    guard_dependencies: []
+    preconditions:
+    - Actual write set has a trusted authority classification; mixed request/result writes are worker
+      commits, never request-only
+    - 'Required three-valued predicate result: EQ(commit.write_set_classified, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - commit.write_set_classified
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK: []
+      STEP: []
+    effective_transitions:
+      TASK:
+      - T01
+      - T02
+      - T03
+      - T04
+      - T05
+      - T06
+      - T07
+      - T08
+      - T09
+      - T10
+      - T11
+      - T12
+      - T13
+      - T14
+      - T15
+      - T16
+      - T17
+      - T18
+      - T19
+      - T20
+      - T21
+      - T22
+      - T23
+      - T24
+      - T25
+      - T26
+      - T27
+      - T28
+      - T29
+      - T30
+      - T31
+      STEP:
+      - S01
+      - S02
+      - S03
+      - S04
+      - S05
+      - S06
+      - S07
+      - S08
+      - S09
+      - S10
+      - S11
+      - S12
+      - S13
+      - S14
+      - S15
+      - S16
+      - S17
+      - S18
+      - S19
+      - S20
+      - S21
+      - S22
+      - S23
+      - S24
+      - S25
+      - S26
+      - S27
+      - S28
+      - S29
+      - S30
+      - S31
+      - S32
+      - S33
+      - S34
+      - S35
+      - S36
+      - S37
+    unresolved_dependencies:
+    - DP-1
+    - DP-5b
+    - OPEN-06
+  request_only_authorized:
+    description: Trusted request handler writes only authorized admission/request data and audit; no Attempt/result/Observation/recovery
+      or execution-state advancement, including advancement based on earlier results
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.request_only_authorized
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 FC; DP-5b (current global epoch, actual write-set
+      classification) (candidate requirements only)
+    missing_sources: []
+    inputs:
+      commit.request_only_authorized:
+        type: boolean
+        meaning: Trusted request handler writes only authorized admission/request data and audit; no Attempt/result/Observation/recovery
+          or execution-state advancement, including advancement based on earlier results
+    guard_dependencies: []
+    preconditions:
+    - Trusted request handler writes only authorized admission/request data and audit; no Attempt/result/Observation/recovery
+      or execution-state advancement, including advancement based on earlier results
+    - 'Required three-valued predicate result: EQ(commit.request_only_authorized, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - commit.request_only_authorized
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK: []
+      STEP: []
+    effective_transitions:
+      TASK:
+      - T01
+      - T02
+      - T03
+      - T04
+      - T05
+      - T06
+      - T07
+      - T08
+      - T09
+      - T10
+      - T11
+      - T12
+      - T13
+      - T14
+      - T15
+      - T16
+      - T17
+      - T18
+      - T19
+      - T20
+      - T21
+      - T22
+      - T23
+      - T24
+      - T25
+      - T26
+      - T27
+      - T28
+      - T29
+      - T30
+      - T31
+      STEP:
+      - S01
+      - S02
+      - S03
+      - S04
+      - S05
+      - S06
+      - S07
+      - S08
+      - S09
+      - S10
+      - S11
+      - S12
+      - S13
+      - S14
+      - S15
+      - S16
+      - S17
+      - S18
+      - S19
+      - S20
+      - S21
+      - S22
+      - S23
+      - S24
+      - S25
+      - S26
+      - S27
+      - S28
+      - S29
+      - S30
+      - S31
+      - S32
+      - S33
+      - S34
+      - S35
+      - S36
+      - S37
+    unresolved_dependencies:
+    - DP-1
+    - DP-5b
+    - OPEN-06
+  worker_commit_required:
+    description: Write set includes Attempt/result/Observation/recovery or associated execution-state
+      advancement, even if result was persisted earlier
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.worker_commit_required
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 FC; DP-5b (current global epoch, actual write-set
+      classification) (candidate requirements only)
+    missing_sources: []
+    inputs:
+      commit.is_worker_result_or_advancement:
+        type: boolean
+        meaning: Write set includes Attempt/result/Observation/recovery or associated execution-state
+          advancement, even if result was persisted earlier
+    guard_dependencies: []
+    preconditions:
+    - Write set includes Attempt/result/Observation/recovery or associated execution-state advancement,
+      even if result was persisted earlier
+    - 'Required three-valued predicate result: EQ(commit.is_worker_result_or_advancement, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - commit.is_worker_result_or_advancement
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK: []
+      STEP: []
+    effective_transitions:
+      TASK:
+      - T01
+      - T02
+      - T03
+      - T04
+      - T05
+      - T06
+      - T07
+      - T08
+      - T09
+      - T10
+      - T11
+      - T12
+      - T13
+      - T14
+      - T15
+      - T16
+      - T17
+      - T18
+      - T19
+      - T20
+      - T21
+      - T22
+      - T23
+      - T24
+      - T25
+      - T26
+      - T27
+      - T28
+      - T29
+      - T30
+      - T31
+      STEP:
+      - S01
+      - S02
+      - S03
+      - S04
+      - S05
+      - S06
+      - S07
+      - S08
+      - S09
+      - S10
+      - S11
+      - S12
+      - S13
+      - S14
+      - S15
+      - S16
+      - S17
+      - S18
+      - S19
+      - S20
+      - S21
+      - S22
+      - S23
+      - S24
+      - S25
+      - S26
+      - S27
+      - S28
+      - S29
+      - S30
+      - S31
+      - S32
+      - S33
+      - S34
+      - S35
+      - S36
+      - S37
+    unresolved_dependencies:
+    - DP-1
+    - DP-5b
+    - OPEN-06
+  worker_lock_held:
+    description: Current worker owns the one fixed execution flock and retains its fd; lease, worker_id,
+      or historical Attempt epoch is not proof
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.worker_lock_held
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 FC; DP-5b (current global epoch, actual write-set
+      classification) (candidate requirements only)
+    missing_sources: []
+    inputs:
+      worker.fixed_lock_fd_held:
+        type: boolean
+        meaning: Current worker owns the one fixed execution flock and retains its fd; lease, worker_id,
+          or historical Attempt epoch is not proof
+    guard_dependencies: []
+    preconditions:
+    - Current worker owns the one fixed execution flock and retains its fd; lease, worker_id, or historical
+      Attempt epoch is not proof
+    - 'Required three-valued predicate result: EQ(worker.fixed_lock_fd_held, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - worker.fixed_lock_fd_held
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK: []
+      STEP: []
+    effective_transitions:
+      TASK:
+      - T01
+      - T02
+      - T03
+      - T04
+      - T05
+      - T06
+      - T07
+      - T08
+      - T09
+      - T10
+      - T11
+      - T12
+      - T13
+      - T14
+      - T15
+      - T16
+      - T17
+      - T18
+      - T19
+      - T20
+      - T21
+      - T22
+      - T23
+      - T24
+      - T25
+      - T26
+      - T27
+      - T28
+      - T29
+      - T30
+      - T31
+      STEP:
+      - S01
+      - S02
+      - S03
+      - S04
+      - S05
+      - S06
+      - S07
+      - S08
+      - S09
+      - S10
+      - S11
+      - S12
+      - S13
+      - S14
+      - S15
+      - S16
+      - S17
+      - S18
+      - S19
+      - S20
+      - S21
+      - S22
+      - S23
+      - S24
+      - S25
+      - S26
+      - S27
+      - S28
+      - S29
+      - S30
+      - S31
+      - S32
+      - S33
+      - S34
+      - S35
+      - S36
+      - S37
+    unresolved_dependencies:
+    - DP-1
+    - DP-5b
+    - OPEN-06
+  global_epoch_present:
+    description: Singleton global system_control epoch row exists in the committing transaction
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.global_epoch_present
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 FC; DP-5b (current global epoch, actual write-set
+      classification) (candidate requirements only)
+    missing_sources: []
+    inputs:
+      control.global_epoch_present:
+        type: boolean
+        meaning: Singleton global system_control epoch row exists in the committing transaction
+    guard_dependencies: []
+    preconditions:
+    - Singleton global system_control epoch row exists in the committing transaction
+    - 'Required three-valued predicate result: EQ(control.global_epoch_present, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - control.global_epoch_present
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK: []
+      STEP: []
+    effective_transitions:
+      TASK:
+      - T01
+      - T02
+      - T03
+      - T04
+      - T05
+      - T06
+      - T07
+      - T08
+      - T09
+      - T10
+      - T11
+      - T12
+      - T13
+      - T14
+      - T15
+      - T16
+      - T17
+      - T18
+      - T19
+      - T20
+      - T21
+      - T22
+      - T23
+      - T24
+      - T25
+      - T26
+      - T27
+      - T28
+      - T29
+      - T30
+      - T31
+      STEP:
+      - S01
+      - S02
+      - S03
+      - S04
+      - S05
+      - S06
+      - S07
+      - S08
+      - S09
+      - S10
+      - S11
+      - S12
+      - S13
+      - S14
+      - S15
+      - S16
+      - S17
+      - S18
+      - S19
+      - S20
+      - S21
+      - S22
+      - S23
+      - S24
+      - S25
+      - S26
+      - S27
+      - S28
+      - S29
+      - S30
+      - S31
+      - S32
+      - S33
+      - S34
+      - S35
+      - S36
+      - S37
+    unresolved_dependencies:
+    - DP-1
+    - DP-5b
+    - OPEN-06
+  global_epoch_current:
+    description: Current submitting worker epoch equals global current epoch in conditional SQL or same-transaction
+      write barrier; never compare only the old Attempt row
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.global_epoch_current
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 FC; DP-5b (current global epoch, actual write-set
+      classification) (candidate requirements only)
+    missing_sources: []
+    inputs:
+      control.worker_epoch:
+        type: integer
+        meaning: Current submitting worker epoch equals global current epoch in conditional SQL or same-transaction
+          write barrier; never compare only the old Attempt row (right)
+      worker.my_epoch:
+        type: integer
+        meaning: Current submitting worker epoch equals global current epoch in conditional SQL or same-transaction
+          write barrier; never compare only the old Attempt row (left)
+    guard_dependencies: []
+    preconditions:
+    - Current submitting worker epoch equals global current epoch in conditional SQL or same-transaction
+      write barrier; never compare only the old Attempt row
+    - 'Required three-valued predicate result: EQ(worker.my_epoch, control.worker_epoch) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - worker.my_epoch
+    - - fact
+      - control.worker_epoch
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK: []
+      STEP: []
+    effective_transitions:
+      TASK:
+      - T01
+      - T02
+      - T03
+      - T04
+      - T05
+      - T06
+      - T07
+      - T08
+      - T09
+      - T10
+      - T11
+      - T12
+      - T13
+      - T14
+      - T15
+      - T16
+      - T17
+      - T18
+      - T19
+      - T20
+      - T21
+      - T22
+      - T23
+      - T24
+      - T25
+      - T26
+      - T27
+      - T28
+      - T29
+      - T30
+      - T31
+      STEP:
+      - S01
+      - S02
+      - S03
+      - S04
+      - S05
+      - S06
+      - S07
+      - S08
+      - S09
+      - S10
+      - S11
+      - S12
+      - S13
+      - S14
+      - S15
+      - S16
+      - S17
+      - S18
+      - S19
+      - S20
+      - S21
+      - S22
+      - S23
+      - S24
+      - S25
+      - S26
+      - S27
+      - S28
+      - S29
+      - S30
+      - S31
+      - S32
+      - S33
+      - S34
+      - S35
+      - S36
+      - S37
+    unresolved_dependencies:
+    - DP-1
+    - DP-5b
+    - OPEN-06
+  epoch_barrier_one_row:
+    description: Current-global-epoch condition is in the same SQL/write transaction, accepts exactly
+      one row, and failure rolls back all result/state/event writes including INSERT
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.epoch_barrier_one_row
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 FC; DP-5b (current global epoch, actual write-set
+      classification) (candidate requirements only)
+    missing_sources: []
+    inputs:
+      commit.epoch_barrier_one_row:
+        type: boolean
+        meaning: Current-global-epoch condition is in the same SQL/write transaction, accepts exactly
+          one row, and failure rolls back all result/state/event writes including INSERT
+    guard_dependencies: []
+    preconditions:
+    - Current-global-epoch condition is in the same SQL/write transaction, accepts exactly one row, and
+      failure rolls back all result/state/event writes including INSERT
+    - 'Required three-valued predicate result: EQ(commit.epoch_barrier_one_row, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - commit.epoch_barrier_one_row
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK: []
+      STEP: []
+    effective_transitions:
+      TASK:
+      - T01
+      - T02
+      - T03
+      - T04
+      - T05
+      - T06
+      - T07
+      - T08
+      - T09
+      - T10
+      - T11
+      - T12
+      - T13
+      - T14
+      - T15
+      - T16
+      - T17
+      - T18
+      - T19
+      - T20
+      - T21
+      - T22
+      - T23
+      - T24
+      - T25
+      - T26
+      - T27
+      - T28
+      - T29
+      - T30
+      - T31
+      STEP:
+      - S01
+      - S02
+      - S03
+      - S04
+      - S05
+      - S06
+      - S07
+      - S08
+      - S09
+      - S10
+      - S11
+      - S12
+      - S13
+      - S14
+      - S15
+      - S16
+      - S17
+      - S18
+      - S19
+      - S20
+      - S21
+      - S22
+      - S23
+      - S24
+      - S25
+      - S26
+      - S27
+      - S28
+      - S29
+      - S30
+      - S31
+      - S32
+      - S33
+      - S34
+      - S35
+      - S36
+      - S37
+    unresolved_dependencies:
+    - DP-1
+    - DP-5b
+    - OPEN-06
+  fenced_worker_commit:
+    description: Every worker result/recovery/associated advancement is fenced by the current global epoch,
+      including new worker recovery of old Attempts
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.fenced_worker_commit
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 FC; DP-5b (current global epoch, actual write-set
+      classification) (candidate requirements only)
+    missing_sources: []
+    inputs:
+      commit.epoch_barrier_one_row:
+        type: boolean
+        meaning: Current-global-epoch condition is in the same SQL/write transaction, accepts exactly
+          one row, and failure rolls back all result/state/event writes including INSERT
+      commit.is_worker_result_or_advancement:
+        type: boolean
+        meaning: Write set includes Attempt/result/Observation/recovery or associated execution-state
+          advancement, even if result was persisted earlier
+      control.global_epoch_present:
+        type: boolean
+        meaning: Singleton global system_control epoch row exists in the committing transaction
+      control.worker_epoch:
+        type: integer
+        meaning: Current submitting worker epoch equals global current epoch in conditional SQL or same-transaction
+          write barrier; never compare only the old Attempt row (right)
+      worker.fixed_lock_fd_held:
+        type: boolean
+        meaning: Current worker owns the one fixed execution flock and retains its fd; lease, worker_id,
+          or historical Attempt epoch is not proof
+      worker.my_epoch:
+        type: integer
+        meaning: Current submitting worker epoch equals global current epoch in conditional SQL or same-transaction
+          write barrier; never compare only the old Attempt row (left)
+    guard_dependencies:
+    - epoch_barrier_one_row
+    - global_epoch_current
+    - global_epoch_present
+    - worker_commit_required
+    - worker_lock_held
+    preconditions:
+    - Every worker result/recovery/associated advancement is fenced by the current global epoch, including
+      new worker recovery of old Attempts
+    - 'Required three-valued predicate result: ALL(guard(worker_commit_required), guard(worker_lock_held),
+      guard(global_epoch_present), guard(global_epoch_current), guard(epoch_barrier_one_row)) == TRUE.'
+    - Every referenced guard is evaluated using the same trusted input snapshot; no missing/cyclic dependency
+      may be treated as true.
+    predicate:
+    - all
+    - - guard
+      - worker_commit_required
+    - - guard
+      - worker_lock_held
+    - - guard
+      - global_epoch_present
+    - - guard
+      - global_epoch_current
+    - - guard
+      - epoch_barrier_one_row
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK: []
+      STEP: []
+    effective_transitions:
+      TASK:
+      - T01
+      - T02
+      - T03
+      - T04
+      - T05
+      - T06
+      - T07
+      - T08
+      - T09
+      - T10
+      - T11
+      - T12
+      - T13
+      - T14
+      - T15
+      - T16
+      - T17
+      - T18
+      - T19
+      - T20
+      - T21
+      - T22
+      - T23
+      - T24
+      - T25
+      - T26
+      - T27
+      - T28
+      - T29
+      - T30
+      - T31
+      STEP:
+      - S01
+      - S02
+      - S03
+      - S04
+      - S05
+      - S06
+      - S07
+      - S08
+      - S09
+      - S10
+      - S11
+      - S12
+      - S13
+      - S14
+      - S15
+      - S16
+      - S17
+      - S18
+      - S19
+      - S20
+      - S21
+      - S22
+      - S23
+      - S24
+      - S25
+      - S26
+      - S27
+      - S28
+      - S29
+      - S30
+      - S31
+      - S32
+      - S33
+      - S34
+      - S35
+      - S36
+      - S37
+    unresolved_dependencies:
+    - DP-1
+    - DP-5b
+    - OPEN-06
+  fenced_commit:
+    description: Classify actual writes, then authorized request-only OR fenced worker commit. Unknown/mixed/unclassified
+      never bypass fencing.
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.fenced_commit
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 FC; DP-5b (current global epoch, actual write-set
+      classification) (candidate requirements only)
+    missing_sources: []
+    inputs:
+      commit.epoch_barrier_one_row:
+        type: boolean
+        meaning: Current-global-epoch condition is in the same SQL/write transaction, accepts exactly
+          one row, and failure rolls back all result/state/event writes including INSERT
+      commit.is_worker_result_or_advancement:
+        type: boolean
+        meaning: Write set includes Attempt/result/Observation/recovery or associated execution-state
+          advancement, even if result was persisted earlier
+      commit.request_only_authorized:
+        type: boolean
+        meaning: Trusted request handler writes only authorized admission/request data and audit; no Attempt/result/Observation/recovery
+          or execution-state advancement, including advancement based on earlier results
+      commit.write_set_classified:
+        type: boolean
+        meaning: Actual write set has a trusted authority classification; mixed request/result writes
+          are worker commits, never request-only
+      control.global_epoch_present:
+        type: boolean
+        meaning: Singleton global system_control epoch row exists in the committing transaction
+      control.worker_epoch:
+        type: integer
+        meaning: Current submitting worker epoch equals global current epoch in conditional SQL or same-transaction
+          write barrier; never compare only the old Attempt row (right)
+      worker.fixed_lock_fd_held:
+        type: boolean
+        meaning: Current worker owns the one fixed execution flock and retains its fd; lease, worker_id,
+          or historical Attempt epoch is not proof
+      worker.my_epoch:
+        type: integer
+        meaning: Current submitting worker epoch equals global current epoch in conditional SQL or same-transaction
+          write barrier; never compare only the old Attempt row (left)
+    guard_dependencies:
+    - commit_classified
+    - fenced_worker_commit
+    - request_only_authorized
+    preconditions:
+    - Classify actual writes, then authorized request-only OR fenced worker commit. Unknown/mixed/unclassified
+      never bypass fencing.
+    - 'Required three-valued predicate result: ALL(guard(commit_classified), ANY(ALL(guard(request_only_authorized),
+      EQ(commit.is_worker_result_or_advancement, false)), guard(fenced_worker_commit))) == TRUE.'
+    - Every referenced guard is evaluated using the same trusted input snapshot; no missing/cyclic dependency
+      may be treated as true.
+    predicate:
+    - all
+    - - guard
+      - commit_classified
+    - - any
+      - - all
+        - - guard
+          - request_only_authorized
+        - - eq
+          - - fact
+            - commit.is_worker_result_or_advancement
+          - - literal
+            - false
+      - - guard
+        - fenced_worker_commit
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK:
+      - T01
+      - T02
+      - T03
+      - T04
+      - T05
+      - T06
+      - T07
+      - T08
+      - T09
+      - T10
+      - T11
+      - T12
+      - T13
+      - T14
+      - T15
+      - T16
+      - T17
+      - T18
+      - T19
+      - T20
+      - T21
+      - T22
+      - T23
+      - T24
+      - T25
+      - T26
+      - T27
+      - T28
+      - T29
+      - T30
+      - T31
+      STEP:
+      - S01
+      - S02
+      - S03
+      - S04
+      - S05
+      - S06
+      - S07
+      - S08
+      - S09
+      - S10
+      - S11
+      - S12
+      - S13
+      - S14
+      - S15
+      - S16
+      - S17
+      - S18
+      - S19
+      - S20
+      - S21
+      - S22
+      - S23
+      - S24
+      - S25
+      - S26
+      - S27
+      - S28
+      - S29
+      - S30
+      - S31
+      - S32
+      - S33
+      - S34
+      - S35
+      - S36
+      - S37
+    effective_transitions:
+      TASK:
+      - T01
+      - T02
+      - T03
+      - T04
+      - T05
+      - T06
+      - T07
+      - T08
+      - T09
+      - T10
+      - T11
+      - T12
+      - T13
+      - T14
+      - T15
+      - T16
+      - T17
+      - T18
+      - T19
+      - T20
+      - T21
+      - T22
+      - T23
+      - T24
+      - T25
+      - T26
+      - T27
+      - T28
+      - T29
+      - T30
+      - T31
+      STEP:
+      - S01
+      - S02
+      - S03
+      - S04
+      - S05
+      - S06
+      - S07
+      - S08
+      - S09
+      - S10
+      - S11
+      - S12
+      - S13
+      - S14
+      - S15
+      - S16
+      - S17
+      - S18
+      - S19
+      - S20
+      - S21
+      - S22
+      - S23
+      - S24
+      - S25
+      - S26
+      - S27
+      - S28
+      - S29
+      - S30
+      - S31
+      - S32
+      - S33
+      - S34
+      - S35
+      - S36
+      - S37
+    unresolved_dependencies:
+    - DP-1
+    - DP-5b
+    - OPEN-06
+  cancel_absent:
+    description: Task cancellation column is NULL in the committing transaction (parent Task for a Step)
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.cancel_absent
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 T4a/T4b/S7; §4.1 T14; §4.2 S19 (candidate requirements
+      only)
+    missing_sources: []
+    inputs:
+      task.cancel_requested_at_ms:
+        type: nullable_integer
+        meaning: Persisted cancellation request time on this Task or parent Task, read in the commit transaction
+    guard_dependencies: []
+    preconditions:
+    - Task cancellation column is NULL in the committing transaction (parent Task for a Step)
+    - 'Required three-valued predicate result: IS_NULL(task.cancel_requested_at_ms) == TRUE.'
+    predicate:
+    - is_null
+    - - fact
+      - task.cancel_requested_at_ms
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK:
+      - T14
+      - T29
+      STEP:
+      - S05
+      - S10
+      - S35
+    effective_transitions:
+      TASK:
+      - T04
+      - T10
+      - T14
+      - T16
+      - T21
+      - T25
+      - T29
+      STEP:
+      - S01
+      - S04
+      - S05
+      - S09
+      - S10
+      - S16
+      - S22
+      - S27
+      - S31
+      - S35
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-01
+  cancel_persisted:
+    description: Cancellation source is already durable; never require cancel_absent on cancellation-completion
+      edges
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.cancel_persisted
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 T4a/T4b/S7; §4.1 T14; §4.2 S19 (candidate requirements
+      only)
+    missing_sources: []
+    inputs:
+      task.cancel_requested_at_ms:
+        type: nullable_integer
+        meaning: Persisted cancellation request time on this Task or parent Task, read in the commit transaction
+    guard_dependencies: []
+    preconditions:
+    - Cancellation source is already durable; never require cancel_absent on cancellation-completion edges
+    - 'Required three-valued predicate result: NOT_NULL(task.cancel_requested_at_ms) == TRUE.'
+    predicate:
+    - not_null
+    - - fact
+      - task.cancel_requested_at_ms
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK: []
+      STEP: []
+    effective_transitions:
+      TASK:
+      - T03
+      - T07
+      - T13
+      - T19
+      - T24
+      - T28
+      - T31
+      STEP:
+      - S03
+      - S08
+      - S13
+      - S19
+      - S25
+      - S30
+      - S34
+      - S37
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-01
+  emergency_stop_inactive:
+    description: Global emergency_stop is exactly false at commit/start; unknown/missing control state
+      denies
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.emergency_stop_inactive
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 T5; §4.1 cancellation rows; §4.2 S19 (MP §9.2/9.3)
+      (candidate requirements only)
+    missing_sources: []
+    inputs:
+      control.emergency_stop:
+        type: boolean
+        meaning: Durable global emergency-stop flag
+    guard_dependencies: []
+    preconditions:
+    - Global emergency_stop is exactly false at commit/start; unknown/missing control state denies
+    - 'Required three-valued predicate result: EQ(control.emergency_stop, false) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - control.emergency_stop
+    - - literal
+      - false
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK:
+      - T29
+      STEP:
+      - S05
+      - S10
+      - S35
+    effective_transitions:
+      TASK:
+      - T04
+      - T10
+      - T16
+      - T21
+      - T25
+      - T29
+      STEP:
+      - S01
+      - S04
+      - S05
+      - S09
+      - S10
+      - S16
+      - S22
+      - S27
+      - S31
+      - S35
+    unresolved_dependencies:
+    - DEC-004
+    - DP-1
+    - OPEN-01
+    - OPEN-08
+  new_effects_stopped:
+    description: New target side-effect starts are stopped and no unarbitrated start is in flight; a flag
+      read alone does not prove cancellation/publish linearization
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.new_effects_stopped
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 T5; §4.1 cancellation rows; §4.2 S19 (MP §9.2/9.3)
+      (candidate requirements only)
+    missing_sources: []
+    inputs:
+      effects.new_starts_stopped:
+        type: boolean
+        meaning: New target side-effect starts are stopped and no unarbitrated start is in flight; a flag
+          read alone does not prove cancellation/publish linearization
+    guard_dependencies: []
+    preconditions:
+    - New target side-effect starts are stopped and no unarbitrated start is in flight; a flag read alone
+      does not prove cancellation/publish linearization
+    - 'Required three-valued predicate result: EQ(effects.new_starts_stopped, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - effects.new_starts_stopped
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK: []
+      STEP: []
+    effective_transitions:
+      TASK:
+      - T03
+      - T07
+      - T13
+      - T19
+      - T24
+      - T28
+      - T31
+      STEP:
+      - S03
+      - S08
+      - S13
+      - S19
+      - S25
+      - S30
+      - S34
+      - S37
+    unresolved_dependencies:
+    - DEC-004
+    - DP-1
+    - OPEN-01
+    - OPEN-08
+  effects_settled:
+    description: Every started effect has a known reconciled disposition and no uncontrolled active or
+      unresolved dangerous effect remains; an absent target alone proves neither never-published nor settled
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.effects_settled
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 T7/S5; §4.1 T02/T12/T18; §4.2 FAILED/CANCELED
+      rows (candidate requirements only)
+    missing_sources: []
+    inputs:
+      effects.settled:
+        type: boolean
+        meaning: Every started effect has a known reconciled disposition and no uncontrolled active or
+          unresolved dangerous effect remains; an absent target alone proves neither never-published nor
+          settled
+    guard_dependencies: []
+    preconditions:
+    - Every started effect has a known reconciled disposition and no uncontrolled active or unresolved
+      dangerous effect remains; an absent target alone proves neither never-published nor settled
+    - 'Required three-valued predicate result: EQ(effects.settled, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - effects.settled
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK:
+      - T14
+      - T29
+      STEP:
+      - S20
+      - S35
+    effective_transitions:
+      TASK:
+      - T02
+      - T03
+      - T06
+      - T07
+      - T10
+      - T12
+      - T13
+      - T14
+      - T16
+      - T18
+      - T19
+      - T21
+      - T23
+      - T24
+      - T25
+      - T27
+      - T28
+      - T29
+      - T30
+      - T31
+      STEP:
+      - S02
+      - S03
+      - S07
+      - S08
+      - S12
+      - S13
+      - S16
+      - S18
+      - S19
+      - S20
+      - S22
+      - S24
+      - S25
+      - S27
+      - S29
+      - S30
+      - S31
+      - S33
+      - S34
+      - S35
+      - S36
+      - S37
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-12
+  no_active_attempt:
+    description: No ACTIVE Attempt in this transition scope; Task scope includes historical Plans, Step
+      scope its own Attempts
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_MISSING
+    source_refs:
+    - contracts/transition_guards.yaml#guards.no_active_attempt
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 T7/S5; §4.1 T02/T12/T18; §4.2 FAILED/CANCELED
+      rows (candidate requirements only)
+    missing_sources:
+    - 'no_active_attempt: D-02/DP-3: full Attempt state vocabulary and interruption/recovery transitions
+      remain undefined; ACTIVE index alone is insufficient.'
+    inputs:
+      attempts.active_count:
+        type: integer
+        meaning: Transactional count of ACTIVE Attempts in scope; Task includes historical Plans, Step
+          includes its own Attempts
+    guard_dependencies: []
+    preconditions:
+    - No ACTIVE Attempt in this transition scope; Task scope includes historical Plans, Step scope its
+      own Attempts
+    - 'Required three-valued predicate result: EQ(attempts.active_count, 0) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - attempts.active_count
+    - - literal
+      - 0
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK:
+      - T14
+      - T29
+      STEP:
+      - S01
+      - S05
+      - S10
+      - S20
+      - S35
+    effective_transitions:
+      TASK:
+      - T02
+      - T03
+      - T06
+      - T07
+      - T10
+      - T12
+      - T13
+      - T14
+      - T16
+      - T18
+      - T19
+      - T21
+      - T23
+      - T24
+      - T25
+      - T27
+      - T28
+      - T29
+      - T30
+      - T31
+      STEP:
+      - S01
+      - S02
+      - S03
+      - S05
+      - S07
+      - S08
+      - S10
+      - S12
+      - S13
+      - S16
+      - S18
+      - S19
+      - S20
+      - S22
+      - S24
+      - S25
+      - S27
+      - S29
+      - S30
+      - S31
+      - S33
+      - S34
+      - S35
+      - S36
+      - S37
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-12
+  safe_checkpoint:
+    description: Durable safe-checkpoint and reconciled-effect evidence bound to these operations exists;
+      definition and cancellation arbitration remain OPEN-08/OPEN-01
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_MISSING
+    source_refs:
+    - contracts/transition_guards.yaml#guards.safe_checkpoint
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 T5; §4.1 cancellation rows; §4.2 S19 (MP §9.2/9.3)
+      (candidate requirements only)
+    missing_sources:
+    - 'safe_checkpoint: OPEN-08/OPEN-01: safe-checkpoint and cancel-versus-start arbitration are not defined
+      by an approved carrier; A1–A6 remain NOT_APPROVED.'
+    inputs:
+      effects.safe_checkpoint_evidence:
+        type: boolean
+        meaning: Durable safe-checkpoint and reconciled-effect evidence bound to these operations exists;
+          definition and cancellation arbitration remain OPEN-08/OPEN-01
+    guard_dependencies: []
+    preconditions:
+    - Durable safe-checkpoint and reconciled-effect evidence bound to these operations exists; definition
+      and cancellation arbitration remain OPEN-08/OPEN-01
+    - 'Required three-valued predicate result: EQ(effects.safe_checkpoint_evidence, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - effects.safe_checkpoint_evidence
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK: []
+      STEP: []
+    effective_transitions:
+      TASK:
+      - T03
+      - T07
+      - T13
+      - T19
+      - T24
+      - T28
+      - T31
+      STEP:
+      - S03
+      - S08
+      - S13
+      - S19
+      - S25
+      - S30
+      - S34
+      - S37
+    unresolved_dependencies:
+    - DEC-004
+    - DP-1
+    - OPEN-01
+    - OPEN-08
+  failure_confirmed:
+    description: Durable reason confirms this object cannot complete; transient error/unknown outcome
+      alone is insufficient
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.failure_confirmed
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 T7/S5; §4.1 T02/T12/T18; §4.2 FAILED/CANCELED
+      rows (candidate requirements only)
+    missing_sources: []
+    inputs:
+      failure.confirmed:
+        type: boolean
+        meaning: Durable reason confirms this object cannot complete; transient error/unknown outcome
+          alone is insufficient
+    guard_dependencies: []
+    preconditions:
+    - Durable reason confirms this object cannot complete; transient error/unknown outcome alone is insufficient
+    - 'Required three-valued predicate result: EQ(failure.confirmed, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - failure.confirmed
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK: []
+      STEP: []
+    effective_transitions:
+      TASK:
+      - T02
+      - T06
+      - T12
+      - T18
+      - T23
+      - T27
+      - T30
+      STEP:
+      - S02
+      - S07
+      - S12
+      - S18
+      - S24
+      - S29
+      - S33
+      - S36
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-12
+  no_started_effect:
+    description: Positive durable evidence that no target effect ever started, not inferred from target
+      absence
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.no_started_effect
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 T7/S5; §4.1 T02/T12/T18; §4.2 FAILED/CANCELED
+      rows (candidate requirements only)
+    missing_sources: []
+    inputs:
+      effects.none_started:
+        type: boolean
+        meaning: Positive durable evidence that no target effect ever started, not inferred from target
+          absence
+    guard_dependencies: []
+    preconditions:
+    - Positive durable evidence that no target effect ever started, not inferred from target absence
+    - 'Required three-valued predicate result: EQ(effects.none_started, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - effects.none_started
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK:
+      - T02
+      - T03
+      STEP:
+      - S05
+      - S10
+    effective_transitions:
+      TASK:
+      - T02
+      - T03
+      STEP:
+      - S05
+      - S10
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-12
+  valid_task_spec:
+    description: TaskSpec validates against task_spec.schema.json and retained request/digest identity
+      matches; digest field set remains D-03
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.valid_task_spec
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.1 T01/T04/T14; DP-2 (candidate requirements only)
+    missing_sources: []
+    inputs:
+      task.spec_valid:
+        type: boolean
+        meaning: TaskSpec validates against task_spec.schema.json and retained request/digest identity
+          matches; digest field set remains D-03
+    guard_dependencies: []
+    preconditions:
+    - TaskSpec validates against task_spec.schema.json and retained request/digest identity matches; digest
+      field set remains D-03
+    - 'Required three-valued predicate result: EQ(task.spec_valid, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - task.spec_valid
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK:
+      - T01
+      STEP: []
+    effective_transitions:
+      TASK:
+      - T01
+      STEP: []
+    unresolved_dependencies:
+    - D-01
+    - DP-1
+  active_plan_bound:
+    description: Exactly one ACTIVE Plan exists, belongs to this Task and is referenced by active_plan_id;
+      no cross-Task Plan
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_MISSING
+    source_refs:
+    - contracts/transition_guards.yaml#guards.active_plan_bound
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.1 T01/T04/T14; DP-2 (candidate requirements only)
+    missing_sources:
+    - 'active_plan_bound: D-01/DP-2: complete Plan state vocabulary and active-plan carrier remain draft;
+      ACTIVE alone is not a complete state contract.'
+    inputs:
+      plan.id:
+        type: string
+        meaning: Identity of candidate active Plan
+      plan.state:
+        type: string
+        meaning: Candidate active Plan state, ACTIVE is known from existing partial index
+      plan.task_id:
+        type: string
+        meaning: Task owning the candidate active Plan
+      plans.active_count:
+        type: integer
+        meaning: Transactional number of ACTIVE Plans for this Task
+      task.active_plan_id:
+        type: string
+        meaning: Non-null active Plan pointer on this Task
+      task.id:
+        type: string
+        meaning: Identity of parent Task
+    guard_dependencies: []
+    preconditions:
+    - Exactly one ACTIVE Plan exists, belongs to this Task and is referenced by active_plan_id; no cross-Task
+      Plan
+    - 'Required three-valued predicate result: ALL(EQ(task.active_plan_id, plan.id), EQ(task.id, plan.task_id),
+      EQ(plan.state, "ACTIVE"), EQ(plans.active_count, 1)) == TRUE.'
+    predicate:
+    - all
+    - - eq
+      - - fact
+        - task.active_plan_id
+      - - fact
+        - plan.id
+    - - eq
+      - - fact
+        - task.id
+      - - fact
+        - plan.task_id
+    - - eq
+      - - fact
+        - plan.state
+      - - literal
+        - ACTIVE
+    - - eq
+      - - fact
+        - plans.active_count
+      - - literal
+        - 1
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK:
+      - T01
+      - T04
+      - T08
+      - T14
+      - T25
+      - T29
+      STEP: []
+    effective_transitions:
+      TASK:
+      - T01
+      - T04
+      - T08
+      - T14
+      - T25
+      - T29
+      STEP:
+      - S01
+      - S04
+      - S09
+      - S31
+      - S35
+    unresolved_dependencies:
+    - D-01
+    - DP-1
+  task_running:
+    description: Parent Task state is RUNNING in the transition transaction
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.task_running
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 T6/S4; §4.1 T04; §4.2 S01/S04/S09 (candidate requirements
+      only)
+    missing_sources: []
+    inputs:
+      task.state:
+        type: string
+        meaning: Parent Task persisted state in transition transaction
+    guard_dependencies: []
+    preconditions:
+    - Parent Task state is RUNNING in the transition transaction
+    - 'Required three-valued predicate result: EQ(task.state, "RUNNING") == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - task.state
+    - - literal
+      - RUNNING
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK: []
+      STEP:
+      - S01
+      - S04
+      - S09
+    effective_transitions:
+      TASK: []
+      STEP:
+      - S01
+      - S04
+      - S09
+    unresolved_dependencies:
+    - D-01
+    - DP-1
+    - DP-5b
+    - OPEN-06
+  step_in_active_plan:
+    description: Step.plan_id equals parent Task.active_plan_id and that Plan belongs to same Task and
+      is ACTIVE
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_MISSING
+    source_refs:
+    - contracts/transition_guards.yaml#guards.step_in_active_plan
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 T6/S4; §4.1 T04; §4.2 S01/S04/S09 (candidate requirements
+      only)
+    missing_sources:
+    - 'active_plan_bound: D-01/DP-2: complete Plan state vocabulary and active-plan carrier remain draft;
+      ACTIVE alone is not a complete state contract.'
+    - 'step_in_active_plan: D-01/D-08: Step-to-active-Plan requirement is sourced, but Plan state and
+      full Step structure remain unfrozen candidate contracts.'
+    inputs:
+      plan.id:
+        type: string
+        meaning: Identity of candidate active Plan
+      plan.state:
+        type: string
+        meaning: Candidate active Plan state, ACTIVE is known from existing partial index
+      plan.task_id:
+        type: string
+        meaning: Task owning the candidate active Plan
+      plans.active_count:
+        type: integer
+        meaning: Transactional number of ACTIVE Plans for this Task
+      step.plan_id:
+        type: string
+        meaning: Persisted owner Plan of this Step
+      step.task_id:
+        type: string
+        meaning: Persisted owner Task of this Step
+      task.active_plan_id:
+        type: string
+        meaning: Non-null active Plan pointer on this Task
+      task.id:
+        type: string
+        meaning: Identity of parent Task
+    guard_dependencies:
+    - active_plan_bound
+    preconditions:
+    - Step.plan_id equals parent Task.active_plan_id and that Plan belongs to same Task and is ACTIVE
+    - 'Required three-valued predicate result: ALL(guard(active_plan_bound), EQ(step.plan_id, task.active_plan_id),
+      EQ(step.task_id, task.id)) == TRUE.'
+    - Every referenced guard is evaluated using the same trusted input snapshot; no missing/cyclic dependency
+      may be treated as true.
+    predicate:
+    - all
+    - - guard
+      - active_plan_bound
+    - - eq
+      - - fact
+        - step.plan_id
+      - - fact
+        - task.active_plan_id
+    - - eq
+      - - fact
+        - step.task_id
+      - - fact
+        - task.id
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK: []
+      STEP:
+      - S01
+      - S04
+      - S09
+      - S31
+      - S35
+    effective_transitions:
+      TASK: []
+      STEP:
+      - S01
+      - S04
+      - S09
+      - S31
+      - S35
+    unresolved_dependencies:
+    - D-01
+    - DP-1
+    - DP-5b
+    - OPEN-06
+  k0_execution_slot_free:
+    description: No other active Task Step executes; one fixed worker lock plus transactional claim, not
+      per-Step uniqueness alone
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_MISSING
+    source_refs:
+    - contracts/transition_guards.yaml#guards.k0_execution_slot_free
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 T6/S4; §4.1 T04; §4.2 S01/S04/S09 (candidate requirements
+      only)
+    missing_sources:
+    - 'k0_execution_slot_free: D-02/DP-3: transactionally enumerating live execution needs the unsettled
+      Attempt lifecycle and ownership carriers.'
+    inputs:
+      worker.k0_slot_free:
+        type: boolean
+        meaning: No other active Task Step executes; one fixed worker lock plus transactional claim, not
+          per-Step uniqueness alone
+    guard_dependencies: []
+    preconditions:
+    - No other active Task Step executes; one fixed worker lock plus transactional claim, not per-Step
+      uniqueness alone
+    - 'Required three-valued predicate result: EQ(worker.k0_slot_free, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - worker.k0_slot_free
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK:
+      - T04
+      STEP:
+      - S01
+    effective_transitions:
+      TASK:
+      - T04
+      STEP:
+      - S01
+    unresolved_dependencies:
+    - D-01
+    - DP-1
+    - DP-5b
+    - OPEN-06
+  preconditions_passed:
+    description: All declared Step input/type/authorization/path/environment prerequisites passed with
+      evidence bound to the Step; unavailable D-08 carrier denies
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_MISSING
+    source_refs:
+    - contracts/transition_guards.yaml#guards.preconditions_passed
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S04/S09; DP-1 §3.1.1 (MP §8.3) (candidate requirements
+      only)
+    missing_sources:
+    - 'preconditions_passed: D-08: full Step precondition input/evidence carrier remains undefined; a
+      synthetic boolean is not real evidence.'
+    inputs:
+      step.preconditions_passed:
+        type: boolean
+        meaning: All declared Step input/type/authorization/path/environment prerequisites passed with
+          evidence bound to the Step; unavailable D-08 carrier denies
+    guard_dependencies: []
+    preconditions:
+    - All declared Step input/type/authorization/path/environment prerequisites passed with evidence bound
+      to the Step; unavailable D-08 carrier denies
+    - 'Required three-valued predicate result: EQ(step.preconditions_passed, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - step.preconditions_passed
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK: []
+      STEP:
+      - S04
+      - S09
+    effective_transitions:
+      TASK: []
+      STEP:
+      - S04
+      - S09
+    unresolved_dependencies:
+    - D-08
+    - DP-1
+  intent_committed:
+    description: Exact logical Intent and matching FileWriteIntent were durably committed before any target-effect
+      start, not merely scheduled in the current transaction
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.intent_committed
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S09; DP-1 §3.1.1 (MP §8.1/8.3/14.1) (candidate
+      requirements only)
+    missing_sources: []
+    inputs:
+      intent.previously_committed:
+        type: boolean
+        meaning: Exact logical Intent and matching FileWriteIntent were durably committed before any target-effect
+          start, not merely scheduled in the current transaction
+    guard_dependencies: []
+    preconditions:
+    - Exact logical Intent and matching FileWriteIntent were durably committed before any target-effect
+      start, not merely scheduled in the current transaction
+    - 'Required three-valued predicate result: EQ(intent.previously_committed, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - intent.previously_committed
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK: []
+      STEP:
+      - S09
+    effective_transitions:
+      TASK: []
+      STEP:
+      - S09
+    unresolved_dependencies:
+    - D-02
+    - D-16
+    - DEC-004
+    - DP-1
+    - OPEN-01
+    - OPEN-08
+  intent_prepared:
+    description: The single Intent for this Step has PREPARED state; same operation_id and original immutable
+      operation_key/arguments digest
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.intent_prepared
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S09; DP-1 §3.1.1 (MP §8.1/8.3/14.1) (candidate
+      requirements only)
+    missing_sources: []
+    inputs:
+      intent.state:
+        type: string
+        meaning: Persisted state of the same single Intent bound to this Step
+    guard_dependencies: []
+    preconditions:
+    - The single Intent for this Step has PREPARED state; same operation_id and original immutable operation_key/arguments
+      digest
+    - 'Required three-valued predicate result: EQ(intent.state, "PREPARED") == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - intent.state
+    - - literal
+      - PREPARED
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK: []
+      STEP:
+      - S09
+    effective_transitions:
+      TASK: []
+      STEP:
+      - S09
+    unresolved_dependencies:
+    - D-02
+    - D-16
+    - DEC-004
+    - DP-1
+    - OPEN-01
+    - OPEN-08
+  prepared_durable:
+    description: Prepared file, manifest, size/hash and required file/directory sync evidence are intact
+      at required durability level before publish; filesystem and SQLite are not atomic together
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.prepared_durable
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S09; DP-1 §3.1.1 (MP §8.1/8.3/14.1) (candidate
+      requirements only)
+    missing_sources: []
+    inputs:
+      prepared.durability_verified:
+        type: boolean
+        meaning: Prepared file, manifest, size/hash and required file/directory sync evidence are intact
+          at required durability level before publish; filesystem and SQLite are not atomic together
+    guard_dependencies: []
+    preconditions:
+    - Prepared file, manifest, size/hash and required file/directory sync evidence are intact at required
+      durability level before publish; filesystem and SQLite are not atomic together
+    - 'Required three-valued predicate result: EQ(prepared.durability_verified, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - prepared.durability_verified
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK: []
+      STEP:
+      - S09
+    effective_transitions:
+      TASK: []
+      STEP:
+      - S09
+    unresolved_dependencies:
+    - D-02
+    - D-16
+    - DEC-004
+    - DP-1
+    - OPEN-01
+    - OPEN-08
+  attempt_bound:
+    description: Current ACTIVE Attempt references the exact committed Intent of this Step and is owned
+      by current worker; no second ACTIVE Attempt
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_MISSING
+    source_refs:
+    - contracts/transition_guards.yaml#guards.attempt_bound
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S09; DP-1 §3.1.1 (MP §8.1/8.3/14.1) (candidate
+      requirements only)
+    missing_sources:
+    - 'attempt_bound: D-02: full Attempt lifecycle and binding carrier remain a draft; do not invent interrupted
+      or completed enum values.'
+    inputs:
+      attempt.current_bound:
+        type: boolean
+        meaning: Current ACTIVE Attempt references the exact committed Intent of this Step and is owned
+          by current worker; no second ACTIVE Attempt
+    guard_dependencies: []
+    preconditions:
+    - Current ACTIVE Attempt references the exact committed Intent of this Step and is owned by current
+      worker; no second ACTIVE Attempt
+    - 'Required three-valued predicate result: EQ(attempt.current_bound, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - attempt.current_bound
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK: []
+      STEP:
+      - S09
+    effective_transitions:
+      TASK: []
+      STEP:
+      - S09
+    unresolved_dependencies:
+    - D-02
+    - D-16
+    - DEC-004
+    - DP-1
+    - OPEN-01
+    - OPEN-08
+  publish_start_arbitrated:
+    description: Approved and tested cancel/stop-versus-publish-start arbiter establishes no new start
+      after durable cancel; pre-read/no_cancel, CAS, flock alone do not prove INV-010 (OPEN-01 remains)
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_MISSING
+    source_refs:
+    - contracts/transition_guards.yaml#guards.publish_start_arbitrated
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S09; DP-1 §3.1.1 (MP §8.1/8.3/14.1) (candidate
+      requirements only)
+    missing_sources:
+    - 'publish_start_arbitrated: OPEN-01/DEC-004: no approved cancel-versus-publish-start arbiter or linearization
+      proof; pre-read/CAS/flock is insufficient.'
+    inputs:
+      effects.publish_start_arbitrated:
+        type: boolean
+        meaning: Approved and tested cancel/stop-versus-publish-start arbiter establishes no new start
+          after durable cancel; pre-read/no_cancel, CAS, flock alone do not prove INV-010 (OPEN-01 remains)
+    guard_dependencies: []
+    preconditions:
+    - Approved and tested cancel/stop-versus-publish-start arbiter establishes no new start after durable
+      cancel; pre-read/no_cancel, CAS, flock alone do not prove INV-010 (OPEN-01 remains)
+    - 'Required three-valued predicate result: EQ(effects.publish_start_arbitrated, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - effects.publish_start_arbitrated
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK: []
+      STEP:
+      - S09
+    effective_transitions:
+      TASK: []
+      STEP:
+      - S09
+    unresolved_dependencies:
+    - D-02
+    - D-16
+    - DEC-004
+    - DP-1
+    - OPEN-01
+    - OPEN-08
+  result_durable:
+    description: Current operation has a known checkable persisted Attempt result/evidence bound to this
+      Step/Intent; missing D-13 carrier or unknown outcome denies
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_MISSING
+    source_refs:
+    - contracts/transition_guards.yaml#guards.result_durable
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.1 T08; §4.2 S14; DP-4a (candidate requirements only)
+    missing_sources:
+    - 'result_durable: D-13/OPEN-10: result/error/recovery evidence carrier is a candidate only; no settled
+      field-level evidence contract.'
+    inputs:
+      result.known_and_durable:
+        type: boolean
+        meaning: Current operation has a known checkable persisted Attempt result/evidence bound to this
+          Step/Intent; missing D-13 carrier or unknown outcome denies
+    guard_dependencies: []
+    preconditions:
+    - Current operation has a known checkable persisted Attempt result/evidence bound to this Step/Intent;
+      missing D-13 carrier or unknown outcome denies
+    - 'Required three-valued predicate result: EQ(result.known_and_durable, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - result.known_and_durable
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK:
+      - T08
+      STEP:
+      - S14
+    effective_transitions:
+      TASK:
+      - T08
+      STEP:
+      - S14
+    unresolved_dependencies:
+    - D-13
+    - DP-1
+    - OPEN-10
+  observation_bound:
+    description: Durable Observation is one of four reconciliation.schema.json values, bound to exact
+      operation/paths/expected digest and current observation; unknown itself is a valid observation,
+      not success
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_MISSING
+    source_refs:
+    - contracts/transition_guards.yaml#guards.observation_bound
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.1 T09/T15; §4.2 S15/S21; MP §16.1 (candidate requirements
+      only)
+    missing_sources:
+    - 'observation_bound: OPEN-03: trusted Observation/Intent/scope evidence carrier and full Observation×Decision
+      pairing are not settled.'
+    inputs:
+      reconciliation.observation_bound:
+        type: boolean
+        meaning: Durable Observation is one of four reconciliation.schema.json values, bound to exact
+          operation/paths/expected digest and current observation; unknown itself is a valid observation,
+          not success
+    guard_dependencies: []
+    preconditions:
+    - Durable Observation is one of four reconciliation.schema.json values, bound to exact operation/paths/expected
+      digest and current observation; unknown itself is a valid observation, not success
+    - 'Required three-valued predicate result: EQ(reconciliation.observation_bound, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - reconciliation.observation_bound
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK:
+      - T09
+      - T11
+      - T15
+      - T17
+      - T22
+      - T23
+      STEP:
+      - S15
+      - S17
+      - S21
+      - S23
+      - S28
+      - S29
+    effective_transitions:
+      TASK:
+      - T09
+      - T10
+      - T11
+      - T15
+      - T16
+      - T17
+      - T20
+      - T21
+      - T22
+      - T23
+      - T25
+      STEP:
+      - S15
+      - S16
+      - S17
+      - S21
+      - S22
+      - S23
+      - S26
+      - S27
+      - S28
+      - S29
+      - S31
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-03
+  reconciliation_needed:
+    description: Execution/verification result is unknown or disagrees with expected effect; retain evidence
+      and prohibit blind retry
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.reconciliation_needed
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.1 T09/T15; §4.2 S15/S21; MP §16.1 (candidate requirements
+      only)
+    missing_sources: []
+    inputs:
+      result.unknown_or_mismatch:
+        type: boolean
+        meaning: Execution/verification result is unknown or disagrees with expected effect; retain evidence
+          and prohibit blind retry
+    guard_dependencies: []
+    preconditions:
+    - Execution/verification result is unknown or disagrees with expected effect; retain evidence and
+      prohibit blind retry
+    - 'Required three-valued predicate result: EQ(result.unknown_or_mismatch, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - result.unknown_or_mismatch
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK:
+      - T09
+      - T15
+      STEP:
+      - S15
+      - S21
+    effective_transitions:
+      TASK:
+      - T09
+      - T15
+      STEP:
+      - S15
+      - S21
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-03
+  verification_passed:
+    description: Independent verifier checked actual output path/type/hash/size against the original Intent;
+      tool success or model text alone is not verification
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.verification_passed
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.1 T14; §4.2 S20 (STATE-001/002/004) (candidate requirements
+      only)
+    missing_sources: []
+    inputs:
+      verification.independent_pass:
+        type: boolean
+        meaning: Independent verifier checked actual output path/type/hash/size against the original Intent;
+          tool success or model text alone is not verification
+    guard_dependencies: []
+    preconditions:
+    - Independent verifier checked actual output path/type/hash/size against the original Intent; tool
+      success or model text alone is not verification
+    - 'Required three-valued predicate result: EQ(verification.independent_pass, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - verification.independent_pass
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK: []
+      STEP:
+      - S20
+    effective_transitions:
+      TASK: []
+      STEP:
+      - S20
+    unresolved_dependencies:
+    - D-16
+    - DP-1
+  verification_evidence:
+    description: Matching VERIFICATION_EVIDENCE artifact/evidence record is durable and associated to
+      the original Intent and result
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_MISSING
+    source_refs:
+    - contracts/transition_guards.yaml#guards.verification_evidence
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.1 T14; §4.2 S20 (STATE-001/002/004) (candidate requirements
+      only)
+    missing_sources:
+    - 'verification_evidence: D-16: generic Intent verification-evidence carrier and association are not
+      closed.'
+    inputs:
+      verification.evidence_durable:
+        type: boolean
+        meaning: Matching VERIFICATION_EVIDENCE artifact/evidence record is durable and associated to
+          the original Intent and result
+    guard_dependencies: []
+    preconditions:
+    - Matching VERIFICATION_EVIDENCE artifact/evidence record is durable and associated to the original
+      Intent and result
+    - 'Required three-valued predicate result: EQ(verification.evidence_durable, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - verification.evidence_durable
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK:
+      - T14
+      STEP:
+      - S20
+    effective_transitions:
+      TASK:
+      - T14
+      STEP:
+      - S20
+    unresolved_dependencies:
+    - D-16
+    - DP-1
+  intent_verified:
+    description: Single associated Intent is VERIFIED on independent evidence
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.intent_verified
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.1 T14; §4.2 S20 (STATE-001/002/004) (candidate requirements
+      only)
+    missing_sources: []
+    inputs:
+      intent.state:
+        type: string
+        meaning: Persisted state of the same single Intent bound to this Step
+    guard_dependencies: []
+    preconditions:
+    - Single associated Intent is VERIFIED on independent evidence
+    - 'Required three-valued predicate result: EQ(intent.state, "VERIFIED") == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - intent.state
+    - - literal
+      - VERIFIED
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK: []
+      STEP:
+      - S20
+    effective_transitions:
+      TASK: []
+      STEP:
+      - S20
+    unresolved_dependencies:
+    - D-16
+    - DP-1
+  required_steps_completed:
+    description: Every required Step of active Plan is COMPLETED and active Plan has required K0 Step;
+      not vacuous empty-plan success
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.required_steps_completed
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.1 T14; §4.2 S20 (STATE-001/002/004) (candidate requirements
+      only)
+    missing_sources: []
+    inputs:
+      task.required_steps_completed:
+        type: boolean
+        meaning: Every required Step of active Plan is COMPLETED and active Plan has required K0 Step;
+          not vacuous empty-plan success
+    guard_dependencies: []
+    preconditions:
+    - Every required Step of active Plan is COMPLETED and active Plan has required K0 Step; not vacuous
+      empty-plan success
+    - 'Required three-valued predicate result: EQ(task.required_steps_completed, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - task.required_steps_completed
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK:
+      - T14
+      STEP: []
+    effective_transitions:
+      TASK:
+      - T14
+      STEP: []
+    unresolved_dependencies:
+    - D-16
+    - DP-1
+  all_effects_verified:
+    description: All associated logical effects, including relevant historical Plan effects, have independent
+      VERIFIED evidence; no unresolved Attempt or dangerous effect
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.all_effects_verified
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.1 T14; §4.2 S20 (STATE-001/002/004) (candidate requirements
+      only)
+    missing_sources: []
+    inputs:
+      task.all_effects_verified:
+        type: boolean
+        meaning: All associated logical effects, including relevant historical Plan effects, have independent
+          VERIFIED evidence; no unresolved Attempt or dangerous effect
+    guard_dependencies: []
+    preconditions:
+    - All associated logical effects, including relevant historical Plan effects, have independent VERIFIED
+      evidence; no unresolved Attempt or dangerous effect
+    - 'Required three-valued predicate result: EQ(task.all_effects_verified, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - task.all_effects_verified
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK:
+      - T14
+      STEP: []
+    effective_transitions:
+      TASK:
+      - T14
+      STEP: []
+    unresolved_dependencies:
+    - D-16
+    - DP-1
+  block_reason_recorded:
+    description: Explicit missing prerequisite/conflict/environment/recovery evidence and nonempty reason
+      are durably recorded; BLOCKED must preserve unresolved effects and prohibit starts
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_MISSING
+    source_refs:
+    - contracts/transition_guards.yaml#guards.block_reason_recorded
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.1 BLOCKED rows; §4.2 S06/S11/S23/S28/S32; §4.3 G1/G2
+      (candidate requirements only)
+    missing_sources:
+    - 'block_reason_recorded: D-08/OPEN-03/R-7: Step prerequisite/conflict and block-reason evidence carriers
+      are incomplete; a nonempty boolean/string alone is not proof.'
+    inputs:
+      block.reason_durable:
+        type: boolean
+        meaning: Explicit missing prerequisite/conflict/environment/recovery evidence and nonempty reason
+          are durably recorded; BLOCKED must preserve unresolved effects and prohibit starts
+    guard_dependencies: []
+    preconditions:
+    - Explicit missing prerequisite/conflict/environment/recovery evidence and nonempty reason are durably
+      recorded; BLOCKED must preserve unresolved effects and prohibit starts
+    - 'Required three-valued predicate result: EQ(block.reason_durable, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - block.reason_durable
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK: []
+      STEP: []
+    effective_transitions:
+      TASK:
+      - T05
+      - T11
+      - T17
+      - T22
+      - T26
+      STEP:
+      - S06
+      - S11
+      - S17
+      - S23
+      - S28
+      - S32
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-03
+  block_starts_stopped:
+    description: Entering BLOCKED stops any new target-effect starts and preserves all unresolved operation/artifact/Attempt
+      evidence; not terminalization
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.block_starts_stopped
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.1 BLOCKED rows; §4.2 S06/S11/S23/S28/S32; §4.3 G1/G2
+      (candidate requirements only)
+    missing_sources: []
+    inputs:
+      block.starts_stopped:
+        type: boolean
+        meaning: Entering BLOCKED stops any new target-effect starts and preserves all unresolved operation/artifact/Attempt
+          evidence; not terminalization
+    guard_dependencies: []
+    preconditions:
+    - Entering BLOCKED stops any new target-effect starts and preserves all unresolved operation/artifact/Attempt
+      evidence; not terminalization
+    - 'Required three-valued predicate result: EQ(block.starts_stopped, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - block.starts_stopped
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK: []
+      STEP: []
+    effective_transitions:
+      TASK:
+      - T05
+      - T11
+      - T17
+      - T22
+      - T26
+      STEP:
+      - S06
+      - S11
+      - S17
+      - S23
+      - S28
+      - S32
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-03
+  unblock_authorized:
+    description: Trusted explicit unblock authorization and reason match this blocking record and prerequisite
+      repair; model/ordinary parameter cannot self-authorize (OPEN-07)
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_MISSING
+    source_refs:
+    - contracts/transition_guards.yaml#guards.unblock_authorized
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.1 T29; §4.2 S05/S10/S35; §4.3 G1 (candidate requirements
+      only)
+    missing_sources:
+    - 'unblock_authorized: OPEN-07: trusted human unblock identity, authorization and reason carrier are
+      not settled.'
+    inputs:
+      block.trusted_release:
+        type: boolean
+        meaning: Trusted explicit unblock authorization and reason match this blocking record and prerequisite
+          repair; model/ordinary parameter cannot self-authorize (OPEN-07)
+    guard_dependencies: []
+    preconditions:
+    - Trusted explicit unblock authorization and reason match this blocking record and prerequisite repair;
+      model/ordinary parameter cannot self-authorize (OPEN-07)
+    - 'Required three-valued predicate result: EQ(block.trusted_release, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - block.trusted_release
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK:
+      - T29
+      STEP:
+      - S35
+    effective_transitions:
+      TASK:
+      - T29
+      STEP:
+      - S35
+    unresolved_dependencies:
+    - D-G1a
+    - DP-1
+    - OPEN-07
+  claim_release_authorized:
+    description: Trusted claim release authorization with nonempty reason exists; no possible started
+      target effect
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_MISSING
+    source_refs:
+    - contracts/transition_guards.yaml#guards.claim_release_authorized
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.1 T29; §4.2 S05/S10/S35; §4.3 G1 (candidate requirements
+      only)
+    missing_sources:
+    - 'claim_release_authorized: S05/D-G1a: no MP edge source; release authorization/reason carrier and
+      OPEN-07 remain unresolved.'
+    inputs:
+      claim.trusted_release:
+        type: boolean
+        meaning: Trusted claim release authorization with nonempty reason exists; no possible started
+          target effect
+    guard_dependencies: []
+    preconditions:
+    - Trusted claim release authorization with nonempty reason exists; no possible started target effect
+    - 'Required three-valued predicate result: EQ(claim.trusted_release, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - claim.trusted_release
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK: []
+      STEP:
+      - S05
+    effective_transitions:
+      TASK: []
+      STEP:
+      - S05
+    unresolved_dependencies:
+    - D-G1a
+    - DP-1
+    - OPEN-07
+  intent_absent:
+    description: Recovery proves no Intent committed for this preparation and no target effect could start;
+      do not infer from inaccessible DB
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_MISSING
+    source_refs:
+    - contracts/transition_guards.yaml#guards.intent_absent
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.1 T29; §4.2 S05/S10/S35; §4.3 G1 (candidate requirements
+      only)
+    missing_sources:
+    - 'intent_absent: S10/D-G1a: MP §8.2 forbids assuming an effect but does not define PREPARING→PENDING;
+      recovery authorization/source remains missing.'
+    inputs:
+      intent.absent_proven:
+        type: boolean
+        meaning: Recovery proves no Intent committed for this preparation and no target effect could start;
+          do not infer from inaccessible DB
+    guard_dependencies: []
+    preconditions:
+    - Recovery proves no Intent committed for this preparation and no target effect could start; do not
+      infer from inaccessible DB
+    - 'Required three-valued predicate result: EQ(intent.absent_proven, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - intent.absent_proven
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK: []
+      STEP:
+      - S10
+    effective_transitions:
+      TASK: []
+      STEP:
+      - S10
+    unresolved_dependencies:
+    - D-G1a
+    - DP-1
+    - OPEN-07
+  retry_policy_proved:
+    description: K0 atomic no-clobber publish recovery strategy proves repeated attempt cannot produce
+      disallowed effects under unchanged original Intent/trust assumptions; unavailable OPEN-02/D-05 evidence
+      denies
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_MISSING
+    source_refs:
+    - contracts/transition_guards.yaml#guards.retry_policy_proved
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 S6; §4.1 T10/T16/T21/T25; §4.2 S27; MP §16.2/16.3
+      (candidate requirements only)
+    missing_sources:
+    - 'retry_policy_proved: OPEN-02/D-05/D-06: RETRY_SAFE decision proof, argument identity and stable
+      identifier rules are not closed.'
+    inputs:
+      retry.policy_proved:
+        type: boolean
+        meaning: K0 atomic no-clobber publish recovery strategy proves repeated attempt cannot produce
+          disallowed effects under unchanged original Intent/trust assumptions; unavailable OPEN-02/D-05
+          evidence denies
+    guard_dependencies: []
+    preconditions:
+    - K0 atomic no-clobber publish recovery strategy proves repeated attempt cannot produce disallowed
+      effects under unchanged original Intent/trust assumptions; unavailable OPEN-02/D-05 evidence denies
+    - 'Required three-valued predicate result: EQ(retry.policy_proved, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - retry.policy_proved
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK: []
+      STEP: []
+    effective_transitions:
+      TASK:
+      - T10
+      - T16
+      - T21
+      - T25
+      STEP:
+      - S16
+      - S22
+      - S27
+      - S31
+    unresolved_dependencies:
+    - D-05
+    - D-06
+    - DP-1
+    - OPEN-02
+    - OPEN-03
+  retry_prepared_intact:
+    description: Original Prepared file exists, is regular/nonsymlink, and expected size/hash and snapshot/Intent
+      identities match; not regenerated with new arguments
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.retry_prepared_intact
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 S6; §4.1 T10/T16/T21/T25; §4.2 S27; MP §16.2/16.3
+      (candidate requirements only)
+    missing_sources: []
+    inputs:
+      retry.prepared_intact:
+        type: boolean
+        meaning: Original Prepared file exists, is regular/nonsymlink, and expected size/hash and snapshot/Intent
+          identities match; not regenerated with new arguments
+    guard_dependencies: []
+    preconditions:
+    - Original Prepared file exists, is regular/nonsymlink, and expected size/hash and snapshot/Intent
+      identities match; not regenerated with new arguments
+    - 'Required three-valued predicate result: EQ(retry.prepared_intact, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - retry.prepared_intact
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK: []
+      STEP: []
+    effective_transitions:
+      TASK:
+      - T10
+      - T16
+      - T21
+      - T25
+      STEP:
+      - S16
+      - S22
+      - S27
+      - S31
+    unresolved_dependencies:
+    - D-05
+    - D-06
+    - DP-1
+    - OPEN-02
+    - OPEN-03
+  retry_original_intent:
+    description: Reuse the same OperationIntent and FileWriteIntent rows, operation_key/arguments/paths/expected
+      bytes; never one Intent or key per Attempt (INV-004)
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_MISSING
+    source_refs:
+    - contracts/transition_guards.yaml#guards.retry_original_intent
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 S6; §4.1 T10/T16/T21/T25; §4.2 S27; MP §16.2/16.3
+      (candidate requirements only)
+    missing_sources:
+    - 'retry_original_intent: D-05/D-06: original-Intent identity and byte/argument digest identity lack
+      closed canonicalization/stable-identifier rules.'
+    inputs:
+      retry.original_intent_retained:
+        type: boolean
+        meaning: Reuse the same OperationIntent and FileWriteIntent rows, operation_key/arguments/paths/expected
+          bytes; never one Intent or key per Attempt (INV-004)
+    guard_dependencies: []
+    preconditions:
+    - Reuse the same OperationIntent and FileWriteIntent rows, operation_key/arguments/paths/expected
+      bytes; never one Intent or key per Attempt (INV-004)
+    - 'Required three-valued predicate result: EQ(retry.original_intent_retained, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - retry.original_intent_retained
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK: []
+      STEP: []
+    effective_transitions:
+      TASK:
+      - T10
+      - T16
+      - T21
+      - T25
+      STEP:
+      - S16
+      - S22
+      - S27
+      - S31
+    unresolved_dependencies:
+    - D-05
+    - D-06
+    - DP-1
+    - OPEN-02
+    - OPEN-03
+  retry_permitted:
+    description: Trusted policy allows another Attempt for this exact operation; cannot be self-granted
+      by model
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.retry_permitted
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 S6; §4.1 T10/T16/T21/T25; §4.2 S27; MP §16.2/16.3
+      (candidate requirements only)
+    missing_sources: []
+    inputs:
+      retry.permitted:
+        type: boolean
+        meaning: Trusted policy allows another Attempt for this exact operation; cannot be self-granted
+          by model
+    guard_dependencies: []
+    preconditions:
+    - Trusted policy allows another Attempt for this exact operation; cannot be self-granted by model
+    - 'Required three-valued predicate result: EQ(retry.permitted, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - retry.permitted
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK: []
+      STEP: []
+    effective_transitions:
+      TASK:
+      - T10
+      - T16
+      - T21
+      - T25
+      STEP:
+      - S16
+      - S22
+      - S27
+      - S31
+    unresolved_dependencies:
+    - D-05
+    - D-06
+    - DP-1
+    - OPEN-02
+    - OPEN-03
+  retry_schedule_due:
+    description: Persisted backoff deadline <= current scheduler time, attempts below persisted maximum,
+      no active predecessor; undefined R-3 deadline/budget carrier denies
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_MISSING
+    source_refs:
+    - contracts/transition_guards.yaml#guards.retry_schedule_due
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.1 T25; §4.2 S31; §6 R-3 (candidate requirements
+      only)
+    missing_sources:
+    - 'retry_schedule_due: R-3: persisted backoff deadline, clock/budget carrier and retry maximum have
+      no defined source.'
+    inputs:
+      retry.schedule_due:
+        type: boolean
+        meaning: Persisted backoff deadline <= current scheduler time, attempts below persisted maximum,
+          no active predecessor; undefined R-3 deadline/budget carrier denies
+    guard_dependencies: []
+    preconditions:
+    - Persisted backoff deadline <= current scheduler time, attempts below persisted maximum, no active
+      predecessor; undefined R-3 deadline/budget carrier denies
+    - 'Required three-valued predicate result: EQ(retry.schedule_due, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - retry.schedule_due
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK:
+      - T25
+      STEP:
+      - S31
+    effective_transitions:
+      TASK:
+      - T25
+      STEP:
+      - S31
+    unresolved_dependencies:
+    - DP-1
+    - R-3
+  reconciled_all:
+    description: Task-level reconciliation aggregates every relevant Step/Intent, not a single favorable
+      operation; aggregation subject D-G2 remains unresolved
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_MISSING
+    source_refs:
+    - contracts/transition_guards.yaml#guards.reconciled_all
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.1 T20/T21; §5.3 D-G2 (candidate requirements only)
+    missing_sources:
+    - 'reconciled_all: D-G2: Task-level retry_safe/reconciliation aggregation subject and complete evidence
+      scope require a decision.'
+    inputs:
+      task.reconciled_all_relevant:
+        type: boolean
+        meaning: Task-level reconciliation aggregates every relevant Step/Intent, not a single favorable
+          operation; aggregation subject D-G2 remains unresolved
+    guard_dependencies: []
+    preconditions:
+    - Task-level reconciliation aggregates every relevant Step/Intent, not a single favorable operation;
+      aggregation subject D-G2 remains unresolved
+    - 'Required three-valued predicate result: EQ(task.reconciled_all_relevant, true) == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - task.reconciled_all_relevant
+    - - literal
+      - true
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK:
+      - T10
+      - T16
+      - T20
+      - T21
+      - T25
+      STEP: []
+    effective_transitions:
+      TASK:
+      - T10
+      - T16
+      - T20
+      - T21
+      - T25
+      STEP: []
+    unresolved_dependencies:
+    - D-G2
+    - DP-1
+  decision_verify:
+    description: Decision for the bound original operation
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.decision_verify
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.1 T20; §4.2 S26; MP §16.3 (candidate requirements
+      only)
+    missing_sources: []
+    inputs:
+      reconciliation.decision:
+        type: string
+        meaning: Decision for the bound original operation
+    guard_dependencies: []
+    preconditions:
+    - Decision for the bound original operation
+    - 'Required three-valued predicate result: EQ(reconciliation.decision, "VERIFY") == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - reconciliation.decision
+    - - literal
+      - VERIFY
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK: []
+      STEP: []
+    effective_transitions:
+      TASK:
+      - T20
+      STEP:
+      - S26
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-03
+  decision_retry_safe:
+    description: Decision for the bound original operation
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.decision_retry_safe
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 S6; §4.1 T10/T16/T21/T25; §4.2 S27; MP §16.2/16.3
+      (candidate requirements only)
+    missing_sources: []
+    inputs:
+      reconciliation.decision:
+        type: string
+        meaning: Decision for the bound original operation
+    guard_dependencies: []
+    preconditions:
+    - Decision for the bound original operation
+    - 'Required three-valued predicate result: EQ(reconciliation.decision, "RETRY_SAFE") == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - reconciliation.decision
+    - - literal
+      - RETRY_SAFE
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK: []
+      STEP: []
+    effective_transitions:
+      TASK:
+      - T10
+      - T16
+      - T21
+      - T25
+      STEP:
+      - S16
+      - S22
+      - S27
+      - S31
+    unresolved_dependencies:
+    - D-05
+    - D-06
+    - DP-1
+    - OPEN-02
+    - OPEN-03
+  decision_block:
+    description: Decision for the bound original operation
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.decision_block
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.1 BLOCKED rows; §4.2 S06/S11/S23/S28/S32; §4.3 G1/G2
+      (candidate requirements only)
+    missing_sources: []
+    inputs:
+      reconciliation.decision:
+        type: string
+        meaning: Decision for the bound original operation
+    guard_dependencies: []
+    preconditions:
+    - Decision for the bound original operation
+    - 'Required three-valued predicate result: EQ(reconciliation.decision, "BLOCK") == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - reconciliation.decision
+    - - literal
+      - BLOCK
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK:
+      - T11
+      - T17
+      - T22
+      STEP:
+      - S17
+      - S23
+      - S28
+    effective_transitions:
+      TASK:
+      - T11
+      - T17
+      - T22
+      STEP:
+      - S17
+      - S23
+      - S28
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-03
+  decision_fail:
+    description: Decision for the bound original operation
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_MISSING
+    source_refs:
+    - contracts/transition_guards.yaml#guards.decision_fail
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.1 T23; §4.2 S29; §6 OPEN-12 (candidate requirements
+      only)
+    missing_sources:
+    - 'decision_fail: OPEN-12: MP §16.3 has no Observation×FAIL decision row; no valid FAIL-producing
+      policy may be invented.'
+    inputs:
+      reconciliation.decision:
+        type: string
+        meaning: Decision for the bound original operation
+    guard_dependencies: []
+    preconditions:
+    - Decision for the bound original operation
+    - 'Required three-valued predicate result: EQ(reconciliation.decision, "FAIL") == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - reconciliation.decision
+    - - literal
+      - FAIL
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK:
+      - T23
+      STEP:
+      - S29
+    effective_transitions:
+      TASK:
+      - T23
+      STEP:
+      - S29
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-12
+  expected_effect_present:
+    description: Observation for the bound original operation
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.expected_effect_present
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.1 T20; §4.2 S26; MP §16.3 (candidate requirements
+      only)
+    missing_sources: []
+    inputs:
+      reconciliation.observation:
+        type: string
+        meaning: Observation for the bound original operation
+    guard_dependencies: []
+    preconditions:
+    - Observation for the bound original operation
+    - 'Required three-valued predicate result: EQ(reconciliation.observation, "EXPECTED_EFFECT_PRESENT")
+      == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - reconciliation.observation
+    - - literal
+      - EXPECTED_EFFECT_PRESENT
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK: []
+      STEP: []
+    effective_transitions:
+      TASK:
+      - T20
+      STEP:
+      - S26
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-03
+  target_absent:
+    description: Observation for the bound original operation
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.target_absent
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 S6; §4.1 T10/T16/T21/T25; §4.2 S27; MP §16.2/16.3
+      (candidate requirements only)
+    missing_sources: []
+    inputs:
+      reconciliation.observation:
+        type: string
+        meaning: Observation for the bound original operation
+    guard_dependencies: []
+    preconditions:
+    - Observation for the bound original operation
+    - 'Required three-valued predicate result: EQ(reconciliation.observation, "TARGET_ABSENT") == TRUE.'
+    predicate:
+    - eq
+    - - fact
+      - reconciliation.observation
+    - - literal
+      - TARGET_ABSENT
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK: []
+      STEP: []
+    effective_transitions:
+      TASK:
+      - T10
+      - T16
+      - T21
+      - T25
+      STEP:
+      - S16
+      - S22
+      - S27
+      - S31
+    unresolved_dependencies:
+    - D-05
+    - D-06
+    - DP-1
+    - OPEN-02
+    - OPEN-03
+  verify_reconciled:
+    description: EXPECTED_EFFECT_PRESENT/VERIFY with valid Intent/hash/path evidence; still requires independent
+      verification
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_MISSING
+    source_refs:
+    - contracts/transition_guards.yaml#guards.verify_reconciled
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.1 T20; §4.2 S26; MP §16.3 (candidate requirements
+      only)
+    missing_sources:
+    - 'observation_bound: OPEN-03: trusted Observation/Intent/scope evidence carrier and full Observation×Decision
+      pairing are not settled.'
+    inputs:
+      reconciliation.decision:
+        type: string
+        meaning: Decision for the bound original operation
+      reconciliation.observation:
+        type: string
+        meaning: Observation for the bound original operation
+      reconciliation.observation_bound:
+        type: boolean
+        meaning: Durable Observation is one of four reconciliation.schema.json values, bound to exact
+          operation/paths/expected digest and current observation; unknown itself is a valid observation,
+          not success
+    guard_dependencies:
+    - decision_verify
+    - expected_effect_present
+    - observation_bound
+    preconditions:
+    - EXPECTED_EFFECT_PRESENT/VERIFY with valid Intent/hash/path evidence; still requires independent
+      verification
+    - 'Required three-valued predicate result: ALL(guard(observation_bound), guard(expected_effect_present),
+      guard(decision_verify)) == TRUE.'
+    - Every referenced guard is evaluated using the same trusted input snapshot; no missing/cyclic dependency
+      may be treated as true.
+    predicate:
+    - all
+    - - guard
+      - observation_bound
+    - - guard
+      - expected_effect_present
+    - - guard
+      - decision_verify
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK:
+      - T20
+      STEP:
+      - S26
+    effective_transitions:
+      TASK:
+      - T20
+      STEP:
+      - S26
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-03
+  retry_safe:
+    description: Only TARGET_ABSENT/RETRY_SAFE for K0 no-clobber publish with all strict prerequisites;
+      target absence alone never permits retry
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_MISSING
+    source_refs:
+    - contracts/transition_guards.yaml#guards.retry_safe
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 S6; §4.1 T10/T16/T21/T25; §4.2 S27; MP §16.2/16.3
+      (candidate requirements only)
+    missing_sources:
+    - 'no_active_attempt: D-02/DP-3: full Attempt state vocabulary and interruption/recovery transitions
+      remain undefined; ACTIVE index alone is insufficient.'
+    - 'observation_bound: OPEN-03: trusted Observation/Intent/scope evidence carrier and full Observation×Decision
+      pairing are not settled.'
+    - 'retry_original_intent: D-05/D-06: original-Intent identity and byte/argument digest identity lack
+      closed canonicalization/stable-identifier rules.'
+    - 'retry_policy_proved: OPEN-02/D-05/D-06: RETRY_SAFE decision proof, argument identity and stable
+      identifier rules are not closed.'
+    inputs:
+      attempts.active_count:
+        type: integer
+        meaning: Transactional count of ACTIVE Attempts in scope; Task includes historical Plans, Step
+          includes its own Attempts
+      control.emergency_stop:
+        type: boolean
+        meaning: Durable global emergency-stop flag
+      effects.settled:
+        type: boolean
+        meaning: Every started effect has a known reconciled disposition and no uncontrolled active or
+          unresolved dangerous effect remains; an absent target alone proves neither never-published nor
+          settled
+      reconciliation.decision:
+        type: string
+        meaning: Decision for the bound original operation
+      reconciliation.observation:
+        type: string
+        meaning: Observation for the bound original operation
+      reconciliation.observation_bound:
+        type: boolean
+        meaning: Durable Observation is one of four reconciliation.schema.json values, bound to exact
+          operation/paths/expected digest and current observation; unknown itself is a valid observation,
+          not success
+      retry.original_intent_retained:
+        type: boolean
+        meaning: Reuse the same OperationIntent and FileWriteIntent rows, operation_key/arguments/paths/expected
+          bytes; never one Intent or key per Attempt (INV-004)
+      retry.permitted:
+        type: boolean
+        meaning: Trusted policy allows another Attempt for this exact operation; cannot be self-granted
+          by model
+      retry.policy_proved:
+        type: boolean
+        meaning: K0 atomic no-clobber publish recovery strategy proves repeated attempt cannot produce
+          disallowed effects under unchanged original Intent/trust assumptions; unavailable OPEN-02/D-05
+          evidence denies
+      retry.prepared_intact:
+        type: boolean
+        meaning: Original Prepared file exists, is regular/nonsymlink, and expected size/hash and snapshot/Intent
+          identities match; not regenerated with new arguments
+      task.cancel_requested_at_ms:
+        type: nullable_integer
+        meaning: Persisted cancellation request time on this Task or parent Task, read in the commit transaction
+    guard_dependencies:
+    - cancel_absent
+    - decision_retry_safe
+    - effects_settled
+    - emergency_stop_inactive
+    - no_active_attempt
+    - observation_bound
+    - retry_original_intent
+    - retry_permitted
+    - retry_policy_proved
+    - retry_prepared_intact
+    - target_absent
+    preconditions:
+    - Only TARGET_ABSENT/RETRY_SAFE for K0 no-clobber publish with all strict prerequisites; target absence
+      alone never permits retry
+    - 'Required three-valued predicate result: ALL(guard(observation_bound), guard(target_absent), guard(decision_retry_safe),
+      guard(retry_policy_proved), guard(retry_prepared_intact), guard(retry_original_intent), guard(retry_permitted),
+      guard(cancel_absent), guard(emergency_stop_inactive), guard(no_active_attempt), guard(effects_settled))
+      == TRUE.'
+    - Every referenced guard is evaluated using the same trusted input snapshot; no missing/cyclic dependency
+      may be treated as true.
+    predicate:
+    - all
+    - - guard
+      - observation_bound
+    - - guard
+      - target_absent
+    - - guard
+      - decision_retry_safe
+    - - guard
+      - retry_policy_proved
+    - - guard
+      - retry_prepared_intact
+    - - guard
+      - retry_original_intent
+    - - guard
+      - retry_permitted
+    - - guard
+      - cancel_absent
+    - - guard
+      - emergency_stop_inactive
+    - - guard
+      - no_active_attempt
+    - - guard
+      - effects_settled
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK:
+      - T10
+      - T16
+      - T21
+      - T25
+      STEP:
+      - S16
+      - S22
+      - S27
+      - S31
+    effective_transitions:
+      TASK:
+      - T10
+      - T16
+      - T21
+      - T25
+      STEP:
+      - S16
+      - S22
+      - S27
+      - S31
+    unresolved_dependencies:
+    - D-05
+    - D-06
+    - DEC-004
+    - DP-1
+    - OPEN-01
+    - OPEN-02
+    - OPEN-03
+    - OPEN-08
+    - OPEN-12
+  cancellation_complete:
+    description: Persisted cancel source plus stopped starts, safe checkpoint, all effects accounted for
+      and no active Attempt; emergency stop need not be cleared
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_MISSING
+    source_refs:
+    - contracts/transition_guards.yaml#guards.cancellation_complete
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 T5; §4.1 cancellation rows; §4.2 S19 (MP §9.2/9.3)
+      (candidate requirements only)
+    missing_sources:
+    - 'no_active_attempt: D-02/DP-3: full Attempt state vocabulary and interruption/recovery transitions
+      remain undefined; ACTIVE index alone is insufficient.'
+    - 'safe_checkpoint: OPEN-08/OPEN-01: safe-checkpoint and cancel-versus-start arbitration are not defined
+      by an approved carrier; A1–A6 remain NOT_APPROVED.'
+    inputs:
+      attempts.active_count:
+        type: integer
+        meaning: Transactional count of ACTIVE Attempts in scope; Task includes historical Plans, Step
+          includes its own Attempts
+      effects.new_starts_stopped:
+        type: boolean
+        meaning: New target side-effect starts are stopped and no unarbitrated start is in flight; a flag
+          read alone does not prove cancellation/publish linearization
+      effects.safe_checkpoint_evidence:
+        type: boolean
+        meaning: Durable safe-checkpoint and reconciled-effect evidence bound to these operations exists;
+          definition and cancellation arbitration remain OPEN-08/OPEN-01
+      effects.settled:
+        type: boolean
+        meaning: Every started effect has a known reconciled disposition and no uncontrolled active or
+          unresolved dangerous effect remains; an absent target alone proves neither never-published nor
+          settled
+      task.cancel_requested_at_ms:
+        type: nullable_integer
+        meaning: Persisted cancellation request time on this Task or parent Task, read in the commit transaction
+    guard_dependencies:
+    - cancel_persisted
+    - effects_settled
+    - new_effects_stopped
+    - no_active_attempt
+    - safe_checkpoint
+    preconditions:
+    - Persisted cancel source plus stopped starts, safe checkpoint, all effects accounted for and no active
+      Attempt; emergency stop need not be cleared
+    - 'Required three-valued predicate result: ALL(guard(cancel_persisted), guard(new_effects_stopped),
+      guard(safe_checkpoint), guard(effects_settled), guard(no_active_attempt)) == TRUE.'
+    - Every referenced guard is evaluated using the same trusted input snapshot; no missing/cyclic dependency
+      may be treated as true.
+    predicate:
+    - all
+    - - guard
+      - cancel_persisted
+    - - guard
+      - new_effects_stopped
+    - - guard
+      - safe_checkpoint
+    - - guard
+      - effects_settled
+    - - guard
+      - no_active_attempt
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK:
+      - T03
+      - T07
+      - T13
+      - T19
+      - T24
+      - T28
+      - T31
+      STEP:
+      - S03
+      - S08
+      - S13
+      - S19
+      - S25
+      - S30
+      - S34
+      - S37
+    effective_transitions:
+      TASK:
+      - T03
+      - T07
+      - T13
+      - T19
+      - T24
+      - T28
+      - T31
+      STEP:
+      - S03
+      - S08
+      - S13
+      - S19
+      - S25
+      - S30
+      - S34
+      - S37
+    unresolved_dependencies:
+    - DEC-004
+    - DP-1
+    - OPEN-01
+    - OPEN-08
+    - OPEN-12
+  failure_safe:
+    description: Known irrecoverable failure with no uncontrolled/unreconciled effect or active Attempt
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_MISSING
+    source_refs:
+    - contracts/transition_guards.yaml#guards.failure_safe
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 T7/S5; §4.1 T02/T12/T18; §4.2 FAILED/CANCELED
+      rows (candidate requirements only)
+    missing_sources:
+    - 'no_active_attempt: D-02/DP-3: full Attempt state vocabulary and interruption/recovery transitions
+      remain undefined; ACTIVE index alone is insufficient.'
+    inputs:
+      attempts.active_count:
+        type: integer
+        meaning: Transactional count of ACTIVE Attempts in scope; Task includes historical Plans, Step
+          includes its own Attempts
+      effects.settled:
+        type: boolean
+        meaning: Every started effect has a known reconciled disposition and no uncontrolled active or
+          unresolved dangerous effect remains; an absent target alone proves neither never-published nor
+          settled
+      failure.confirmed:
+        type: boolean
+        meaning: Durable reason confirms this object cannot complete; transient error/unknown outcome
+          alone is insufficient
+    guard_dependencies:
+    - effects_settled
+    - failure_confirmed
+    - no_active_attempt
+    preconditions:
+    - Known irrecoverable failure with no uncontrolled/unreconciled effect or active Attempt
+    - 'Required three-valued predicate result: ALL(guard(failure_confirmed), guard(effects_settled), guard(no_active_attempt))
+      == TRUE.'
+    - Every referenced guard is evaluated using the same trusted input snapshot; no missing/cyclic dependency
+      may be treated as true.
+    predicate:
+    - all
+    - - guard
+      - failure_confirmed
+    - - guard
+      - effects_settled
+    - - guard
+      - no_active_attempt
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK:
+      - T02
+      - T06
+      - T12
+      - T18
+      - T23
+      - T27
+      - T30
+      STEP:
+      - S02
+      - S07
+      - S12
+      - S18
+      - S24
+      - S29
+      - S33
+      - S36
+    effective_transitions:
+      TASK:
+      - T02
+      - T06
+      - T12
+      - T18
+      - T23
+      - T27
+      - T30
+      STEP:
+      - S02
+      - S07
+      - S12
+      - S18
+      - S24
+      - S29
+      - S33
+      - S36
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-12
+  can_start_work:
+    description: Trusted current worker and uncanceled/non-stopped Task, not proof of publish-start linearization
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_IDENTIFIED
+    source_refs:
+    - contracts/transition_guards.yaml#guards.can_start_work
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.0 T6/S4; §4.1 T04; §4.2 S01/S04/S09 (candidate requirements
+      only)
+    missing_sources: []
+    inputs:
+      control.emergency_stop:
+        type: boolean
+        meaning: Durable global emergency-stop flag
+      control.global_epoch_present:
+        type: boolean
+        meaning: Singleton global system_control epoch row exists in the committing transaction
+      control.worker_epoch:
+        type: integer
+        meaning: Current submitting worker epoch equals global current epoch in conditional SQL or same-transaction
+          write barrier; never compare only the old Attempt row (right)
+      task.cancel_requested_at_ms:
+        type: nullable_integer
+        meaning: Persisted cancellation request time on this Task or parent Task, read in the commit transaction
+      worker.fixed_lock_fd_held:
+        type: boolean
+        meaning: Current worker owns the one fixed execution flock and retains its fd; lease, worker_id,
+          or historical Attempt epoch is not proof
+      worker.my_epoch:
+        type: integer
+        meaning: Current submitting worker epoch equals global current epoch in conditional SQL or same-transaction
+          write barrier; never compare only the old Attempt row (left)
+    guard_dependencies:
+    - cancel_absent
+    - emergency_stop_inactive
+    - global_epoch_current
+    - global_epoch_present
+    - worker_lock_held
+    preconditions:
+    - Trusted current worker and uncanceled/non-stopped Task, not proof of publish-start linearization
+    - 'Required three-valued predicate result: ALL(guard(worker_lock_held), guard(global_epoch_current),
+      guard(global_epoch_present), guard(cancel_absent), guard(emergency_stop_inactive)) == TRUE.'
+    - Every referenced guard is evaluated using the same trusted input snapshot; no missing/cyclic dependency
+      may be treated as true.
+    predicate:
+    - all
+    - - guard
+      - worker_lock_held
+    - - guard
+      - global_epoch_current
+    - - guard
+      - global_epoch_present
+    - - guard
+      - cancel_absent
+    - - guard
+      - emergency_stop_inactive
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK:
+      - T04
+      STEP:
+      - S01
+      - S04
+      - S09
+    effective_transitions:
+      TASK:
+      - T04
+      STEP:
+      - S01
+      - S04
+      - S09
+    unresolved_dependencies:
+    - D-01
+    - DEC-004
+    - DP-1
+    - DP-5b
+    - OPEN-01
+    - OPEN-06
+    - OPEN-08
+  block_safe:
+    description: Record cause and stop new starts while preserving evidence, not treating BLOCK as a known
+      outcome
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_MISSING
+    source_refs:
+    - contracts/transition_guards.yaml#guards.block_safe
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.1 BLOCKED rows; §4.2 S06/S11/S23/S28/S32; §4.3 G1/G2
+      (candidate requirements only)
+    missing_sources:
+    - 'block_reason_recorded: D-08/OPEN-03/R-7: Step prerequisite/conflict and block-reason evidence carriers
+      are incomplete; a nonempty boolean/string alone is not proof.'
+    inputs:
+      block.reason_durable:
+        type: boolean
+        meaning: Explicit missing prerequisite/conflict/environment/recovery evidence and nonempty reason
+          are durably recorded; BLOCKED must preserve unresolved effects and prohibit starts
+      block.starts_stopped:
+        type: boolean
+        meaning: Entering BLOCKED stops any new target-effect starts and preserves all unresolved operation/artifact/Attempt
+          evidence; not terminalization
+    guard_dependencies:
+    - block_reason_recorded
+    - block_starts_stopped
+    preconditions:
+    - Record cause and stop new starts while preserving evidence, not treating BLOCK as a known outcome
+    - 'Required three-valued predicate result: ALL(guard(block_reason_recorded), guard(block_starts_stopped))
+      == TRUE.'
+    - Every referenced guard is evaluated using the same trusted input snapshot; no missing/cyclic dependency
+      may be treated as true.
+    predicate:
+    - all
+    - - guard
+      - block_reason_recorded
+    - - guard
+      - block_starts_stopped
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK:
+      - T05
+      - T11
+      - T17
+      - T22
+      - T26
+      STEP:
+      - S06
+      - S11
+      - S17
+      - S23
+      - S28
+      - S32
+    effective_transitions:
+      TASK:
+      - T05
+      - T11
+      - T17
+      - T22
+      - T26
+      STEP:
+      - S06
+      - S11
+      - S17
+      - S23
+      - S28
+      - S32
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-03
+  g3_safety_decision_open:
+    description: Always deny S16/S17/S22 while G3 semantic approval is absent. Other hypothetical prerequisites
+      are documented but do not permit this edge. Existing NRC edge is evaluated separately, never implicitly.
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_MISSING
+    source_refs:
+    - contracts/transition_guards.yaml#guards.g3_safety_decision_open
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S16/S17/S22; §4.3 G3 (candidate requirements only)
+    missing_sources:
+    - 'g3_safety_decision_open: S16/S17/S22: MP edge sources and safety decisions are missing; preserve
+      literal false, never treat the name as approval.'
+    inputs: {}
+    guard_dependencies: []
+    preconditions:
+    - Always deny S16/S17/S22 while G3 semantic approval is absent. Other hypothetical prerequisites are
+      documented but do not permit this edge. Existing NRC edge is evaluated separately, never implicitly.
+    - 'Required three-valued predicate result: false == TRUE.'
+    - 'No passing valuation exists in this draft: predicate is literal false until a separately authorized
+      design revision.'
+    predicate:
+    - literal
+    - false
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK: []
+      STEP:
+      - S16
+      - S17
+      - S22
+    effective_transitions:
+      TASK: []
+      STEP:
+      - S16
+      - S17
+      - S22
+    unresolved_dependencies:
+    - D-G1a
+    - DP-1
+    - OPEN-02
+  fail_decision_policy_open:
+    description: 'Always deny reconciliation-to-FAILED while OPEN-12 is open: K0 MP §16.3 produces no
+      FAIL row. Do not invent an Observation/FAIL pairing.'
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_MISSING
+    source_refs:
+    - contracts/transition_guards.yaml#guards.fail_decision_policy_open
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.1 T23; §4.2 S29; §6 OPEN-12 (candidate requirements
+      only)
+    missing_sources:
+    - 'fail_decision_policy_open: OPEN-12: no approved FAIL-producing policy; existing literal false is
+      only the fail-closed candidate.'
+    inputs: {}
+    guard_dependencies: []
+    preconditions:
+    - 'Always deny reconciliation-to-FAILED while OPEN-12 is open: K0 MP §16.3 produces no FAIL row. Do
+      not invent an Observation/FAIL pairing.'
+    - 'Required three-valued predicate result: false == TRUE.'
+    - 'No passing valuation exists in this draft: predicate is literal false until a separately authorized
+      design revision.'
+    predicate:
+    - literal
+    - false
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK:
+      - T23
+      STEP:
+      - S29
+    effective_transitions:
+      TASK:
+      - T23
+      STEP:
+      - S29
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-12
+  block_pair:
+    description: 'Known K0 conservative BLOCK pairing: TARGET_ABSENT, CONFLICTING_EFFECT_PRESENT or INSUFFICIENT_EVIDENCE
+      with bound BLOCK. Expected effect with invalid identity/hash is insufficient evidence, not a free
+      BLOCK pairing.'
+    approval_status: NOT_APPROVED
+    verification_status: NOT_IMPLEMENTED
+    source_status: SOURCE_MISSING
+    source_refs:
+    - contracts/transition_guards.yaml#guards.block_pair
+    - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.1 BLOCKED rows; §4.2 S06/S11/S23/S28/S32; §4.3 G1/G2
+      (candidate requirements only)
+    missing_sources:
+    - 'observation_bound: OPEN-03: trusted Observation/Intent/scope evidence carrier and full Observation×Decision
+      pairing are not settled.'
+    inputs:
+      reconciliation.decision:
+        type: string
+        meaning: Decision for the bound original operation
+      reconciliation.observation:
+        type: string
+        meaning: Observation for the bound original operation
+      reconciliation.observation_bound:
+        type: boolean
+        meaning: Durable Observation is one of four reconciliation.schema.json values, bound to exact
+          operation/paths/expected digest and current observation; unknown itself is a valid observation,
+          not success
+    guard_dependencies:
+    - decision_block
+    - observation_bound
+    preconditions:
+    - 'Known K0 conservative BLOCK pairing: TARGET_ABSENT, CONFLICTING_EFFECT_PRESENT or INSUFFICIENT_EVIDENCE
+      with bound BLOCK. Expected effect with invalid identity/hash is insufficient evidence, not a free
+      BLOCK pairing.'
+    - 'Required three-valued predicate result: ALL(guard(observation_bound), guard(decision_block), ANY(EQ(reconciliation.observation,
+      "TARGET_ABSENT"), EQ(reconciliation.observation, "CONFLICTING_EFFECT_PRESENT"), EQ(reconciliation.observation,
+      "INSUFFICIENT_EVIDENCE"))) == TRUE.'
+    - Every referenced guard is evaluated using the same trusted input snapshot; no missing/cyclic dependency
+      may be treated as true.
+    predicate:
+    - all
+    - - guard
+      - observation_bound
+    - - guard
+      - decision_block
+    - - any
+      - - eq
+        - - fact
+          - reconciliation.observation
+        - - literal
+          - TARGET_ABSENT
+      - - eq
+        - - fact
+          - reconciliation.observation
+        - - literal
+          - CONFLICTING_EFFECT_PRESENT
+      - - eq
+        - - fact
+          - reconciliation.observation
+        - - literal
+          - INSUFFICIENT_EVIDENCE
+    rejection_conditions:
+    - Predicate evaluates FALSE or UNKNOWN; a required fact/evidence is missing, mistyped, unreadable
+      or unevaluable.
+    - Any required source/dependency is unresolved in real use; a synthetic true fact is not an authorization
+      or evidence grant.
+    on_rejection: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES_NO_IMPLICIT_TRANSITION
+    transitions:
+      TASK:
+      - T11
+      - T17
+      - T22
+      STEP:
+      - S17
+      - S23
+      - S28
+    effective_transitions:
+      TASK:
+      - T11
+      - T17
+      - T22
+      STEP:
+      - S17
+      - S23
+      - S28
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-03
+
+

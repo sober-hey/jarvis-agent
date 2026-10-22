@@ -1,0 +1,25 @@
+{
+  "source_id": "positive_022",
+  "text": "Jarvis, turn off the hallway light.",
+  "category": "positive",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Ethan",
+  "voice_kind": "system",
+  "tempo": 1.0,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 35
+  },
+  "elapsed_seconds": 0.879,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/positive_022.wav",
+  "audio": "wav/positive_022.wav",
+  "duration_seconds": 2.0,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "c63147bf8c488b0cfc4efc84b52ea89529127e5dc2620951189d6bdfa3b6d6ac",
+  "sha256_audio": "473ae2b6aa052cbc6044df48cbe8df15c0b256a66683f77ee43c48ae36d4d855"
+}

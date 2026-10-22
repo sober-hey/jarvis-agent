@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_near_087",
+  "text": "Carla is waiting near the library.",
+  "category": "negative_near",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Ethan",
+  "voice_kind": "system",
+  "tempo": 0.94,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 34
+  },
+  "elapsed_seconds": 1.062,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_near_087.wav",
+  "audio": "wav/negative_near_087.wav",
+  "duration_seconds": 2.7174,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "f870b5b738db431b591fd05423beba4415ed871ef4df0ddfc4a66aa0936ee0ff",
+  "sha256_audio": "6f9f7c15a216a0a4af60819dd154fc4c84ea0ff30508560d139f6c83f58fffd3"
+}

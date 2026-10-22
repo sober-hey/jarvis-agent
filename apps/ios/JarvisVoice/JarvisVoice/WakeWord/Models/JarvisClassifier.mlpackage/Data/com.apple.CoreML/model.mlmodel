@@ -1,0 +1,425 @@
+Ã
+
+features*	
+` €R
+
+confidence
+*
+ €¢Œ
+jOffline Jarvis wake-word JarvisClassifier; openWakeWord-derived frontend; personal noncommercial use only.PJARVIS project; frontend weights dscripka/openWakeWord / Google speech_embedding"mFrontend: see research/RESEARCH.md; personal noncommercial only pending upstream model licence clarification.¢4
+#com.github.apple.coremltools.sourcetorch==2.14.1¢:
++com.github.apple.coremltools.source_dialectTorchScript¢:
+,com.github.apple.coremltools.conversion_date
+2026-10-20¢+
+$com.github.apple.coremltools.version9.0²Šœ
+main“
+$
+features
+
+
+
+`CoreML6á
+CoreML6Õ
+confidence‚
+const
+
+net_1_bias
+
+€* 
+name
+
+"
+
+net_1_bias*:
+val3
+
+€*"
+@model_path/weights/weight.bin@•
+const$
+net_1_weight
+
+€
+€*"
+name
+
+"
+net_1_weight*B
+val;
+
+€
+€*#
+@model_path/weights/weight.bin€„
+const
+
+net_2_bias
+
+€* 
+name
+
+"
+
+net_2_bias*<
+val5
+
+€*$
+@model_path/weights/weight.binÀ…0ˆ
+const
+net_2_weight
+
+€*"
+name
+
+"
+net_2_weight*<
+val5
+
+€*$
+@model_path/weights/weight.bin€Š0„
+const
+
+net_4_bias
+
+€* 
+name
+
+"
+
+net_4_bias*<
+val5
+
+€*$
+@model_path/weights/weight.binÀŽ0–
+const$
+net_4_weight
+
+€
+€*"
+name
+
+"
+net_4_weight*C
+val<
+
+€
+€*$
+@model_path/weights/weight.bin€“0„
+const
+
+net_5_bias
+
+€* 
+name
+
+"
+
+net_5_bias*<
+val5
+
+€*$
+@model_path/weights/weight.binÀ“4ˆ
+const
+net_5_weight
+
+€*"
+name
+
+"
+net_5_weight*<
+val5
+
+€*$
+@model_path/weights/weight.bin€˜4h
+const
+
+net_7_bias
+
+
+* 
+name
+
+"
+
+net_7_bias*!
+val
+
+
+
+
+
+
+¬ô»”
+const#
+net_7_weight
+
+
+€*"
+name
+
+"
+net_7_weight*B
+val;
+
+
+€*$
+@model_path/weights/weight.binÀœ4M
+const
+var_4
+*
+name
+
+
+"
+op_4*
+val
+
+
+
+
+¬Å'7c
+const
+concat_0
+
+
+*
+name
+
+"
+
+concat_0* 
+val
+
+
+	
+
+€r
+reshape
+shape
+
+
+concat_0
+x
+
+
+features
+input_1
+
+
+€*
+name
+
+"	
+input_1Ž
+linear
+bias
+
+
+net_1_bias
+weight
+
+net_1_weight
+x
+	
+input_1
+input_3
+
+
+€*
+name
+
+"
+
+linear_0v
+const
+input_5_axes_0
+
+
+*$
+name
+
+"
+input_5_axes_0*'
+val 
+
+
+
+
+
+ÿÿÿÿÿÿÿÿÿÂ
+
+layer_norm
+beta
+
+
+net_2_bias
+epsilon	
+
+var_4
+axes
+
+input_5_axes_0
+gamma
+
+net_2_weight
+x
+	
+input_3
+input_5
+
+
+€*
+name
+
+"	
+input_5W
+relu
+x
+	
+input_5
+input_7
+
+
+€*
+name
+
+"	
+input_7Ž
+linear
+bias
+
+
+net_4_bias
+weight
+
+net_4_weight
+x
+	
+input_7
+input_9
+
+
+€*
+name
+
+"
+
+linear_1x
+const
+input_11_axes_0
+
+
+*%
+name
+
+"
+input_11_axes_0*'
+val 
+
+
+
+
+
+ÿÿÿÿÿÿÿÿÿÅ
+
+layer_norm
+beta
+
+
+net_5_bias
+epsilon	
+
+var_4
+axes
+
+input_11_axes_0
+gamma
+
+net_5_weight
+x
+	
+input_9
+input_11
+
+
+€*
+name
+
+"
+
+input_11Z
+relu
+x
+
+
+input_11
+input_13
+
+
+€*
+name
+
+"
+
+input_13Œ
+linear
+bias
+
+
+net_7_bias
+weight
+
+net_7_weight
+x
+
+
+input_13
+input
+
+
+*
+name
+
+"
+
+linear_2X
+sigmoid
+x	
+
+input 
+
+confidence
+
+
+*
+name
+
+	"
+op_33"æ
+	buildInfoØ"
+
+
+Å"Â
+6
+!
+
+"
+coremltools-version
+	
+"
+9.0
+A
+)
+!
+"
+coremltools-component-torch
+
+
+"
+2.14.1
+E
+(
+ 
+"
+coremltools-source-dialect
+
+"
+TorchScript

@@ -1,0 +1,1985 @@
+schema_version: 1
+status: DRAFT
+approval_status: NOT_APPROVED
+runtime_enabled: false
+contract_pack_status: NOT_FROZEN
+verification_status: OFFLINE_DESIGN_PROBES_ONLY
+purpose: K0-004 SQLite Schema 与迁移设计草案；不是生产 DDL、迁移工具或 K0 完成证据。
+dependencies:
+  K0-002: IN_PROGRESS / NOT_FROZEN
+  K0-003: IN_PROGRESS / DRAFT
+source_refs:
+- contracts/draft/plan.schema.json
+- contracts/draft/step.schema.json
+- contracts/draft/attempt.schema.json
+- contracts/draft/execution_graph.schema.json
+- contracts/task_transitions.yaml
+- contracts/step_transitions.yaml
+- contracts/guards.yaml
+- contracts/domain_relationships.yaml
+- contracts/database_constraints.yaml
+- docs/reviews/K0-002-database-fixture-review.md
+- docs/reviews/K0-002-database-fixture-acceptance.md
+- docs/reports/K0-002_CORE_DECISION_PACKAGE.md
+naming:
+  status: DRAFT_PENDING_DP
+  is_deployed_rename: false
+  aliases:
+    step_attempts: attempts
+    task_events: events
+    operation_intents.id: operation_intents.operation_id
+  basis: 按本任务给定表名及 execution_graph.intent.operation_id 命名。MP/顶层草案仍用旧名；DP-6 未批准，禁止静默改名或假定兼容。
+  not_a_deployed_migration: 没有 ALTER/复制/删除现有产品表；当前 packaging/ 数据库不在本草案适用范围。
+representation:
+  status: DRAFT_PENDING_DP
+  primary_keys: TEXT PRIMARY KEY 显式 NOT NULL；避免普通 rowid 表允许 NULL 主键的 SQLite 特例。
+  integers: INTEGER affinity 加 typeof CHECK；域 boolean 必须由显式适配映射为 0/1，禁止 truthiness。
+  timestamps: 非负 UTC epoch 毫秒；时间戳不是事件排序或提交线性化权威。
+  digest: TEXT 小写十六进制 64 字符；仅格式，不裁定 D-03/D-04 摘要字段或重算算法。
+  document_version: JSON schema_version 是封套版本，不自动增加领域行列；schema_version 表仅跟踪候选物理迁移版本。
+  state_checks: Task/Step 精确投影当前草案枚举；CHECK 只校验值，不能决定合法边、Guard 或授权。
+  open_lifecycles: Plan/Attempt 仅已知 ACTIVE 部分索引谓词，不发明其他枚举、终态或 version 列。
+  delete_policy: FK NO ACTION 无级联删除；不能单靠 FK 防止叶子行删除、历史重写或 INSERT OR REPLACE。
+  extra_table: file_write_intents 保留通用 Intent 与专用载体分离；不把所有字段硬塞进 operation_intents。
+  out_of_scope: artifacts 仅有字段清单、未有定稿类型；不猜造 artifacts DDL，结果/Observation/恢复证据载体仍待 DP-4。
+connection_requirements:
+  status: DRAFT_PENDING_DP
+  foreign_keys:
+    sql: PRAGMA foreign_keys = ON;
+    readback: 1
+    scope: 每条连接、BEGIN 前设置并读回；缺失/关闭拒绝写入。
+  journal_mode:
+    sql: PRAGMA journal_mode = WAL;
+    readback: wal
+    scope: 真实文件库打开时验证；本测试使用 :memory:，不声称 WAL 已验证。
+  synchronous:
+    sql: PRAGMA synchronous = FULL;
+    readback: 2
+  busy_timeout:
+    sql: PRAGMA busy_timeout = 5000;
+    readback: 5000
+  json: events.payload_json 依赖 SQLite json_valid；正式迁移前探测能力，不吞掉函数缺失。
+  failure: SQLITE_BUSY/超时/未知 COMMIT 结果不得视为成功或触发副作用重试；恢复/重试规则另行批准。
+tables:
+  tasks:
+    status: DRAFT_PENDING_DP
+    unresolved_dependencies:
+    - DP-1
+    - DP-5b
+    - D-03
+    - OPEN-01
+    - DP-6
+    source_refs:
+    - MP-v1.1.1 §10.1; inherited unchanged by v1.1.2 §10.1
+    columns:
+      id:
+        type: TEXT
+        not_null: true
+        primary_key: true
+        check: length(id) > 0
+      request_key:
+        type: TEXT
+        not_null: true
+        unique: true
+        check: length(request_key) > 0
+      request_digest:
+        type: TEXT
+        not_null: true
+        check: length(request_digest) = 64 AND request_digest NOT GLOB '*[^0-9a-f]*'
+      task_kind:
+        type: TEXT
+        not_null: true
+        check: length(task_kind) > 0
+      state:
+        type: TEXT
+        not_null: true
+        check: state IN ('CREATED', 'READY', 'RUNNING', 'VERIFYING', 'NEEDS_RECONCILIATION', 'RETRY_WAIT',
+          'BLOCKED', 'SUCCEEDED', 'FAILED', 'CANCELED')
+      active_plan_id:
+        type: TEXT
+        not_null: false
+        check: length(active_plan_id) > 0
+      cancel_requested_at_ms:
+        type: INTEGER
+        not_null: false
+        check: cancel_requested_at_ms IS NULL OR (typeof(cancel_requested_at_ms) = 'integer' AND cancel_requested_at_ms
+          >= 0)
+      cancel_requested_by:
+        type: TEXT
+        not_null: false
+        check: length(cancel_requested_by) > 0
+      cancel_reason:
+        type: TEXT
+        not_null: false
+        check: length(cancel_reason) > 0
+      version:
+        type: INTEGER
+        not_null: true
+        check: typeof(version) = 'integer' AND version >= 0
+        default_sql: '0'
+      created_at_ms:
+        type: INTEGER
+        not_null: true
+        check: typeof(created_at_ms) = 'integer' AND created_at_ms >= 0
+      updated_at_ms:
+        type: INTEGER
+        not_null: true
+        check: typeof(updated_at_ms) = 'integer' AND updated_at_ms >= 0
+    unique: []
+    foreign_keys:
+    - columns:
+      - active_plan_id
+      - id
+      references:
+        table: task_plans
+        columns:
+        - id
+        - task_id
+      on_delete: NO ACTION
+      on_update: NO ACTION
+    checks:
+    - updated_at_ms >= created_at_ms
+    notes:
+    - 最小 graph Task 投影另补 MP 已有 request/timestamp/cancel 列，未发明 TaskSpec JSON 载体。
+    - 可空 active_plan_id 遵循 MATCH SIMPLE；同 Task FK 不证明目标 Plan ACTIVE 或指针双向一致。
+    - version 与 state 用于同事务条件更新；不增加 Plan/Attempt CAS 列。
+    state_values:
+    - CREATED
+    - READY
+    - RUNNING
+    - VERIFYING
+    - NEEDS_RECONCILIATION
+    - RETRY_WAIT
+    - BLOCKED
+    - SUCCEEDED
+    - FAILED
+    - CANCELED
+  task_plans:
+    status: DRAFT_PENDING_DP
+    unresolved_dependencies:
+    - DP-2
+    - D-01
+    - D-04
+    - D-07
+    source_refs:
+    - MP-v1.1.1 §10.1; inherited unchanged by v1.1.2 §10.1
+    columns:
+      id:
+        type: TEXT
+        not_null: true
+        primary_key: true
+        check: length(id) > 0
+      task_id:
+        type: TEXT
+        not_null: true
+        check: length(task_id) > 0
+      plan_version:
+        type: INTEGER
+        not_null: true
+        check: typeof(plan_version) = 'integer' AND plan_version >= 1
+      state:
+        type: TEXT
+        not_null: true
+        check: length(state) > 0
+      plan_digest:
+        type: TEXT
+        not_null: true
+        check: length(plan_digest) = 64 AND plan_digest NOT GLOB '*[^0-9a-f]*'
+      created_at_ms:
+        type: INTEGER
+        not_null: true
+        check: typeof(created_at_ms) = 'integer' AND created_at_ms >= 0
+    unique:
+    - - task_id
+      - plan_version
+    - - id
+      - task_id
+    foreign_keys:
+    - columns:
+      - task_id
+      references:
+        table: tasks
+        columns:
+        - id
+      on_delete: NO ACTION
+      on_update: NO ACTION
+    checks: []
+    notes:
+    - plan_version 是领域计划版本，不是行 CAS 或数据库迁移版本。
+    - ACTIVE 唯一索引只能证明最多一个，不能证明存在、生命周期或 Task 指针指回。
+    lifecycle_status: DRAFT_PENDING_DP
+  task_steps:
+    status: DRAFT_PENDING_DP
+    unresolved_dependencies:
+    - DP-1
+    - D-08
+    - D-11
+    - DP-5b
+    source_refs:
+    - MP-v1.1.1 §10.1; inherited unchanged by v1.1.2 §10.1
+    columns:
+      id:
+        type: TEXT
+        not_null: true
+        primary_key: true
+        check: length(id) > 0
+      task_id:
+        type: TEXT
+        not_null: true
+        check: length(task_id) > 0
+      plan_id:
+        type: TEXT
+        not_null: true
+        check: length(plan_id) > 0
+      ordinal:
+        type: INTEGER
+        not_null: true
+        check: typeof(ordinal) = 'integer' AND ordinal >= 1
+      logical_effect_id:
+        type: TEXT
+        not_null: false
+        check: length(logical_effect_id) > 0
+      state:
+        type: TEXT
+        not_null: true
+        check: state IN ('PENDING', 'CLAIMED', 'PREPARING', 'EXECUTING', 'VERIFYING', 'NEEDS_RECONCILIATION',
+          'RETRY_WAIT', 'BLOCKED', 'COMPLETED', 'FAILED', 'CANCELED')
+      required:
+        type: INTEGER
+        not_null: true
+        check: typeof(required) = 'integer' AND required IN (0, 1)
+        default_sql: '1'
+      version:
+        type: INTEGER
+        not_null: true
+        check: typeof(version) = 'integer' AND version >= 0
+        default_sql: '0'
+    unique:
+    - - plan_id
+      - ordinal
+    - - id
+      - task_id
+    foreign_keys:
+    - columns:
+      - plan_id
+      - task_id
+      references:
+        table: task_plans
+        columns:
+        - id
+        - task_id
+      on_delete: NO ACTION
+      on_update: NO ACTION
+    checks: []
+    notes:
+    - 没有重复添加 task FK，Task 归属经 Plan 的组合 FK 保证。
+    - logical_effect_id 可空保持结构兼容；可发布状态必须非空属于事务 Guard。
+    - 输入、前置条件、验证定义、退避/预算载体未批准，不猜造对应列。
+    state_values:
+    - PENDING
+    - CLAIMED
+    - PREPARING
+    - EXECUTING
+    - VERIFYING
+    - NEEDS_RECONCILIATION
+    - RETRY_WAIT
+    - BLOCKED
+    - COMPLETED
+    - FAILED
+    - CANCELED
+  operation_intents:
+    status: DRAFT_PENDING_DP
+    unresolved_dependencies:
+    - DP-4
+    - DP-5b
+    - DP-6
+    - D-16
+    source_refs:
+    - MP-v1.1.1 §10.1; inherited unchanged by v1.1.2 §10.1
+    columns:
+      operation_id:
+        type: TEXT
+        not_null: true
+        primary_key: true
+        check: length(operation_id) > 0
+      step_id:
+        type: TEXT
+        not_null: true
+        unique: true
+        check: length(step_id) > 0
+      operation_key:
+        type: TEXT
+        not_null: true
+        unique: true
+        check: length(operation_key) > 0
+      operation_type:
+        type: TEXT
+        not_null: true
+        check: operation_type = 'file.publish.no_clobber'
+      tool_name:
+        type: TEXT
+        not_null: true
+        check: tool_name = 'filesystem.publisher'
+      tool_version:
+        type: TEXT
+        not_null: true
+        check: length(tool_version) > 0
+      arguments_digest:
+        type: TEXT
+        not_null: true
+        check: length(arguments_digest) = 64 AND arguments_digest NOT GLOB '*[^0-9a-f]*'
+      state:
+        type: TEXT
+        not_null: true
+        check: state IN ('PREPARED', 'PUBLISHING', 'NEEDS_RECONCILIATION', 'VERIFIED', 'BLOCKED', 'FAILED')
+      created_at_ms:
+        type: INTEGER
+        not_null: true
+        check: typeof(created_at_ms) = 'integer' AND created_at_ms >= 0
+    unique:
+    - - operation_id
+      - step_id
+    foreign_keys:
+    - columns:
+      - step_id
+      references:
+        table: task_steps
+        columns:
+        - id
+      on_delete: NO ACTION
+      on_update: NO ACTION
+    checks: []
+    notes:
+    - operation_id 是草案 JSON 域名，对应 MP id；命名兼容问题不在此自批。
+    - 每 Step 至多一个 Intent、operation_key 全局唯一；不能证明原始参数字节跨时间不变。
+    - 重试共享同一行；禁止用 INSERT OR REPLACE 或新 key 规避唯一约束。
+    state_values:
+    - PREPARED
+    - PUBLISHING
+    - NEEDS_RECONCILIATION
+    - VERIFIED
+    - BLOCKED
+    - FAILED
+  file_write_intents:
+    status: DRAFT_PENDING_DP
+    unresolved_dependencies:
+    - DP-4
+    - DP-6
+    - D-16
+    - OPEN-01
+    source_refs:
+    - MP-v1.1.1 §10.1; inherited unchanged by v1.1.2 §10.1
+    columns:
+      operation_id:
+        type: TEXT
+        not_null: true
+        primary_key: true
+        check: length(operation_id) > 0
+      input_snapshot_sha256:
+        type: TEXT
+        not_null: true
+        check: length(input_snapshot_sha256) = 64 AND input_snapshot_sha256 NOT GLOB '*[^0-9a-f]*'
+      prepared_relpath:
+        type: TEXT
+        not_null: true
+        check: length(prepared_relpath) > 0
+      target_relpath:
+        type: TEXT
+        not_null: true
+        check: length(target_relpath) > 0
+      expected_sha256:
+        type: TEXT
+        not_null: true
+        check: length(expected_sha256) = 64 AND expected_sha256 NOT GLOB '*[^0-9a-f]*'
+      expected_size:
+        type: INTEGER
+        not_null: true
+        check: typeof(expected_size) = 'integer' AND expected_size >= 0
+    unique: []
+    foreign_keys:
+    - columns:
+      - operation_id
+      references:
+        table: operation_intents
+        columns:
+        - operation_id
+      on_delete: NO ACTION
+      on_update: NO ACTION
+    checks: []
+    notes:
+    - 仅数据格式/引用；路径归一化、NOFOLLOW、文件 fsync、内容哈希与发布仲裁不能由 TEXT CHECK 证明。
+  attempts:
+    status: DRAFT_PENDING_DP
+    unresolved_dependencies:
+    - DP-3
+    - DP-4
+    - DP-5a
+    - DP-5b
+    - DP-6
+    - D-02
+    - D-07
+    - D-13
+    - D-15
+    - OPEN-10
+    source_refs:
+    - MP-v1.1.1 §10.1; inherited unchanged by v1.1.2 §10.1
+    columns:
+      id:
+        type: TEXT
+        not_null: true
+        primary_key: true
+        check: length(id) > 0
+      step_id:
+        type: TEXT
+        not_null: true
+        check: length(step_id) > 0
+      operation_id:
+        type: TEXT
+        not_null: true
+        check: length(operation_id) > 0
+      attempt_no:
+        type: INTEGER
+        not_null: true
+        check: typeof(attempt_no) = 'integer' AND attempt_no >= 1
+      worker_epoch:
+        type: INTEGER
+        not_null: true
+        check: typeof(worker_epoch) = 'integer' AND worker_epoch >= 0
+      state:
+        type: TEXT
+        not_null: true
+        check: length(state) > 0
+      started_at_ms:
+        type: INTEGER
+        not_null: true
+        check: typeof(started_at_ms) = 'integer' AND started_at_ms >= 0
+      finished_at_ms:
+        type: INTEGER
+        not_null: false
+        check: finished_at_ms IS NULL OR (typeof(finished_at_ms) = 'integer' AND finished_at_ms >= 0)
+    unique:
+    - - step_id
+      - attempt_no
+    foreign_keys:
+    - columns:
+      - step_id
+      references:
+        table: task_steps
+        columns:
+        - id
+      on_delete: NO ACTION
+      on_update: NO ACTION
+    - columns:
+      - operation_id
+      - step_id
+      references:
+        table: operation_intents
+        columns:
+        - operation_id
+        - step_id
+      on_delete: NO ACTION
+      on_update: NO ACTION
+    checks:
+    - finished_at_ms IS NULL OR finished_at_ms >= started_at_ms
+    - state != 'ACTIVE' OR finished_at_ms IS NULL
+    notes:
+    - worker_epoch 是历史提交者 epoch，不是 worker identity，不因全局 epoch 增长改写旧 Attempt。
+    - 不添加结果/错误/owner/version 列；缺失证据或可信 owner 适配器时 Guard 拒绝。
+    - 恢复后新 Attempt 的编号严格单调、旧行封口、旧 Intent 重用仍需事务与已批准生命周期。
+    lifecycle_status: DRAFT_PENDING_DP
+  system_control:
+    status: DRAFT_PENDING_DP
+    unresolved_dependencies:
+    - DP-5b
+    - OPEN-06
+    - OPEN-01
+    - OPEN-08
+    source_refs:
+    - MP-v1.1.1 §10.1; inherited unchanged by v1.1.2 §10.1
+    columns:
+      singleton_id:
+        type: INTEGER
+        not_null: true
+        check: singleton_id = 1
+        primary_key: true
+      emergency_stop:
+        type: INTEGER
+        not_null: true
+        check: typeof(emergency_stop) = 'integer' AND emergency_stop IN (0, 1)
+      backup_mode:
+        type: INTEGER
+        not_null: true
+        check: typeof(backup_mode) = 'integer' AND backup_mode IN (0, 1)
+      worker_epoch:
+        type: INTEGER
+        not_null: true
+        check: typeof(worker_epoch) = 'integer' AND worker_epoch >= 0
+      updated_at_ms:
+        type: INTEGER
+        not_null: true
+        check: typeof(updated_at_ms) = 'integer' AND updated_at_ms >= 0
+    unique: []
+    foreign_keys: []
+    checks: []
+    notes:
+    - MP 只有字段清单、没有发布 DDL；这里类型、singleton_id=1、backup_mode 0/1 均为待批候选。
+    - PK+CHECK 只保证至多一行；不自动种入全局 epoch，不允许缺行当作 epoch=0/未停止。
+    - epoch 单调递增与比较在同一写事务；不能给 Attempt.worker_epoch 建 FK 到当前全局 epoch。
+  events:
+    status: DRAFT_PENDING_DP
+    unresolved_dependencies:
+    - DP-1
+    - DP-4
+    - DP-5b
+    - DP-6
+    - OPEN-10
+    source_refs:
+    - MP-v1.1.1 §10.1; inherited unchanged by v1.1.2 §10.1
+    columns:
+      event_sequence:
+        type: INTEGER
+        not_null: true
+        check: typeof(event_sequence) = 'integer' AND event_sequence >= 1
+        primary_key: true
+        autoincrement: true
+      task_id:
+        type: TEXT
+        not_null: true
+        check: length(task_id) > 0
+      step_id:
+        type: TEXT
+        not_null: false
+        check: length(step_id) > 0
+      event_type:
+        type: TEXT
+        not_null: true
+        check: length(event_type) > 0
+      actor_type:
+        type: TEXT
+        not_null: true
+        check: length(actor_type) > 0
+      actor_id:
+        type: TEXT
+        not_null: true
+        check: length(actor_id) > 0
+      correlation_id:
+        type: TEXT
+        not_null: false
+        check: length(correlation_id) > 0
+      payload_json:
+        type: TEXT
+        not_null: true
+        check: json_valid(payload_json)
+      created_at_ms:
+        type: INTEGER
+        not_null: true
+        check: typeof(created_at_ms) = 'integer' AND created_at_ms >= 0
+      from_state:
+        type: TEXT
+        not_null: false
+        check: length(from_state) > 0
+      to_state:
+        type: TEXT
+        not_null: false
+        check: length(to_state) > 0
+      from_version:
+        type: INTEGER
+        not_null: false
+        check: from_version IS NULL OR (typeof(from_version) = 'integer' AND from_version >= 0)
+      to_version:
+        type: INTEGER
+        not_null: false
+        check: to_version IS NULL OR (typeof(to_version) = 'integer' AND to_version >= 0)
+    unique: []
+    foreign_keys:
+    - columns:
+      - task_id
+      references:
+        table: tasks
+        columns:
+        - id
+      on_delete: NO ACTION
+      on_update: NO ACTION
+    - columns:
+      - step_id
+      - task_id
+      references:
+        table: task_steps
+        columns:
+        - id
+        - task_id
+      on_delete: NO ACTION
+      on_update: NO ACTION
+    checks:
+    - (from_state IS NULL AND to_state IS NULL AND from_version IS NULL AND to_version IS NULL) OR (from_state
+      IS NOT NULL AND to_state IS NOT NULL AND from_version IS NOT NULL AND to_version IS NOT NULL AND
+      to_version = from_version + 1)
+    notes:
+    - event_sequence 继承 MP AUTOINCREMENT；仅已提交行的数据库顺序，不承诺连续无洞或 wall-clock 顺序。
+    - 新增 from_state/to_state/from_version/to_version 是 DP-4 待批候选；普通审计事件可全空，状态事件必须全填且与目标行匹配。
+    - payload_json 只检查有效 JSON；事件类型枚举、幂等键与唯一作用域未批准，故不添加伪定稿 UNIQUE。
+    - 组合 FK 可空 step_id 允许 Task-only 事件，但不证明状态更新一定写了事件或反向因果。
+  schema_version:
+    status: DRAFT_PENDING_DP
+    unresolved_dependencies:
+    - DP-6
+    - DP-7
+    source_refs:
+    - K0-004 current user requirement; migration design proposal, not published MP DDL
+    columns:
+      version:
+        type: INTEGER
+        not_null: true
+        check: typeof(version) = 'integer' AND version >= 1
+        primary_key: true
+      previous_version:
+        type: INTEGER
+        not_null: false
+        check: previous_version IS NULL OR (typeof(previous_version) = 'integer' AND previous_version
+          >= 1)
+      migration_name:
+        type: TEXT
+        not_null: true
+        unique: true
+        check: length(migration_name) > 0
+      checksum_sha256:
+        type: TEXT
+        not_null: true
+        check: length(checksum_sha256) = 64 AND checksum_sha256 NOT GLOB '*[^0-9a-f]*'
+      applied_at_ms:
+        type: INTEGER
+        not_null: true
+        check: typeof(applied_at_ms) = 'integer' AND applied_at_ms >= 0
+    unique: []
+    foreign_keys:
+    - columns:
+      - previous_version
+      references:
+        table: schema_version
+        columns:
+        - version
+      on_delete: NO ACTION
+      on_update: NO ACTION
+    checks:
+    - (version = 1 AND previous_version IS NULL) OR (version > 1 AND previous_version IS NOT NULL AND
+      previous_version = version - 1)
+    notes:
+    - 新增迁移历史表，不是 Task/Plan 行版本或已安装版本；本文件的 schema_version:1 是 YAML 格式版本。
+    - 自引用 FK + CHECK 约束前驱存在与相邻关系；应用迁移器仍须拒绝修改/删除历史、未知版本与 checksum 漂移。
+indexes:
+  ux_active_plan_per_task:
+    status: DRAFT_PENDING_DP
+    table: task_plans
+    columns:
+    - task_id
+    unique: true
+    where: state = 'ACTIVE'
+    sql: |
+      CREATE UNIQUE INDEX ux_active_plan_per_task
+      ON task_plans(task_id)
+      WHERE state = 'ACTIVE';
+  ux_active_attempt_per_step:
+    status: DRAFT_PENDING_DP
+    table: attempts
+    columns:
+    - step_id
+    unique: true
+    where: state = 'ACTIVE'
+    sql: |
+      CREATE UNIQUE INDEX ux_active_attempt_per_step
+      ON attempts(step_id)
+      WHERE state = 'ACTIVE';
+  ix_steps_task_plan:
+    status: DRAFT_PENDING_DP
+    table: task_steps
+    columns:
+    - task_id
+    - plan_id
+    unique: false
+    where: null
+    sql: |
+      CREATE INDEX ix_steps_task_plan
+      ON task_steps(task_id, plan_id);
+  ix_attempts_operation:
+    status: DRAFT_PENDING_DP
+    table: attempts
+    columns:
+    - operation_id
+    unique: false
+    where: null
+    sql: |
+      CREATE INDEX ix_attempts_operation
+      ON attempts(operation_id);
+  ix_events_task_sequence:
+    status: DRAFT_PENDING_DP
+    table: events
+    columns:
+    - task_id
+    - event_sequence
+    unique: false
+    where: null
+    sql: |
+      CREATE INDEX ix_events_task_sequence
+      ON events(task_id, event_sequence);
+  ix_events_step_sequence:
+    status: DRAFT_PENDING_DP
+    table: events
+    columns:
+    - step_id
+    - event_sequence
+    unique: false
+    where: null
+    sql: |
+      CREATE INDEX ix_events_step_sequence
+      ON events(step_id, event_sequence);
+migration_policy:
+  status: DRAFT_PENDING_DP
+  installed_version: NOT_APPLIED
+  candidate_latest_version: 2
+  version_authority: schema_version 历史表，MAX(version) 仅在全序列和 checksum 校验后有效；不同时维护不一致的 PRAGMA user_version。
+  ordering: 候选版本正整数从1连续递增；previous_version 为前驱；迁移名及 SHA-256 绑定冻结后的真实 SQL 字节。
+  gate: 'DP/ADR/命名兼容及适用冻结批准前禁止安装；当前测试仅向 :memory: 渲染，不提供生产迁移器。'
+  application:
+  - 关闭副作用接纳并持有可信迁移/单写互斥；真实文件库预检与一致性备份/恢复策略需独立验证。
+  - 每连接 BEGIN 前设置并读回 foreign_keys；读回 journal_mode/synchronous/busy_timeout 及 JSON 能力。
+  - 未知较新版本、缺少历史、重复/跳号/checksum 不匹配一律拒绝；不得 IF NOT EXISTS 掩盖异构旧库。
+  - 每个版本 BEGIN IMMEDIATE，逐条 execute 执行 DDL 与迁移记录，单个 COMMIT；失败全部 ROLLBACK。不使用隐式提交的 executescript。
+  - 循环 tasks/Plan 引用允许前向 CREATE；该版本全部 CREATE 完成前不得插入领域数据。保持 FK 开启，不靠关闭 FK 逃逸。
+  - 索引迁移前扫描重复 ACTIVE/组合 FK；如有冲突拒绝，不删旧行、不选择任意幸存者。
+  - 提交前 foreign_key_check / integrity_check；提交后以新只读连接验证版本、索引、约束、数据与统计。
+  - 不得自动降级或 drop/recreate 用户库；恢复只能用已验证的一致性备份另行授权，保留失败/旧库证据。
+  rollback_boundary: 每个版本内事务原子；版本2失败保留已提交版本1，不假装两版本整体回滚。进程崩溃/断电/WAL/Linux/ECS 仍需后续真实测试。
+migrations:
+- version: 1
+  previous_version: null
+  name: 0001_candidate_core_tables
+  status: DRAFT_PENDING_DP
+  approval_status: NOT_APPROVED
+  create_tables:
+  - tasks
+  - task_plans
+  - task_steps
+  - operation_intents
+  - file_write_intents
+  - attempts
+  - system_control
+  - events
+  - schema_version
+  create_indexes: []
+- version: 2
+  previous_version: 1
+  name: 0002_candidate_active_and_lookup_indexes
+  status: DRAFT_PENDING_DP
+  approval_status: NOT_APPROVED
+  create_tables: []
+  create_indexes:
+  - ux_active_plan_per_task
+  - ux_active_attempt_per_step
+  - ix_steps_task_plan
+  - ix_attempts_operation
+  - ix_events_task_sequence
+  - ix_events_step_sequence
+transaction_design:
+  status: DRAFT_PENDING_DP
+  runtime_enabled: false
+  shared: 状态变更+关系写入+匹配 event 必须同一连接同一显式写事务提交；任何 Guard FALSE/UNKNOWN/SQL 错误回滚全部。
+  one_row_cas:
+    tables:
+    - tasks
+    - task_steps
+    sql_shape: UPDATE <target> SET state=:to_state, version=version+1 WHERE id=:id AND state=:from_state
+      AND version=:expected_version;
+    application_check: 合法目标边先由状态机拒绝式验证；检查 rowcount 恰为1，事件 from/to/version 与此次更新一致；rowcount=0/多行不成功。
+  fenced_commit:
+    unresolved_dependencies:
+    - DP-5b
+    - OPEN-06
+    sql_barrier_shape: UPDATE system_control SET worker_epoch=worker_epoch WHERE singleton_id=1 AND worker_epoch=:my_epoch;
+    application_check: 持有固定 flock fd，可信实际 write-set 分类；Worker/recovery/相关推进（含 INSERT）同事务 barrier 恰一行，否则全部回滚。请求-only
+      分支须可信授权，混合写集不能旁路。
+    historical_attempt: 比较提交者 my_epoch 与当前全局行；绝不只比旧 Attempt，不把旧 epoch 作为权限，不改写其历史 epoch；缺行拒绝。
+  event_same_transaction:
+    tables:
+    - events
+    - tasks
+    - task_steps
+    boundary: FK/CHECK/sequence 只支持形状与关联；没有自动 trigger，无法单靠 DDL 强制每次变更有事件；K0-005 事务适配器承担。
+    pending: DP-4/OPEN-10 未批准的幂等键、恢复证据与事件 carrier，保持 SOURCE_MISSING，不以 JSON 代替具名证据。
+  relationships: FK/UNIQUE 是子集；active 指针 ACTIVE/反指、Intent+FileWriteIntent 共存、可发布 Step 有 Attempt、单全局活动
+    Step 等需同事务关系验证。
+  not_promised: 不实现取消-发布线性化/可信 Worker 身份/跨资源原子性；INV-010、A1-A6、ADR 均保持未批准/未实现。
+guard_mapping_semantics:
+  status: DRAFT_PENDING_DP
+  authority: contracts/guards.yaml 是需求目录，不在这里重写谓词或补批准。
+  sqlite_constraint_and_application: 所列约束只支持该 Guard 的结构子集，没有一个 Guard 由 DDL 完整实现。
+  sqlite_transaction_and_application: 需要事务读取/条件写/rowcount/commit 等 SQLite 行为，同时必须可信应用适配器；不是 CHECK/普通 FK。
+  application_only: 纯表达式/可信授权/OS/文件校验在应用层；普通 CHECK 不证明这些外部事实，持久审计不等于 Guard 本身。
+  sqlite_carrier_pending_dp: 需要额外持久事实/结果/Observation/恢复/调度载体；所列为关联表而非已存在完整载体，缺失时拒绝，不降级为纯应用事实。
+  composite: 递归使用具名依赖；其缺源与 DB 需求不因组合消失。
+  source_missing: 逐条原样保留来源状态与未决项；SOURCE_MISSING/UNKNOWN 必须拒绝，不接受模型自报 true。
+guard_mapping:
+  source_state_matches:
+    enforcement: SQLITE_TRANSACTION_AND_APPLICATION
+    tables:
+    - tasks
+    - task_steps
+    indexes: []
+    requirements:
+    - Target row still has the exact source state of this edge
+    - source state 必须在条件 UPDATE 中，不做先读后写。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - DP-1
+  version_matches:
+    enforcement: SQLITE_TRANSACTION_AND_APPLICATION
+    tables:
+    - tasks
+    - task_steps
+    indexes: []
+    requirements:
+    - Target row version equals supplied optimistic version, checked in the write transaction
+    - 精确 expected.version 条件，version+1、rowcount 恰1。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - DP-1
+  target_state_matches:
+    enforcement: APPLICATION_ONLY
+    tables: []
+    indexes: []
+    requirements:
+    - Mutation targets this edge, not a different destination
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - DP-1
+  one_row_cas:
+    enforcement: SQLITE_TRANSACTION_AND_APPLICATION
+    tables:
+    - tasks
+    - task_steps
+    indexes: []
+    requirements:
+    - Conditional update includes id/source/version, increments version exactly once, affects exactly
+      one row; otherwise roll back
+    - state/version 条件 UPDATE +1；失败或匹配非1行回滚状态、关系与事件。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - DP-1
+  event_same_transaction:
+    enforcement: SQLITE_TRANSACTION_AND_APPLICATION
+    tables:
+    - tasks
+    - task_steps
+    - events
+    indexes: []
+    requirements:
+    - Matching task/step/from/to/version event, related writes, and state update commit or roll back in
+      the same database transaction; timestamp is not ordering authority
+    - 必须单事务匹配事件和状态更新；DDL 本身不能保证自动事件，DP-4/OPEN-10 仍缺。
+    source_status: SOURCE_MISSING
+    guard_dependencies: []
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-10
+  relationships_consistent:
+    enforcement: SQLITE_CONSTRAINT_AND_APPLICATION
+    tables:
+    - tasks
+    - task_plans
+    - task_steps
+    - operation_intents
+    - file_write_intents
+    - attempts
+    - events
+    indexes:
+    - ux_active_plan_per_task
+    - ux_active_attempt_per_step
+    requirements:
+    - Post-write graph satisfies domain_relationships.yaml in this same transaction; no nontransactional
+      check-then-write
+    - FK/UNIQUE/CHECK 覆盖结构子集；其余 domain_relationships 同事务验证，不能宣称整个 Guard 由 DDL 保证。
+    source_status: SOURCE_MISSING
+    guard_dependencies: []
+    unresolved_dependencies:
+    - DP-1
+  terminal_history_preserved:
+    enforcement: SQLITE_TRANSACTION_AND_APPLICATION
+    tables:
+    - tasks
+    - task_plans
+    - task_steps
+    - operation_intents
+    - file_write_intents
+    - attempts
+    - events
+    indexes: []
+    requirements:
+    - No terminal Task/Step is reopened and no prior Plan/Step/Intent/Attempt or effect history is deleted
+      or replaced
+    - NO ACTION 防部分父删除但不防叶删除/REPLACE；Repository 拒绝终态重开与历史删除/改写。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - DP-1
+  commit_classified:
+    enforcement: APPLICATION_ONLY
+    tables: []
+    indexes: []
+    requirements:
+    - Actual write set has a trusted authority classification; mixed request/result writes are worker
+      commits, never request-only
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - DP-1
+    - DP-5b
+    - OPEN-06
+  request_only_authorized:
+    enforcement: APPLICATION_ONLY
+    tables: []
+    indexes: []
+    requirements:
+    - Trusted request handler writes only authorized admission/request data and audit; no Attempt/result/Observation/recovery
+      or execution-state advancement, including advancement based on earlier results
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - DP-1
+    - DP-5b
+    - OPEN-06
+  worker_commit_required:
+    enforcement: APPLICATION_ONLY
+    tables: []
+    indexes: []
+    requirements:
+    - Write set includes Attempt/result/Observation/recovery or associated execution-state advancement,
+      even if result was persisted earlier
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - DP-1
+    - DP-5b
+    - OPEN-06
+  worker_lock_held:
+    enforcement: APPLICATION_ONLY
+    tables: []
+    indexes: []
+    requirements:
+    - Current worker owns the one fixed execution flock and retains its fd; lease, worker_id, or historical
+      Attempt epoch is not proof
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - DP-1
+    - DP-5b
+    - OPEN-06
+  global_epoch_present:
+    enforcement: SQLITE_TRANSACTION_AND_APPLICATION
+    tables:
+    - system_control
+    indexes: []
+    requirements:
+    - Singleton global system_control epoch row exists in the committing transaction
+    - 同事务读全局行；CHECK+PK 仅至多一行，不保证存在；缺行拒绝。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - DP-1
+    - DP-5b
+    - OPEN-06
+  global_epoch_current:
+    enforcement: SQLITE_TRANSACTION_AND_APPLICATION
+    tables:
+    - system_control
+    indexes: []
+    requirements:
+    - Current submitting worker epoch equals global current epoch in conditional SQL or same-transaction
+      write barrier; never compare only the old Attempt row
+    - 提交者 my_epoch 对当前全局 worker_epoch，同事务 SQL 屏障，不对旧 Attempt 自比。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - DP-1
+    - DP-5b
+    - OPEN-06
+  epoch_barrier_one_row:
+    enforcement: SQLITE_TRANSACTION_AND_APPLICATION
+    tables:
+    - system_control
+    indexes: []
+    requirements:
+    - Current-global-epoch condition is in the same SQL/write transaction, accepts exactly one row, and
+      failure rolls back all result/state/event writes including INSERT
+    - 全局 epoch SQL barrier 恰一行，含 INSERT 的所有相关写入失败回滚。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - DP-1
+    - DP-5b
+    - OPEN-06
+  fenced_worker_commit:
+    enforcement: SQLITE_TRANSACTION_AND_APPLICATION
+    tables:
+    - system_control
+    - attempts
+    - tasks
+    - task_steps
+    - events
+    indexes: []
+    requirements:
+    - Every worker result/recovery/associated advancement is fenced by the current global epoch, including
+      new worker recovery of old Attempts
+    - 同事务全局屏障+固定 flock+可信 owner/写集；历史 epoch 不授予权限。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies:
+    - epoch_barrier_one_row
+    - global_epoch_current
+    - global_epoch_present
+    - worker_commit_required
+    - worker_lock_held
+    unresolved_dependencies:
+    - DP-1
+    - DP-5b
+    - OPEN-06
+  fenced_commit:
+    enforcement: SQLITE_TRANSACTION_AND_APPLICATION
+    tables:
+    - system_control
+    - tasks
+    - task_steps
+    - attempts
+    - events
+    indexes: []
+    requirements:
+    - Classify actual writes, then authorized request-only OR fenced worker commit. Unknown/mixed/unclassified
+      never bypass fencing.
+    - 写集分类后选择可信 request-only 或 fenced worker；混合写集不得绕过。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies:
+    - commit_classified
+    - fenced_worker_commit
+    - request_only_authorized
+    unresolved_dependencies:
+    - DP-1
+    - DP-5b
+    - OPEN-06
+  cancel_absent:
+    enforcement: SQLITE_TRANSACTION_AND_APPLICATION
+    tables:
+    - tasks
+    indexes: []
+    requirements:
+    - Task cancellation column is NULL in the committing transaction (parent Task for a Step)
+    - 同事务 cancel_requested_at_ms IS NULL；不证明发布启动线性化。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-01
+  cancel_persisted:
+    enforcement: SQLITE_TRANSACTION_AND_APPLICATION
+    tables:
+    - tasks
+    indexes: []
+    requirements:
+    - Cancellation source is already durable; never require cancel_absent on cancellation-completion edges
+    - 读取已持久取消来源；取消完成边不得要求 cancel_absent。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-01
+  emergency_stop_inactive:
+    enforcement: SQLITE_TRANSACTION_AND_APPLICATION
+    tables:
+    - system_control
+    indexes: []
+    requirements:
+    - Global emergency_stop is exactly false at commit/start; unknown/missing control state denies
+    - 同事务读取存在行，显式 0/1 适配，false 才允许；不实现取消仲裁。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - DEC-004
+    - DP-1
+    - OPEN-01
+    - OPEN-08
+  new_effects_stopped:
+    enforcement: APPLICATION_ONLY
+    tables: []
+    indexes: []
+    requirements:
+    - New target side-effect starts are stopped and no unarbitrated start is in flight; a flag read alone
+      does not prove cancellation/publish linearization
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - DEC-004
+    - DP-1
+    - OPEN-01
+    - OPEN-08
+  effects_settled:
+    enforcement: SQLITE_CARRIER_PENDING_DP
+    tables:
+    - attempts
+    - operation_intents
+    indexes: []
+    pending_carrier: DRAFT_PENDING_DP；需要具名持久证据/调度载体及关联，当前列不够，禁止用通用 events.payload_json 代替。
+    requirements:
+    - Every started effect has a known reconciled disposition and no uncontrolled active or unresolved
+      dangerous effect remains; an absent target alone proves neither never-published nor settled
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-12
+  no_active_attempt:
+    enforcement: SQLITE_TRANSACTION_AND_APPLICATION
+    tables:
+    - attempts
+    - task_steps
+    indexes:
+    - ux_active_attempt_per_step
+    - ix_steps_task_plan
+    requirements:
+    - No ACTIVE Attempt in this transition scope; Task scope includes historical Plans, Step scope its
+      own Attempts
+    - 事务 count=0；Task 范围含历史 Plan，部分唯一仅 <=1 不等于0。
+    source_status: SOURCE_MISSING
+    guard_dependencies: []
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-12
+  safe_checkpoint:
+    enforcement: SQLITE_CARRIER_PENDING_DP
+    tables:
+    - attempts
+    - operation_intents
+    indexes: []
+    pending_carrier: DRAFT_PENDING_DP；需要具名持久证据/调度载体及关联，当前列不够，禁止用通用 events.payload_json 代替。
+    requirements:
+    - Durable safe-checkpoint and reconciled-effect evidence bound to these operations exists; definition
+      and cancellation arbitration remain OPEN-08/OPEN-01
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_MISSING
+    guard_dependencies: []
+    unresolved_dependencies:
+    - DEC-004
+    - DP-1
+    - OPEN-01
+    - OPEN-08
+  failure_confirmed:
+    enforcement: SQLITE_CARRIER_PENDING_DP
+    tables:
+    - tasks
+    - task_steps
+    - attempts
+    indexes: []
+    pending_carrier: DRAFT_PENDING_DP；需要具名持久证据/调度载体及关联，当前列不够，禁止用通用 events.payload_json 代替。
+    requirements:
+    - Durable reason confirms this object cannot complete; transient error/unknown outcome alone is insufficient
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-12
+  no_started_effect:
+    enforcement: SQLITE_CARRIER_PENDING_DP
+    tables:
+    - attempts
+    - operation_intents
+    indexes: []
+    pending_carrier: DRAFT_PENDING_DP；需要具名持久证据/调度载体及关联，当前列不够，禁止用通用 events.payload_json 代替。
+    requirements:
+    - Positive durable evidence that no target effect ever started, not inferred from target absence
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-12
+  valid_task_spec:
+    enforcement: SQLITE_TRANSACTION_AND_APPLICATION
+    tables:
+    - tasks
+    indexes: []
+    requirements:
+    - TaskSpec validates against task_spec.schema.json and retained request/digest identity matches; digest
+      field set remains D-03
+    - request_key UNIQUE/digest 格式支撑请求身份；完整 TaskSpec、同键异载荷比较与 D-03 仍由应用保证。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - D-01
+    - DP-1
+  active_plan_bound:
+    enforcement: SQLITE_CONSTRAINT_AND_APPLICATION
+    tables:
+    - tasks
+    - task_plans
+    indexes:
+    - ux_active_plan_per_task
+    requirements:
+    - Exactly one ACTIVE Plan exists, belongs to this Task and is referenced by active_plan_id; no cross-Task
+      Plan
+    - 组合 FK 同归属+ACTIVE 上界；存在、state=ACTIVE、双向指针同事务验证。
+    source_status: SOURCE_MISSING
+    guard_dependencies: []
+    unresolved_dependencies:
+    - D-01
+    - DP-1
+  task_running:
+    enforcement: SQLITE_TRANSACTION_AND_APPLICATION
+    tables:
+    - tasks
+    indexes: []
+    requirements:
+    - Parent Task state is RUNNING in the transition transaction
+    - 同事务读取 parent.state=RUNNING，不接受缓存事实。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - D-01
+    - DP-1
+    - DP-5b
+    - OPEN-06
+  step_in_active_plan:
+    enforcement: SQLITE_CONSTRAINT_AND_APPLICATION
+    tables:
+    - tasks
+    - task_plans
+    - task_steps
+    indexes:
+    - ux_active_plan_per_task
+    requirements:
+    - Step.plan_id equals parent Task.active_plan_id and that Plan belongs to same Task and is ACTIVE
+    - 同归属由 FK 支持；Step.plan_id=Task.active_plan_id 与 ACTIVE 状态由事务联结验证。
+    source_status: SOURCE_MISSING
+    guard_dependencies:
+    - active_plan_bound
+    unresolved_dependencies:
+    - D-01
+    - DP-1
+    - DP-5b
+    - OPEN-06
+  k0_execution_slot_free:
+    enforcement: SQLITE_TRANSACTION_AND_APPLICATION
+    tables:
+    - task_steps
+    - attempts
+    indexes: []
+    requirements:
+    - No other active Task Step executes; one fixed worker lock plus transactional claim, not per-Step
+      uniqueness alone
+    - 固定单 Worker 锁+同事务全局活动 Step/claim 查询；每 Step 部分唯一不能限制跨 Step。不擅加未批准全局索引。
+    source_status: SOURCE_MISSING
+    guard_dependencies: []
+    unresolved_dependencies:
+    - D-01
+    - DP-1
+    - DP-5b
+    - OPEN-06
+  preconditions_passed:
+    enforcement: SQLITE_CARRIER_PENDING_DP
+    tables:
+    - task_steps
+    indexes: []
+    pending_carrier: DRAFT_PENDING_DP；需要具名持久证据/调度载体及关联，当前列不够，禁止用通用 events.payload_json 代替。
+    requirements:
+    - All declared Step input/type/authorization/path/environment prerequisites passed with evidence bound
+      to the Step; unavailable D-08 carrier denies
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_MISSING
+    guard_dependencies: []
+    unresolved_dependencies:
+    - D-08
+    - DP-1
+  intent_committed:
+    enforcement: SQLITE_TRANSACTION_AND_APPLICATION
+    tables:
+    - operation_intents
+    - file_write_intents
+    indexes: []
+    requirements:
+    - Exact logical Intent and matching FileWriteIntent were durably committed before any target-effect
+      start, not merely scheduled in the current transaction
+    - 当前事务之前已提交并可读的精确两行；当前事务已排队 INSERT 不是 prior durable。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - D-02
+    - D-16
+    - DEC-004
+    - DP-1
+    - OPEN-01
+    - OPEN-08
+  intent_prepared:
+    enforcement: SQLITE_TRANSACTION_AND_APPLICATION
+    tables:
+    - operation_intents
+    indexes: []
+    requirements:
+    - The single Intent for this Step has PREPARED state; same operation_id and original immutable operation_key/arguments
+      digest
+    - 事务读单 Intent state=PREPARED，核对不可变 identity。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - D-02
+    - D-16
+    - DEC-004
+    - DP-1
+    - OPEN-01
+    - OPEN-08
+  prepared_durable:
+    enforcement: APPLICATION_ONLY
+    tables: []
+    indexes: []
+    requirements:
+    - Prepared file, manifest, size/hash and required file/directory sync evidence are intact at required
+      durability level before publish; filesystem and SQLite are not atomic together
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - D-02
+    - D-16
+    - DEC-004
+    - DP-1
+    - OPEN-01
+    - OPEN-08
+  attempt_bound:
+    enforcement: SQLITE_CONSTRAINT_AND_APPLICATION
+    tables:
+    - attempts
+    - operation_intents
+    - task_steps
+    indexes:
+    - ux_active_attempt_per_step
+    requirements:
+    - Current ACTIVE Attempt references the exact committed Intent of this Step and is owned by current
+      worker; no second ACTIVE Attempt
+    - 组合 FK+部分唯一支持同 Step 和上界；ACTIVE 存在、可信 owner 缺载体，不能自证。
+    source_status: SOURCE_MISSING
+    guard_dependencies: []
+    unresolved_dependencies:
+    - D-02
+    - D-16
+    - DEC-004
+    - DP-1
+    - OPEN-01
+    - OPEN-08
+  publish_start_arbitrated:
+    enforcement: APPLICATION_ONLY
+    tables: []
+    indexes: []
+    requirements:
+    - Approved and tested cancel/stop-versus-publish-start arbiter establishes no new start after durable
+      cancel; pre-read/no_cancel, CAS, flock alone do not prove INV-010 (OPEN-01 remains)
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_MISSING
+    guard_dependencies: []
+    unresolved_dependencies:
+    - D-02
+    - D-16
+    - DEC-004
+    - DP-1
+    - OPEN-01
+    - OPEN-08
+  result_durable:
+    enforcement: SQLITE_CARRIER_PENDING_DP
+    tables:
+    - attempts
+    indexes: []
+    pending_carrier: DRAFT_PENDING_DP；需要具名持久证据/调度载体及关联，当前列不够，禁止用通用 events.payload_json 代替。
+    requirements:
+    - Current operation has a known checkable persisted Attempt result/evidence bound to this Step/Intent;
+      missing D-13 carrier or unknown outcome denies
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_MISSING
+    guard_dependencies: []
+    unresolved_dependencies:
+    - D-13
+    - DP-1
+    - OPEN-10
+  observation_bound:
+    enforcement: SQLITE_CARRIER_PENDING_DP
+    tables:
+    - attempts
+    - operation_intents
+    indexes: []
+    pending_carrier: DRAFT_PENDING_DP；需要具名持久证据/调度载体及关联，当前列不够，禁止用通用 events.payload_json 代替。
+    requirements:
+    - Durable Observation is one of four reconciliation.schema.json values, bound to exact operation/paths/expected
+      digest and current observation; unknown itself is a valid observation, not success
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_MISSING
+    guard_dependencies: []
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-03
+  reconciliation_needed:
+    enforcement: SQLITE_CARRIER_PENDING_DP
+    tables:
+    - attempts
+    - operation_intents
+    indexes: []
+    pending_carrier: DRAFT_PENDING_DP；需要具名持久证据/调度载体及关联，当前列不够，禁止用通用 events.payload_json 代替。
+    requirements:
+    - Execution/verification result is unknown or disagrees with expected effect; retain evidence and
+      prohibit blind retry
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-03
+  verification_passed:
+    enforcement: APPLICATION_ONLY
+    tables: []
+    indexes: []
+    requirements:
+    - Independent verifier checked actual output path/type/hash/size against the original Intent; tool
+      success or model text alone is not verification
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - D-16
+    - DP-1
+  verification_evidence:
+    enforcement: SQLITE_CARRIER_PENDING_DP
+    tables:
+    - operation_intents
+    indexes: []
+    pending_carrier: DRAFT_PENDING_DP；需要具名持久证据/调度载体及关联，当前列不够，禁止用通用 events.payload_json 代替。
+    requirements:
+    - Matching VERIFICATION_EVIDENCE artifact/evidence record is durable and associated to the original
+      Intent and result
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_MISSING
+    guard_dependencies: []
+    unresolved_dependencies:
+    - D-16
+    - DP-1
+  intent_verified:
+    enforcement: SQLITE_TRANSACTION_AND_APPLICATION
+    tables:
+    - operation_intents
+    indexes: []
+    requirements:
+    - Single associated Intent is VERIFIED on independent evidence
+    - 事务读 state=VERIFIED，不能将状态字面量代替独立验证证据。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - D-16
+    - DP-1
+  required_steps_completed:
+    enforcement: SQLITE_TRANSACTION_AND_APPLICATION
+    tables:
+    - tasks
+    - task_plans
+    - task_steps
+    indexes:
+    - ix_steps_task_plan
+    requirements:
+    - Every required Step of active Plan is COMPLETED and active Plan has required K0 Step; not vacuous
+      empty-plan success
+    - 同事务聚合 active Plan required=1 全部 COMPLETED，且非空；CHECK 不实现 forall。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - D-16
+    - DP-1
+  all_effects_verified:
+    enforcement: SQLITE_CARRIER_PENDING_DP
+    tables:
+    - task_plans
+    - task_steps
+    - attempts
+    - operation_intents
+    indexes: []
+    pending_carrier: DRAFT_PENDING_DP；需要具名持久证据/调度载体及关联，当前列不够，禁止用通用 events.payload_json 代替。
+    requirements:
+    - All associated logical effects, including relevant historical Plan effects, have independent VERIFIED
+      evidence; no unresolved Attempt or dangerous effect
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - D-16
+    - DP-1
+  block_reason_recorded:
+    enforcement: SQLITE_CARRIER_PENDING_DP
+    tables:
+    - tasks
+    - task_steps
+    indexes: []
+    pending_carrier: DRAFT_PENDING_DP；需要具名持久证据/调度载体及关联，当前列不够，禁止用通用 events.payload_json 代替。
+    requirements:
+    - Explicit missing prerequisite/conflict/environment/recovery evidence and nonempty reason are durably
+      recorded; BLOCKED must preserve unresolved effects and prohibit starts
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_MISSING
+    guard_dependencies: []
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-03
+  block_starts_stopped:
+    enforcement: APPLICATION_ONLY
+    tables: []
+    indexes: []
+    requirements:
+    - Entering BLOCKED stops any new target-effect starts and preserves all unresolved operation/artifact/Attempt
+      evidence; not terminalization
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-03
+  unblock_authorized:
+    enforcement: APPLICATION_ONLY
+    tables: []
+    indexes: []
+    requirements:
+    - Trusted explicit unblock authorization and reason match this blocking record and prerequisite repair;
+      model/ordinary parameter cannot self-authorize (OPEN-07)
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_MISSING
+    guard_dependencies: []
+    unresolved_dependencies:
+    - D-G1a
+    - DP-1
+    - OPEN-07
+  claim_release_authorized:
+    enforcement: APPLICATION_ONLY
+    tables: []
+    indexes: []
+    requirements:
+    - Trusted claim release authorization with nonempty reason exists; no possible started target effect
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_MISSING
+    guard_dependencies: []
+    unresolved_dependencies:
+    - D-G1a
+    - DP-1
+    - OPEN-07
+  intent_absent:
+    enforcement: SQLITE_TRANSACTION_AND_APPLICATION
+    tables:
+    - operation_intents
+    - task_steps
+    indexes: []
+    requirements:
+    - Recovery proves no Intent committed for this preparation and no target effect could start; do not
+      infer from inaccessible DB
+    - 可信恢复器同事务确认没有该原始 Intent，加不可能启动证明；读失败不是 absent。
+    source_status: SOURCE_MISSING
+    guard_dependencies: []
+    unresolved_dependencies:
+    - D-G1a
+    - DP-1
+    - OPEN-07
+  retry_policy_proved:
+    enforcement: APPLICATION_ONLY
+    tables: []
+    indexes: []
+    requirements:
+    - K0 atomic no-clobber publish recovery strategy proves repeated attempt cannot produce disallowed
+      effects under unchanged original Intent/trust assumptions; unavailable OPEN-02/D-05 evidence denies
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_MISSING
+    guard_dependencies: []
+    unresolved_dependencies:
+    - D-05
+    - D-06
+    - DP-1
+    - OPEN-02
+    - OPEN-03
+  retry_prepared_intact:
+    enforcement: APPLICATION_ONLY
+    tables: []
+    indexes: []
+    requirements:
+    - Original Prepared file exists, is regular/nonsymlink, and expected size/hash and snapshot/Intent
+      identities match; not regenerated with new arguments
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - D-05
+    - D-06
+    - DP-1
+    - OPEN-02
+    - OPEN-03
+  retry_original_intent:
+    enforcement: SQLITE_CONSTRAINT_AND_APPLICATION
+    tables:
+    - operation_intents
+    - file_write_intents
+    - attempts
+    indexes: []
+    requirements:
+    - Reuse the same OperationIntent and FileWriteIntent rows, operation_key/arguments/paths/expected
+      bytes; never one Intent or key per Attempt (INV-004)
+    - 单 Intent/Step 与稳定键 UNIQUE 支持不重复建行；原始参数/路径/字节跨时间不可变须可信事务比较，UNIQUE 不够。
+    source_status: SOURCE_MISSING
+    guard_dependencies: []
+    unresolved_dependencies:
+    - D-05
+    - D-06
+    - DP-1
+    - OPEN-02
+    - OPEN-03
+  retry_permitted:
+    enforcement: APPLICATION_ONLY
+    tables: []
+    indexes: []
+    requirements:
+    - Trusted policy allows another Attempt for this exact operation; cannot be self-granted by model
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - D-05
+    - D-06
+    - DP-1
+    - OPEN-02
+    - OPEN-03
+  retry_schedule_due:
+    enforcement: SQLITE_CARRIER_PENDING_DP
+    tables:
+    - task_steps
+    - attempts
+    indexes: []
+    pending_carrier: DRAFT_PENDING_DP；需要具名持久证据/调度载体及关联，当前列不够，禁止用通用 events.payload_json 代替。
+    requirements:
+    - Persisted backoff deadline <= current scheduler time, attempts below persisted maximum, no active
+      predecessor; undefined R-3 deadline/budget carrier denies
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_MISSING
+    guard_dependencies: []
+    unresolved_dependencies:
+    - DP-1
+    - R-3
+  reconciled_all:
+    enforcement: SQLITE_CARRIER_PENDING_DP
+    tables:
+    - task_steps
+    - attempts
+    - operation_intents
+    indexes: []
+    pending_carrier: DRAFT_PENDING_DP；需要具名持久证据/调度载体及关联，当前列不够，禁止用通用 events.payload_json 代替。
+    requirements:
+    - Task-level reconciliation aggregates every relevant Step/Intent, not a single favorable operation;
+      aggregation subject D-G2 remains unresolved
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_MISSING
+    guard_dependencies: []
+    unresolved_dependencies:
+    - D-G2
+    - DP-1
+  decision_verify:
+    enforcement: APPLICATION_ONLY
+    tables: []
+    indexes: []
+    requirements:
+    - Decision for the bound original operation
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-03
+  decision_retry_safe:
+    enforcement: APPLICATION_ONLY
+    tables: []
+    indexes: []
+    requirements:
+    - Decision for the bound original operation
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - D-05
+    - D-06
+    - DP-1
+    - OPEN-02
+    - OPEN-03
+  decision_block:
+    enforcement: APPLICATION_ONLY
+    tables: []
+    indexes: []
+    requirements:
+    - Decision for the bound original operation
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-03
+  decision_fail:
+    enforcement: APPLICATION_ONLY
+    tables: []
+    indexes: []
+    requirements:
+    - Decision for the bound original operation
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_MISSING
+    guard_dependencies: []
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-12
+  expected_effect_present:
+    enforcement: APPLICATION_ONLY
+    tables: []
+    indexes: []
+    requirements:
+    - Observation for the bound original operation
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-03
+  target_absent:
+    enforcement: APPLICATION_ONLY
+    tables: []
+    indexes: []
+    requirements:
+    - Observation for the bound original operation
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies: []
+    unresolved_dependencies:
+    - D-05
+    - D-06
+    - DP-1
+    - OPEN-02
+    - OPEN-03
+  verify_reconciled:
+    enforcement: COMPOSITE
+    tables: []
+    indexes: []
+    requirements:
+    - EXPECTED_EFFECT_PRESENT/VERIFY with valid Intent/hash/path evidence; still requires independent
+      verification
+    - 按 guard_dependencies 逐项继承 DB/外部验证需求；ALL 失败闭合；不由一个布尔列或通用 JSON 视为已实现。
+    source_status: SOURCE_MISSING
+    guard_dependencies:
+    - decision_verify
+    - expected_effect_present
+    - observation_bound
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-03
+  retry_safe:
+    enforcement: COMPOSITE
+    tables: []
+    indexes: []
+    requirements:
+    - Only TARGET_ABSENT/RETRY_SAFE for K0 no-clobber publish with all strict prerequisites; target absence
+      alone never permits retry
+    - 按 guard_dependencies 逐项继承 DB/外部验证需求；ALL 失败闭合；不由一个布尔列或通用 JSON 视为已实现。
+    source_status: SOURCE_MISSING
+    guard_dependencies:
+    - cancel_absent
+    - decision_retry_safe
+    - effects_settled
+    - emergency_stop_inactive
+    - no_active_attempt
+    - observation_bound
+    - retry_original_intent
+    - retry_permitted
+    - retry_policy_proved
+    - retry_prepared_intact
+    - target_absent
+    unresolved_dependencies:
+    - D-05
+    - D-06
+    - DEC-004
+    - DP-1
+    - OPEN-01
+    - OPEN-02
+    - OPEN-03
+    - OPEN-08
+    - OPEN-12
+  cancellation_complete:
+    enforcement: COMPOSITE
+    tables: []
+    indexes: []
+    requirements:
+    - Persisted cancel source plus stopped starts, safe checkpoint, all effects accounted for and no active
+      Attempt; emergency stop need not be cleared
+    - 按 guard_dependencies 逐项继承 DB/外部验证需求；ALL 失败闭合；不由一个布尔列或通用 JSON 视为已实现。
+    source_status: SOURCE_MISSING
+    guard_dependencies:
+    - cancel_persisted
+    - effects_settled
+    - new_effects_stopped
+    - no_active_attempt
+    - safe_checkpoint
+    unresolved_dependencies:
+    - DEC-004
+    - DP-1
+    - OPEN-01
+    - OPEN-08
+    - OPEN-12
+  failure_safe:
+    enforcement: COMPOSITE
+    tables: []
+    indexes: []
+    requirements:
+    - Known irrecoverable failure with no uncontrolled/unreconciled effect or active Attempt
+    - 按 guard_dependencies 逐项继承 DB/外部验证需求；ALL 失败闭合；不由一个布尔列或通用 JSON 视为已实现。
+    source_status: SOURCE_MISSING
+    guard_dependencies:
+    - effects_settled
+    - failure_confirmed
+    - no_active_attempt
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-12
+  can_start_work:
+    enforcement: COMPOSITE
+    tables: []
+    indexes: []
+    requirements:
+    - Trusted current worker and uncanceled/non-stopped Task, not proof of publish-start linearization
+    - 按 guard_dependencies 逐项继承 DB/外部验证需求；ALL 失败闭合；不由一个布尔列或通用 JSON 视为已实现。
+    source_status: SOURCE_IDENTIFIED
+    guard_dependencies:
+    - cancel_absent
+    - emergency_stop_inactive
+    - global_epoch_current
+    - global_epoch_present
+    - worker_lock_held
+    unresolved_dependencies:
+    - D-01
+    - DEC-004
+    - DP-1
+    - DP-5b
+    - OPEN-01
+    - OPEN-06
+    - OPEN-08
+  block_safe:
+    enforcement: COMPOSITE
+    tables: []
+    indexes: []
+    requirements:
+    - Record cause and stop new starts while preserving evidence, not treating BLOCK as a known outcome
+    - 按 guard_dependencies 逐项继承 DB/外部验证需求；ALL 失败闭合；不由一个布尔列或通用 JSON 视为已实现。
+    source_status: SOURCE_MISSING
+    guard_dependencies:
+    - block_reason_recorded
+    - block_starts_stopped
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-03
+  g3_safety_decision_open:
+    enforcement: APPLICATION_ONLY
+    tables: []
+    indexes: []
+    requirements:
+    - Always deny S16/S17/S22 while G3 semantic approval is absent. Other hypothetical prerequisites are
+      documented but do not permit this edge. Existing NRC edge is evaluated separately, never implicitly.
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_MISSING
+    guard_dependencies: []
+    unresolved_dependencies:
+    - D-G1a
+    - DP-1
+    - OPEN-02
+  fail_decision_policy_open:
+    enforcement: APPLICATION_ONLY
+    tables: []
+    indexes: []
+    requirements:
+    - 'Always deny reconciliation-to-FAILED while OPEN-12 is open: K0 MP §16.3 produces no FAIL row. Do
+      not invent an Observation/FAIL pairing.'
+    - 当前范围无已定稿 SQLite 约束可完整支持；由可信应用/文件系统/授权/验证适配器产生事实，如需持久载体必须经 DP-4/D-08/D-13/D-15/OPEN-10 等批准，不能用任意事件
+      payload 冒充。
+    source_status: SOURCE_MISSING
+    guard_dependencies: []
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-12
+  block_pair:
+    enforcement: COMPOSITE
+    tables: []
+    indexes: []
+    requirements:
+    - 'Known K0 conservative BLOCK pairing: TARGET_ABSENT, CONFLICTING_EFFECT_PRESENT or INSUFFICIENT_EVIDENCE
+      with bound BLOCK. Expected effect with invalid identity/hash is insufficient evidence, not a free
+      BLOCK pairing.'
+    - 按 guard_dependencies 逐项继承 DB/外部验证需求；ALL 失败闭合；不由一个布尔列或通用 JSON 视为已实现。
+    source_status: SOURCE_MISSING
+    guard_dependencies:
+    - decision_block
+    - observation_bound
+    unresolved_dependencies:
+    - DP-1
+    - OPEN-03
+fixture_evidence_boundary:
+  historical: K0-002 候选夹具报告 10 用例证明原 MP 7表+2索引的部分组合 FK/ACTIVE 唯一；不把历史通过数算本次运行。
+  current: 本草案测试在内存库验证声明、FK、真实部分索引、版本链；只是离线设计探针，不是产品迁移验收或所有 Guard 完成。
+  unverified:
+  - 真实文件库迁移、旧数据兼容、历史 checksum、双连接/双进程读写与线性化
+  - WAL 可见性、busy_timeout、进程崩溃、断电、重启、备份恢复、Linux/ECS
+  - DP/ADR 批准、Plan/Attempt 终态、可信身份、A1-A6、INV-010、结果/恢复/事件幂等完整载体
+  - artifacts 表完整 DDL；TaskSpec/StepSpec/result/error/Observation/verification carrier
+  does_not_close:
+  - K0-002
+  - K0-003
+  - K0-004
+  - DOC-R04
+  - DOC-R05
+  - DEC-004

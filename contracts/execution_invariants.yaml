@@ -1,0 +1,57 @@
+schema_version: 1
+status: DRAFT
+invariants:
+  - id: INV-001
+    description: "无授权不得执行目标副作用"
+    verification_status: NOT_IMPLEMENTED
+  - id: INV-002
+    description: "目标副作用前必须提交持久化 Intent"
+    verification_status: NOT_IMPLEMENTED
+  - id: INV-003
+    description: "逻辑副作用必须具有稳定 Operation Key"
+    verification_status: NOT_IMPLEMENTED
+  - id: INV-004
+    description: "重试不得静默改变原始 Intent"
+    verification_status: NOT_IMPLEMENTED
+  - id: INV-005
+    description: "未知外部结果不得盲目重试"
+    verification_status: NOT_IMPLEMENTED
+  - id: INV-006
+    description: "任务成功必须有独立验证证据"
+    verification_status: NOT_IMPLEMENTED
+  - id: INV-007
+    description: "状态与事件必须同事务提交"
+    verification_status: NOT_IMPLEMENTED
+  - id: INV-008
+    description: "K0 同时最多一个活动执行器"
+    verification_status: NOT_IMPLEMENTED
+  - id: INV-009
+    description: "旧 Worker Epoch 不得提交执行结果"
+    verification_status: NOT_IMPLEMENTED
+  - id: INV-010
+    description: "取消提交后不得启动新目标副作用"
+    verification_status: NOT_IMPLEMENTED
+  - id: INV-011
+    description: "紧急停止必须持久化"
+    verification_status: NOT_IMPLEMENTED
+  - id: INV-012
+    description: "模型不得授予自身权限"
+    verification_status: NOT_IMPLEMENTED
+  - id: INV-013
+    description: "模型不得自行批准高风险操作"
+    verification_status: NOT_IMPLEMENTED
+  - id: INV-014
+    description: "自我改进不得绕过发布门禁"
+    verification_status: NOT_IMPLEMENTED
+  - id: INV-015
+    description: "重新规划不得遗忘历史副作用"
+    verification_status: NOT_IMPLEMENTED
+  - id: INV-016
+    description: "未完成操作的恢复产物不得提前清理"
+    verification_status: NOT_IMPLEMENTED
+  - id: INV-017
+    description: "长期记忆必须保留来源与有效性"
+    verification_status: NOT_IMPLEMENTED
+  - id: INV-018
+    description: "未运行测试不得标记通过"
+    verification_status: NOT_IMPLEMENTED

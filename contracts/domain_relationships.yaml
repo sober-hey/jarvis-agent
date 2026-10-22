@@ -1,0 +1,290 @@
+schema_version: 1
+status: DRAFT
+approval_status: NOT_APPROVED
+runtime_enabled: false
+scope: Closed in-memory graph fixture; no SQL, no executor, no lifecycle approval. Complete record structure
+  is checked before indexing; duplicate ids fail before FK checks.
+key_identity: Per-collection ID namespace, exact strings; no normalization. Cross-collection same spelling
+  does not alias records.
+semantics:
+  unique: Tuple equality among matching rows; exact cardinality 0..1.
+  foreign_key: Every matching source tuple has exactly one matching target tuple; optional skip only for
+    explicit null field. where/where_in filter source; target_where filters target.
+  exists: Every selected source tuple has at least one target tuple, not necessarily unique.
+  ordered_fields: upper >= lower; explicit null may be skipped.
+  field_value: Exact typed equality, not truthy coercion.
+  non_null: Selected field is present and non-null.
+  errors: Any malformed/unknown rule or missing field fails closed; structural validation precedes relations.
+rules:
+- id: unique_tasks
+  kind: unique
+  collection: tasks
+  fields:
+  - id
+- id: unique_plans
+  kind: unique
+  collection: plans
+  fields:
+  - id
+- id: unique_steps
+  kind: unique
+  collection: steps
+  fields:
+  - id
+- id: unique_attempts
+  kind: unique
+  collection: attempts
+  fields:
+  - id
+- id: unique_intents
+  kind: unique
+  collection: intents
+  fields:
+  - operation_id
+- id: unique_file_write_intents
+  kind: unique
+  collection: file_write_intents
+  fields:
+  - operation_id
+- id: plan_version_per_task
+  kind: unique
+  collection: plans
+  fields:
+  - task_id
+  - plan_version
+- id: step_ordinal_per_plan
+  kind: unique
+  collection: steps
+  fields:
+  - plan_id
+  - ordinal
+- id: attempt_number_per_step
+  kind: unique
+  collection: attempts
+  fields:
+  - step_id
+  - attempt_no
+- id: one_intent_per_step
+  kind: unique
+  collection: intents
+  fields:
+  - step_id
+- id: operation_key_global_unique
+  kind: unique
+  collection: intents
+  fields:
+  - operation_key
+- id: one_active_plan_per_task
+  kind: unique
+  collection: plans
+  fields:
+  - task_id
+  where:
+    state: ACTIVE
+- id: one_active_attempt_per_step
+  kind: unique
+  collection: attempts
+  fields:
+  - step_id
+  where:
+    state: ACTIVE
+- id: plan_task_exists
+  kind: foreign_key
+  collection: plans
+  fields:
+  - task_id
+  target: tasks
+  target_fields:
+  - id
+- id: step_plan_same_task
+  kind: foreign_key
+  collection: steps
+  fields:
+  - plan_id
+  - task_id
+  target: plans
+  target_fields:
+  - id
+  - task_id
+- id: intent_step_exists
+  kind: foreign_key
+  collection: intents
+  fields:
+  - step_id
+  target: steps
+  target_fields:
+  - id
+- id: attempt_step_exists
+  kind: foreign_key
+  collection: attempts
+  fields:
+  - step_id
+  target: steps
+  target_fields:
+  - id
+- id: attempt_intent_same_step
+  kind: foreign_key
+  collection: attempts
+  fields:
+  - operation_id
+  - step_id
+  target: intents
+  target_fields:
+  - operation_id
+  - step_id
+- id: file_write_intent_exists
+  kind: foreign_key
+  collection: file_write_intents
+  fields:
+  - operation_id
+  target: intents
+  target_fields:
+  - operation_id
+- id: active_plan_same_task
+  kind: foreign_key
+  collection: tasks
+  fields:
+  - active_plan_id
+  - id
+  target: plans
+  target_fields:
+  - id
+  - task_id
+  skip_if_null: active_plan_id
+- id: active_plan_pointer_is_active
+  kind: foreign_key
+  collection: tasks
+  fields:
+  - active_plan_id
+  - id
+  target: plans
+  target_fields:
+  - id
+  - task_id
+  skip_if_null: active_plan_id
+  target_where:
+    state: ACTIVE
+- id: active_plan_points_back
+  kind: foreign_key
+  collection: plans
+  fields:
+  - id
+  - task_id
+  where:
+    state: ACTIVE
+  target: tasks
+  target_fields:
+  - active_plan_id
+  - id
+- id: attempt_finish_not_before_start
+  kind: ordered_fields
+  collection: attempts
+  lower: started_at_ms
+  upper: finished_at_ms
+  skip_if_null: finished_at_ms
+- id: active_attempt_unfinished
+  kind: field_value
+  collection: attempts
+  where:
+    state: ACTIVE
+  field: finished_at_ms
+  value: null
+- id: attempt_has_specialized_intent
+  kind: foreign_key
+  collection: attempts
+  fields:
+  - operation_id
+  target: file_write_intents
+  target_fields:
+  - operation_id
+- id: publishable_step_has_intent
+  kind: foreign_key
+  collection: steps
+  fields:
+  - id
+  where_in:
+    state:
+    - EXECUTING
+    - VERIFYING
+    - NEEDS_RECONCILIATION
+    - RETRY_WAIT
+    - COMPLETED
+  target: intents
+  target_fields:
+  - step_id
+- id: published_step_has_stable_effect_id
+  kind: non_null
+  collection: steps
+  where_in:
+    state:
+    - EXECUTING
+    - VERIFYING
+    - NEEDS_RECONCILIATION
+    - RETRY_WAIT
+    - COMPLETED
+  field: logical_effect_id
+- id: completed_step_intent_verified
+  kind: foreign_key
+  collection: steps
+  fields:
+  - id
+  where:
+    state: COMPLETED
+  target: intents
+  target_fields:
+  - step_id
+  target_where:
+    state: VERIFIED
+- id: committed_intent_has_specialized_record
+  kind: foreign_key
+  collection: intents
+  fields: [operation_id]
+  target: file_write_intents
+  target_fields: [operation_id]
+- id: publishable_step_has_attempt
+  kind: exists
+  collection: steps
+  fields: [id]
+  where_in:
+    state: [EXECUTING, VERIFYING, NEEDS_RECONCILIATION, RETRY_WAIT, COMPLETED]
+  target: attempts
+  target_fields: [step_id]
+- id: one_active_step_globally
+  kind: unique
+  collection: steps
+  fields: []
+  where_in:
+    state: [CLAIMED, PREPARING, EXECUTING, VERIFYING]
+intent_reuse:
+  rule: Every Attempt for one Step references the same existing Intent row by operation_id; never duplicate
+    an Intent row or operation_key per retry.
+  enforced_by:
+  - one_intent_per_step
+  - operation_key_global_unique
+  - attempt_intent_same_step
+  immutable_across_attempts:
+  - operation_id
+  - operation_key
+  - arguments_digest
+  - input_snapshot_sha256
+  - prepared_relpath
+  - target_relpath
+  - expected_sha256
+  - expected_size
+  temporal_limit: Snapshot relations cannot prove immutability across time; original-byte comparison and
+    transactional Guard are still required.
+existence_boundary: PENDING/CLAIMED/PREPARING may have no Intent or Attempt; before EXECUTING require
+  prior committed Intent+FileWriteIntent, durable Prepared and associated Attempt. DDL upper bounds alone
+  do not establish existence.
+unresolved:
+- D-01
+- D-02
+- D-04
+- D-07
+- D-08
+- D-11
+- D-13
+- D-15
+- OPEN-01
+- OPEN-06
+- OPEN-10

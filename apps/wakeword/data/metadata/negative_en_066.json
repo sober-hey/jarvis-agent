@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_en_066",
+  "text": "Play the playlist from this evening.",
+  "category": "negative_en",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Serena",
+  "voice_kind": "system",
+  "tempo": 1.0,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 36
+  },
+  "elapsed_seconds": 1.141,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_en_066.wav",
+  "audio": "wav/negative_en_066.wav",
+  "duration_seconds": 3.52,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "62c8b684cc5d1e1e32da408385cc6cc3e10062555c5a19e87427f59a9e02ffbf",
+  "sha256_audio": "34bba0b1c0481dca5207a1fa7e55f19174bd5c5261c236a81d858be6528a705c"
+}

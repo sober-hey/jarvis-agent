@@ -1,0 +1,205 @@
+# ADR-0006 机器可读附件：取消—发布线性化的状态/结果/断言登记
+#
+# 效力：DRAFT / NOT_APPROVED / NOT_VERIFIED / NOT_FROZEN。binding:false。
+# 本文件不是已冻结契约，不是表驱动测试的许可输入，不得被引用为 INV-010 通过证据
+# 或任何门禁通过。批准权在项目所有者。改动须与 ADR-0006 同步，否则以 ADR 正文为准。
+schema_version: 1
+status: DRAFT
+approval: NOT_APPROVED
+verification_status: NOT_VERIFIED
+frozen: false
+binding: false
+authority:
+  adr: docs/adr/ADR-0006-cancel-publish-linearization.md
+  invariants: [INV-010, INV-011]
+  decisions: [DEC-004]
+  related_open: [FS-047/O-4, RECOVERY-PROTOCOL-OPEN-01]
+scope:
+  operation_type: file.publish.no_clobber
+  targets: single
+  target_template: state/tasks/<task_id>/output/inventory.json
+  hosts: single
+  executors: single
+
+symbols:
+  L_cancel: "取消写事务 COMMIT 成功返回的时刻（§9.1 口径）"
+  S_pub: "发布单元取得仲裁排他的时刻（覆盖 检查→副作用→记账）"
+  E_pub: "发布单元释放该排他的时刻（必然晚于 L_pub）"
+  S_check: "锁内新建事务的取消/停止/所有权/epoch 读完成时刻"
+  S_link: "link(2) 进入内核的时刻"
+  S_sync: "目标目录同步完成时刻"
+  L_pub: "发布结果短写事务 COMMIT 返回时刻"
+  EFFECT: "内核为 TGT 创建了目录项"
+  RECORDED: "发布结果已由提交成功的事务记录"
+  PARTIAL: "EFFECT 且非 RECORDED（含 P5/P6/P9），不构成成功，也不构成取消成功且无副作用"
+
+observations:
+  - EXPECTED_EFFECT_PRESENT
+  - TARGET_ABSENT
+  - CONFLICTING_EFFECT_PRESENT
+  - INSUFFICIENT_EVIDENCE
+
+outcomes:
+  - id: CANCEL_WINS_NO_EFFECT
+    meaning: "取消生效为终态，未观察到该 TGT 的任何副作用"
+    claims_never_executed: false
+  - id: CANCEL_WINS_EFFECT_RETAINED
+    meaning: "取消生效为终态，副作用已发生并被保留/记录；不得删除或改名"
+    claims_never_executed: false
+  - id: PUBLISH_WINS
+    meaning: "发布已完成并记录；取消请求被持久化但不改变终态"
+    claims_never_executed: false
+  - id: RECONCILE_BLOCK
+    meaning: "证据不足或需人工处置；不重试、不补写、不猜"
+    claims_never_executed: false
+  - id: PROTOCOL_VIOLATION
+    meaning: "命中本应不可达的交错；fail-closed、记审计、不得继续发布"
+    claims_never_executed: false
+
+states:
+  - id: P-1
+    name: NO_INTENT
+    criterion: "无引用 TGT 的 operation_intent 行"
+    in_critical_section: false
+  - id: P0
+    name: PREPARED_NOT_STARTED
+    criterion: "Intent 已提交（PREPARED），从未进入 CS_pub"
+    in_critical_section: false
+  - id: P1
+    name: ACQUIRING
+    criterion: "已发起取锁，未持有"
+    in_critical_section: false
+  - id: P2
+    name: IN_CS_CHECKED
+    criterion: "持锁，S_check 已完成且判定无取消"
+    in_critical_section: true
+  - id: P3
+    name: IN_CS_MKDIR
+    criterion: "持锁，目标目录已建，TGT 未创建"
+    in_critical_section: true
+  - id: P4
+    name: IN_CS_LINK_INFLIGHT
+    criterion: "持锁，link 已进入未返回"
+    in_critical_section: true
+  - id: P5
+    name: IN_CS_LINK_OK
+    criterion: "持锁，EFFECT=true，目录同步未完成"
+    in_critical_section: true
+  - id: P6
+    name: IN_CS_SYNCED
+    criterion: "持锁，EFFECT=true 且已同步，结果未提交"
+    in_critical_section: true
+  - id: P7
+    name: IN_CS_RECORDING
+    criterion: "持锁，结果短写事务在途"
+    in_critical_section: true
+  - id: P8
+    name: TERMINAL_RECORDED
+    criterion: "RECORDED=true 且已释放排他"
+    in_critical_section: false
+  - id: P9
+    name: ORPHAN_EFFECT_NO_RECORD
+    criterion: "EFFECT=true、RECORDED=false、无存活持有者"
+    in_critical_section: false
+  - id: P10
+    name: PUBLISHING_NO_EFFECT_NO_RECORD
+    criterion: "state=PUBLISHING、无记录、未观察到 TGT"
+    in_critical_section: false
+
+legal_at_cancel_commit: [P-1, P0, P1, P8, P9, P10]
+forbidden_at_cancel_commit: [P2, P3, P4, P5, P6, P7]
+forbidden_meaning: "在 L_cancel 时刻出现即表示 A1/A2/A3/A5 至少一项失效，属可检测违例，不得再判一次"
+unreachable_outcome: PROTOCOL_VIOLATION
+total_cells_required: 48
+
+# 可达格 24 个；P2–P7 共 24 格统一为 PROTOCOL_VIOLATION（见 unreachable_outcome）。
+outcome_table:
+  - {state: P-1, observation: EXPECTED_EFFECT_PRESENT, outcome: RECONCILE_BLOCK}
+  - {state: P-1, observation: TARGET_ABSENT, outcome: CANCEL_WINS_NO_EFFECT}
+  - {state: P-1, observation: CONFLICTING_EFFECT_PRESENT, outcome: RECONCILE_BLOCK}
+  - {state: P-1, observation: INSUFFICIENT_EVIDENCE, outcome: RECONCILE_BLOCK}
+  - {state: P0, observation: EXPECTED_EFFECT_PRESENT, outcome: RECONCILE_BLOCK}
+  - {state: P0, observation: TARGET_ABSENT, outcome: CANCEL_WINS_NO_EFFECT}
+  - {state: P0, observation: CONFLICTING_EFFECT_PRESENT, outcome: RECONCILE_BLOCK}
+  - {state: P0, observation: INSUFFICIENT_EVIDENCE, outcome: RECONCILE_BLOCK}
+  - {state: P1, observation: EXPECTED_EFFECT_PRESENT, outcome: RECONCILE_BLOCK}
+  - {state: P1, observation: TARGET_ABSENT, outcome: CANCEL_WINS_NO_EFFECT}
+  - {state: P1, observation: CONFLICTING_EFFECT_PRESENT, outcome: RECONCILE_BLOCK}
+  - {state: P1, observation: INSUFFICIENT_EVIDENCE, outcome: RECONCILE_BLOCK}
+  - {state: P8, observation: EXPECTED_EFFECT_PRESENT, outcome: PUBLISH_WINS}
+  - {state: P8, observation: TARGET_ABSENT, outcome: RECONCILE_BLOCK}
+  - {state: P8, observation: CONFLICTING_EFFECT_PRESENT, outcome: RECONCILE_BLOCK}
+  - {state: P8, observation: INSUFFICIENT_EVIDENCE, outcome: RECONCILE_BLOCK}
+  - {state: P9, observation: EXPECTED_EFFECT_PRESENT, outcome: CANCEL_WINS_EFFECT_RETAINED}
+  - {state: P9, observation: TARGET_ABSENT, outcome: CANCEL_WINS_NO_EFFECT}
+  - {state: P9, observation: CONFLICTING_EFFECT_PRESENT, outcome: RECONCILE_BLOCK}
+  - {state: P9, observation: INSUFFICIENT_EVIDENCE, outcome: RECONCILE_BLOCK}
+  - {state: P10, observation: EXPECTED_EFFECT_PRESENT, outcome: CANCEL_WINS_EFFECT_RETAINED}
+  - {state: P10, observation: TARGET_ABSENT, outcome: CANCEL_WINS_NO_EFFECT}
+  - {state: P10, observation: CONFLICTING_EFFECT_PRESENT, outcome: RECONCILE_BLOCK}
+  - {state: P10, observation: INSUFFICIENT_EVIDENCE, outcome: RECONCILE_BLOCK}
+
+function_requirements:
+  total_over_reachable: true
+  single_valued: true
+  default_branch: forbidden
+  undefined_cell_result: PROTOCOL_VIOLATION
+  undefined_cell_reason_code: PAIRING_UNDEFINED
+  depends_on: [state, observation]
+
+# ADR §6.5：结果是仲裁标签，不是 reconciliation.schema.json 的 decision 枚举值。
+# 本表只做单向收窄：集合外的组合不得落库；不改配对表任何格的判定。
+outcome_decision_boundary:
+  status: DRAFT
+  approval: NOT_APPROVED
+  undecided: U-8
+  basis: "docs/adr/ADR-0006-cancel-publish-linearization.md §6.5"
+  observation_binding:
+    CANCEL_WINS_NO_EFFECT: [TARGET_ABSENT]
+    CANCEL_WINS_EFFECT_RETAINED: [EXPECTED_EFFECT_PRESENT]
+    PUBLISH_WINS: [EXPECTED_EFFECT_PRESENT]
+    RECONCILE_BLOCK: [EXPECTED_EFFECT_PRESENT, TARGET_ABSENT, CONFLICTING_EFFECT_PRESENT, INSUFFICIENT_EVIDENCE]
+    PROTOCOL_VIOLATION: []
+  permitted_decisions:
+    CANCEL_WINS_NO_EFFECT: [BLOCK]
+    CANCEL_WINS_EFFECT_RETAINED: [VERIFY, BLOCK]
+    PUBLISH_WINS: [VERIFY]
+    RECONCILE_BLOCK: [BLOCK]
+    PROTOCOL_VIOLATION: []
+  globally_forbidden_decisions: [RETRY_SAFE, FAIL]
+  persist_protocol_violation: false
+  out_of_set_output: {decision: BLOCK, reason_code: PAIRING_FORBIDDEN}
+  direction: "one_way_narrowing"
+  does_not_change_pairing_table: true
+
+assumptions:
+  - {id: A1, name: 无旁路, status: UNVERIFIED, note: "调用点清单非穷举证明；当前 SITES 为空（无实现）"}
+  - {id: A2, name: 锁身份与 fd 语义, status: UNVERIFIED, note: "同进程重复 flock 不产生新互斥，需线程级互斥"}
+  - {id: A3, name: 目标卷 flock 排他/终止释放, status: UNVERIFIED, note: "ADR-0001 仅 PROPOSED；需外接硬盘探针"}
+  - {id: A4, name: 单执行器与 epoch 有效, status: UNVERIFIED, note: "INV-008/009 未实现"}
+  - {id: A5, name: 锁内新建读/提交后释放, status: UNVERIFIED, note: "协议义务，需实现级检查"}
+  - {id: A6, name: WAL 可见性, status: UNVERIFIED, note: "COMMIT 返回 ⇒ 其后新建事务可见；未探针"}
+
+assertions:
+  - {id: AST-01, kind: race, statement: "不存在 S_pub < L_cancel < E_pub", check: "桩标记+共享屏障，禁止跨进程时钟比较", status: NOT_IMPLEMENTED, negative_control: "去掉排他后必须变红"}
+  - {id: AST-02, kind: structural, statement: "S_pub < S_check 且读事务开始序号 > 取锁序号", check: "事件日志序号", status: NOT_IMPLEMENTED, negative_control: "改为锁外读后必须变红"}
+  - {id: AST-03, kind: structural, statement: "S_check < S_link", check: "单进程事件全序", status: NOT_IMPLEMENTED, negative_control: "把检查移到 link 后必须变红"}
+  - {id: AST-04, kind: visibility, statement: "L_cancel < S_pub ⇒ S_check 读到 cancel_requested_at_ms 非空", check: "注入取消后发布，断言读值", status: NOT_IMPLEMENTED, negative_control: "复用旧快照读必须变红"}
+  - {id: AST-05, kind: static, statement: "TGT 目录项创建调用点均被 S_pub 支配，未登记点数为 0", check: "调用点清单+支配性检查", status: NOT_IMPLEMENTED, negative_control: "加入未登记发布点必须变红"}
+  - {id: AST-06, kind: table, statement: "终态在 L_cancel 后不再改变", check: "状态转换表+条件更新负例", status: NOT_IMPLEMENTED, negative_control: "去掉条件更新必须变红"}
+  - {id: AST-07, kind: static_runtime, statement: "取消/恢复路径不含对 TGT 的 unlink/rename/rmdir", check: "系统调用白名单+追踪", status: NOT_IMPLEMENTED, negative_control: "加入清理目标必须变红"}
+  - {id: AST-08, kind: table, statement: "可达组合有且仅有一个结果定义，无 default 分支", check: "枚举 State×Observation 断言匹配数=1", status: NOT_IMPLEMENTED, negative_control: "加入 default 放行必须变红"}
+  - {id: AST-09, kind: fault_injection, statement: "P4/P5/P6 注入 kill -9 后归类与崩溃前状态一致", check: "故障注入夹具", status: NOT_IMPLEMENTED, negative_control: "把 P9 归为取消无副作用必须变红"}
+  - {id: AST-10, kind: race, statement: "L_stop < S_pub ⇒ 不发生 S_link", check: "同 AST-01；强形式待 stop 冲突裁定", status: NOT_IMPLEMENTED, negative_control: "stop 不落库仍发布必须变红"}
+  - {id: AST-11, kind: consistency, statement: "若 mkdir 判为副作用，则区间下界替换为 S_mkdir 且 S_mkdir > S_pub", check: "契约—实现一致性", status: NOT_IMPLEMENTED, negative_control: "mkdir 移出临界区必须变红"}
+  - {id: AST-12, kind: monotonic, statement: "取消字段一旦 COMMIT 不得被后续事务置空", check: "语句白名单+负例", status: NOT_IMPLEMENTED, negative_control: "加入清空语句必须变红"}
+  - {id: AST-13, kind: determinism, statement: "同一 (state, observation) 重复求值结果恒等", check: "纯函数属性测试", status: NOT_IMPLEMENTED, negative_control: "引入时钟/模型依赖必须变红"}
+  - {id: AST-14, kind: crash_equivalence, statement: "P9 与 P6 在相同 observation 下结果相同", check: "对照夹具", status: NOT_IMPLEMENTED, negative_control: "P9 判为 PUBLISH_WINS 必须变红"}
+  - {id: AST-15, kind: cross_document, statement: "不存在已落库三元组 (outcome, observation, decision) 使 observation 或 decision 落在 outcome_decision_boundary 允许集之外；PROTOCOL_VIOLATION 落库记录数为 0", check: "表驱动联合校验 + reconciliation.schema.json 枚举比对", status: NOT_IMPLEMENTED, negative_control: "向 PUBLISH_WINS 的 permitted_decisions 加入 RETRY_SAFE 必须变红"}
+
+non_claims:
+  - "不主张 SQLite 与文件系统跨资源原子性"
+  - "不主张 exactly-once 或可回滚撤销副作用"
+  - "不裁定 mkdir/目录同步是否属目标副作用"
+  - "不裁定 stop 与仲裁锁的优先序"
+  - "不构成平台测试、竞态实验或实现证据"

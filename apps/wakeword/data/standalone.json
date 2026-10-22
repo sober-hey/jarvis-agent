@@ -1,0 +1,289 @@
+{
+  "items": [
+    {
+      "source_id": "bare_0_0",
+      "text": "Jarvis.",
+      "category": "bare",
+      "language_type": "English",
+      "voice": "Cherry",
+      "voice_kind": "system",
+      "tempo": 0.85,
+      "split": "calibration",
+      "model": "qwen3-tts-flash",
+      "usage": {
+        "characters": 7
+      },
+      "error": null,
+      "elapsed_seconds": 0.6525928974151611,
+      "audio": "wav/bare_0_0.wav",
+      "duration_seconds": 1.0189,
+      "sha256_audio": "e47b25d2494fee0e49e16515cfea5fc2b0235d4cca5e9590ce227ee78b5d8b72"
+    },
+    {
+      "source_id": "bare_0_1",
+      "text": "Jarvis.",
+      "category": "bare",
+      "language_type": "English",
+      "voice": "Cherry",
+      "voice_kind": "system",
+      "tempo": 1.0,
+      "split": "holdout",
+      "model": "qwen3-tts-flash",
+      "usage": {
+        "characters": 7
+      },
+      "error": null,
+      "elapsed_seconds": 0.690622091293335,
+      "audio": "wav/bare_0_1.wav",
+      "duration_seconds": 1.2,
+      "sha256_audio": "a99f6ccf8228dba192488acf0227213d57b20716c81e76d1556403d7d5c61536"
+    },
+    {
+      "source_id": "bare_0_2",
+      "text": "Jarvis.",
+      "category": "bare",
+      "language_type": "English",
+      "voice": "Cherry",
+      "voice_kind": "system",
+      "tempo": 1.15,
+      "split": "calibration",
+      "model": "qwen3-tts-flash",
+      "usage": {
+        "characters": 7
+      },
+      "error": null,
+      "elapsed_seconds": 0.6807851791381836,
+      "audio": "wav/bare_0_2.wav",
+      "duration_seconds": 0.778,
+      "sha256_audio": "2141ee8278106e6c49aa89c4ea7c14ac8e9378d5e63fe263bb93e1b1fdba8e0d"
+    },
+    {
+      "source_id": "bare_1_0",
+      "text": "Jarvis.",
+      "category": "bare",
+      "language_type": "English",
+      "voice": "Serena",
+      "voice_kind": "system",
+      "tempo": 0.85,
+      "split": "calibration",
+      "model": "qwen3-tts-flash",
+      "usage": {
+        "characters": 7
+      },
+      "error": null,
+      "elapsed_seconds": 0.5925509929656982,
+      "audio": "wav/bare_1_0.wav",
+      "duration_seconds": 1.1102,
+      "sha256_audio": "8ef107a823b7a8dc08c4f69e31b9ba6f5326c8a5532388d3d2330cb6e511ccda"
+    },
+    {
+      "source_id": "bare_1_1",
+      "text": "Jarvis.",
+      "category": "bare",
+      "language_type": "English",
+      "voice": "Serena",
+      "voice_kind": "system",
+      "tempo": 1.0,
+      "split": "holdout",
+      "model": "qwen3-tts-flash",
+      "usage": {
+        "characters": 7
+      },
+      "error": null,
+      "elapsed_seconds": 0.8831570148468018,
+      "audio": "wav/bare_1_1.wav",
+      "duration_seconds": 1.92,
+      "sha256_audio": "163676c8d769f7d763835ba02209d91f3e23004a99b31eb7c2e2274e1ad2b9f5"
+    },
+    {
+      "source_id": "bare_1_2",
+      "text": "Jarvis.",
+      "category": "bare",
+      "language_type": "English",
+      "voice": "Serena",
+      "voice_kind": "system",
+      "tempo": 1.15,
+      "split": "calibration",
+      "model": "qwen3-tts-flash",
+      "usage": {
+        "characters": 7
+      },
+      "error": null,
+      "elapsed_seconds": 0.5861620903015137,
+      "audio": "wav/bare_1_2.wav",
+      "duration_seconds": 0.9083,
+      "sha256_audio": "c3da8f04eb36a73b2fd6d5394103ff9e7b929ed0e4012b12d716f7484521c9e8"
+    },
+    {
+      "source_id": "bare_2_0",
+      "text": "Jarvis.",
+      "category": "bare",
+      "language_type": "English",
+      "voice": "Ethan",
+      "voice_kind": "system",
+      "tempo": 0.85,
+      "split": "calibration",
+      "model": "qwen3-tts-flash",
+      "usage": {
+        "characters": 7
+      },
+      "error": null,
+      "elapsed_seconds": 0.5862841606140137,
+      "audio": "wav/bare_2_0.wav",
+      "duration_seconds": 1.1134,
+      "sha256_audio": "d410f673cfd3cd2ec36f3f25194b33bd7800afa9d4ac62947145ab1fd7e792b1"
+    },
+    {
+      "source_id": "bare_2_1",
+      "text": "Jarvis.",
+      "category": "bare",
+      "language_type": "English",
+      "voice": "Ethan",
+      "voice_kind": "system",
+      "tempo": 1.0,
+      "split": "holdout",
+      "model": "qwen3-tts-flash",
+      "usage": {
+        "characters": 7
+      },
+      "error": null,
+      "elapsed_seconds": 0.566748857498169,
+      "audio": "wav/bare_2_1.wav",
+      "duration_seconds": 0.8,
+      "sha256_audio": "4803c7bed6a46112f41c40006ddaed3bff05daa3ef64efa9b2635444f8d7b1d4"
+    },
+    {
+      "source_id": "bare_2_2",
+      "text": "Jarvis.",
+      "category": "bare",
+      "language_type": "English",
+      "voice": "Ethan",
+      "voice_kind": "system",
+      "tempo": 1.15,
+      "split": "calibration",
+      "model": "qwen3-tts-flash",
+      "usage": {
+        "characters": 7
+      },
+      "error": null,
+      "elapsed_seconds": 0.5883588790893555,
+      "audio": "wav/bare_2_2.wav",
+      "duration_seconds": 0.9799,
+      "sha256_audio": "2ef235d0063715fdecd225b4a4691cf91761e6e7edd26bdd2ae7668488f6d0a2"
+    },
+    {
+      "source_id": "bare_3_0",
+      "text": "Jarvis.",
+      "category": "bare",
+      "language_type": "English",
+      "voice": "Chelsie",
+      "voice_kind": "system",
+      "tempo": 0.85,
+      "split": "calibration",
+      "model": "qwen3-tts-flash",
+      "usage": {
+        "characters": 7
+      },
+      "error": null,
+      "elapsed_seconds": 0.5831360816955566,
+      "audio": "wav/bare_3_0.wav",
+      "duration_seconds": 1.0186,
+      "sha256_audio": "7796cebeebe1b37b6fa153212722c2dbfd2f1f2e2bb86e145c5f8f197bbd8ab0"
+    },
+    {
+      "source_id": "bare_3_1",
+      "text": "Jarvis.",
+      "category": "bare",
+      "language_type": "English",
+      "voice": "Chelsie",
+      "voice_kind": "system",
+      "tempo": 1.0,
+      "split": "holdout",
+      "model": "qwen3-tts-flash",
+      "usage": {
+        "characters": 7
+      },
+      "error": null,
+      "elapsed_seconds": 0.6612799167633057,
+      "audio": "wav/bare_3_1.wav",
+      "duration_seconds": 0.88,
+      "sha256_audio": "419d37ebe316e50371bc90ce9d8cd3ada214169e558f86e6f2e88cb1969ec00c"
+    },
+    {
+      "source_id": "bare_3_2",
+      "text": "Jarvis.",
+      "category": "bare",
+      "language_type": "English",
+      "voice": "Chelsie",
+      "voice_kind": "system",
+      "tempo": 1.15,
+      "split": "calibration",
+      "model": "qwen3-tts-flash",
+      "usage": {
+        "characters": 7
+      },
+      "error": null,
+      "elapsed_seconds": 0.9324491024017334,
+      "audio": "wav/bare_3_2.wav",
+      "duration_seconds": 0.9058,
+      "sha256_audio": "62815c65ffd6ddbeacd776c0f03675d6fd7552225890fd5a1210f37acd55e8f2"
+    },
+    {
+      "source_id": "bare_4_0",
+      "text": "Jarvis.",
+      "category": "bare",
+      "language_type": "English",
+      "voice": "cosyvoice-v3.5-flash-jarvis-f7bec1631ddf4725841995ba9c711376",
+      "voice_kind": "clone",
+      "tempo": 0.85,
+      "split": "calibration",
+      "model": "cosyvoice-v3.5-flash",
+      "usage": {
+        "characters": 7
+      },
+      "error": null,
+      "elapsed_seconds": 1.0754611492156982,
+      "audio": "wav/bare_4_0.wav",
+      "duration_seconds": 1.3408,
+      "sha256_audio": "7f5074a9c68825afe629eb919bf7560a1364ed29a89f3f0d2b52e66d564ba46b"
+    },
+    {
+      "source_id": "bare_4_1",
+      "text": "Jarvis.",
+      "category": "bare",
+      "language_type": "English",
+      "voice": "cosyvoice-v3.5-flash-jarvis-f7bec1631ddf4725841995ba9c711376",
+      "voice_kind": "clone",
+      "tempo": 1.0,
+      "split": "holdout",
+      "model": "cosyvoice-v3.5-flash",
+      "usage": {
+        "characters": 7
+      },
+      "error": null,
+      "elapsed_seconds": 1.053605079650879,
+      "audio": "wav/bare_4_1.wav",
+      "duration_seconds": 1.176,
+      "sha256_audio": "6d6c965a1723e19b630f7ea0989b640ea0fd9688dc8de64f3424b682e9ac1334"
+    },
+    {
+      "source_id": "bare_4_2",
+      "text": "Jarvis.",
+      "category": "bare",
+      "language_type": "English",
+      "voice": "cosyvoice-v3.5-flash-jarvis-f7bec1631ddf4725841995ba9c711376",
+      "voice_kind": "clone",
+      "tempo": 1.15,
+      "split": "calibration",
+      "model": "cosyvoice-v3.5-flash",
+      "usage": {
+        "characters": 7
+      },
+      "error": null,
+      "elapsed_seconds": 1.5062110424041748,
+      "audio": "wav/bare_4_2.wav",
+      "duration_seconds": 0.9952,
+      "sha256_audio": "c6f9fd3eb07ea877773f16c7f9d79d060edf64fbcd357f01b39ea43abfa39a43"
+    }
+  ]
+}

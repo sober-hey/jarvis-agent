@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_near_077",
+  "text": "Travis left a note on the table.",
+  "category": "negative_near",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Ethan",
+  "voice_kind": "system",
+  "tempo": 1.06,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 32
+  },
+  "elapsed_seconds": 0.991,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_near_077.wav",
+  "audio": "wav/negative_near_077.wav",
+  "duration_seconds": 1.9716,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "629f9fb71315e5b07872238b7e34b78cf6edc77c03d2afe7d7c6af7ad4b50ac9",
+  "sha256_audio": "abe3c9c747c52cca4f6ee7753eccb48e0610258a6924f7ae1129a3a201aa515c"
+}

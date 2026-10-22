@@ -1,0 +1,6 @@
+{
+  "test": "actual_wscat_loopback",
+  "passed": true,
+  "pcm_json_observed": true,
+  "text_audio_received": true
+}

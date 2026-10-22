@@ -1,0 +1,432 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jarvis.invalid/contracts/draft/execution_graph.schema.json",
+  "schema_version": 1,
+  "status": "DRAFT",
+  "x-approval-status": "NOT_APPROVED",
+  "x-runtime-enabled": false,
+  "title": "execution_graph structural record (DRAFT)",
+  "description": "Structural domain/DDL projection only, not lifecycle validity or execution permission. Relationships require domain_relationships.yaml. Integer ranges are candidate representation constraints, not schema migration.",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "tasks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/task"
+      }
+    },
+    "plans": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/plan"
+      }
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/step"
+      }
+    },
+    "attempts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/attempt"
+      }
+    },
+    "intents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/intent"
+      }
+    },
+    "file_write_intents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/file_write_intent"
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "tasks",
+    "plans",
+    "steps",
+    "attempts",
+    "intents",
+    "file_write_intents"
+  ],
+  "additionalProperties": false,
+  "x-unresolved": [
+    "JSON Schema checks per-record structure only; foreign keys, uniqueness, cross-row values require domain_relationships.yaml evaluator",
+    "Plan/Attempt lifecycle remains D-01/D-02; not production-accepted",
+    "Envelope is a closed snapshot of all referenced records; partial graphs are rejected by relation validation"
+  ],
+  "$defs": {
+    "task": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "state": {
+          "enum": [
+            "CREATED",
+            "READY",
+            "RUNNING",
+            "VERIFYING",
+            "NEEDS_RECONCILIATION",
+            "RETRY_WAIT",
+            "BLOCKED",
+            "SUCCEEDED",
+            "FAILED",
+            "CANCELED"
+          ]
+        },
+        "active_plan_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "cancel_requested_at_ms": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "schema_version",
+        "id",
+        "state",
+        "active_plan_id",
+        "cancel_requested_at_ms",
+        "version"
+      ],
+      "additionalProperties": false,
+      "description": "Minimal relationship-check projection, NOT a complete Task record/TaskSpec; tasks without an active Plan may be structurally represented."
+    },
+    "plan": {
+      "schema_version": 1,
+      "status": "DRAFT",
+      "x-approval-status": "NOT_APPROVED",
+      "x-runtime-enabled": false,
+      "title": "plan structural record (DRAFT)",
+      "description": "Structural domain/DDL projection only, not lifecycle validity or execution permission. Relationships require domain_relationships.yaml. Integer ranges are candidate representation constraints, not schema migration.",
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "task_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "plan_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "state": {
+          "type": "string",
+          "minLength": 1,
+          "description": "D-01 OPEN: only ACTIVE is known from the partial-unique predicate; no other state is approved. Nonempty string is structure only, not a lifecycle allowlist."
+        },
+        "plan_digest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "created_at_ms": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "schema_version",
+        "id",
+        "task_id",
+        "plan_version",
+        "state",
+        "plan_digest",
+        "created_at_ms"
+      ],
+      "additionalProperties": false,
+      "x-unresolved": [
+        "D-01: lifecycle enum intentionally not invented",
+        "D-04: digest fields and creation basis not decided",
+        "D-07: no new version column or CAS mechanism approved"
+      ]
+    },
+    "step": {
+      "schema_version": 1,
+      "status": "DRAFT",
+      "x-approval-status": "NOT_APPROVED",
+      "x-runtime-enabled": false,
+      "title": "step structural record (DRAFT)",
+      "description": "Structural domain/DDL projection only, not lifecycle validity or execution permission. Relationships require domain_relationships.yaml. Integer ranges are candidate representation constraints, not schema migration.",
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "task_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "plan_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ordinal": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "logical_effect_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "state": {
+          "enum": [
+            "PENDING",
+            "CLAIMED",
+            "PREPARING",
+            "EXECUTING",
+            "VERIFYING",
+            "NEEDS_RECONCILIATION",
+            "RETRY_WAIT",
+            "BLOCKED",
+            "COMPLETED",
+            "FAILED",
+            "CANCELED"
+          ],
+          "description": "Exact projection of step_states.yaml; offline checks detect drift."
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Domain boolean; explicit DDL adapter maps false/true to 0/1, not implicit truthiness."
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "schema_version",
+        "id",
+        "task_id",
+        "plan_id",
+        "ordinal",
+        "logical_effect_id",
+        "state",
+        "required",
+        "version"
+      ],
+      "additionalProperties": false,
+      "x-unresolved": [
+        "D-08: input/type/precondition/expected-result/verification carrier unresolved, not added here",
+        "D-11: nullable logical_effect_id preserved; publication requires stable non-null identity"
+      ]
+    },
+    "attempt": {
+      "schema_version": 1,
+      "status": "DRAFT",
+      "x-approval-status": "NOT_APPROVED",
+      "x-runtime-enabled": false,
+      "title": "attempt structural record (DRAFT)",
+      "description": "Structural domain/DDL projection only, not lifecycle validity or execution permission. Relationships require domain_relationships.yaml. Integer ranges are candidate representation constraints, not schema migration.",
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "step_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "operation_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "attempt_no": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "worker_epoch": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "state": {
+          "type": "string",
+          "minLength": 1,
+          "description": "D-02 OPEN: ACTIVE partial uniqueness is known; no terminal/interrupted state enum is approved. Structural acceptance is not lifecycle acceptance."
+        },
+        "started_at_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "finished_at_ms": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        }
+      },
+      "required": [
+        "schema_version",
+        "id",
+        "step_id",
+        "operation_id",
+        "attempt_no",
+        "worker_epoch",
+        "state",
+        "started_at_ms",
+        "finished_at_ms"
+      ],
+      "additionalProperties": false,
+      "x-unresolved": [
+        "D-02: lifecycle enum intentionally not invented",
+        "D-07: no new version column approved",
+        "D-13 / OPEN-10: result/error/recovery carrier unresolved",
+        "D-15: worker identity carrier unresolved; worker_epoch is not worker identity",
+        "OPEN-06: epoch fencing protocol not implemented; historical worker_epoch never grants commit authority"
+      ]
+    },
+    "intent": {
+      "schema_version": 1,
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "operation_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "step_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "operation_key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "operation_type": {
+          "const": "file.publish.no_clobber"
+        },
+        "tool_name": {
+          "const": "filesystem.publisher"
+        },
+        "tool_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "arguments_digest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "state": {
+          "enum": [
+            "PREPARED",
+            "PUBLISHING",
+            "NEEDS_RECONCILIATION",
+            "VERIFIED",
+            "BLOCKED",
+            "FAILED"
+          ]
+        }
+      },
+      "required": [
+        "schema_version",
+        "operation_id",
+        "step_id",
+        "operation_key",
+        "operation_type",
+        "tool_name",
+        "tool_version",
+        "arguments_digest",
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "file_write_intent": {
+      "schema_version": 1,
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "operation_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "input_snapshot_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "prepared_relpath": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_relpath": {
+          "type": "string",
+          "minLength": 1
+        },
+        "expected_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "expected_size": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "schema_version",
+        "operation_id",
+        "input_snapshot_sha256",
+        "prepared_relpath",
+        "target_relpath",
+        "expected_sha256",
+        "expected_size"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "x-projections": {
+    "task.state": "task_states.yaml",
+    "step.state": "step_states.yaml",
+    "plan": "draft/plan.schema.json",
+    "step": "draft/step.schema.json",
+    "attempt": "draft/attempt.schema.json",
+    "intent": "operation_intent.schema.json",
+    "file_write_intent": "file_write_intent.schema.json"
+  }
+}

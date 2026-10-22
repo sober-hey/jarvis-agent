@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schema_version": 1,
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "request_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "task_kind": {
+      "const": "inventory.generate"
+    },
+    "input": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "schema_version": 1,
+      "type": "object",
+      "properties": {
+        "root": {
+          "type": "string",
+          "pattern": "^/"
+        }
+      },
+      "required": [
+        "root"
+      ],
+      "additionalProperties": false
+    },
+    "output": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "schema_version": 1,
+      "type": "object",
+      "properties": {
+        "name": {
+          "const": "inventory.json"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "request_key",
+    "task_kind",
+    "input",
+    "output"
+  ],
+  "additionalProperties": false
+}

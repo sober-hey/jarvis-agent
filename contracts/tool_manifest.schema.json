@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schema_version": 1,
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "tool_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tool_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "operation_type": {
+      "type": "string",
+      "minLength": 1
+    },
+    "side_effect_class": {
+      "enum": [
+        "READ_ONLY",
+        "FILE_CREATE_NO_CLOBBER"
+      ]
+    },
+    "requires_authorization": {
+      "type": "boolean"
+    },
+    "supports_reconciliation": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "schema_version",
+    "tool_name",
+    "tool_version",
+    "operation_type",
+    "side_effect_class",
+    "requires_authorization",
+    "supports_reconciliation"
+  ],
+  "additionalProperties": false
+}

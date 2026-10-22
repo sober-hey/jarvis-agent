@@ -1,0 +1,25 @@
+{
+  "source_id": "positive_005",
+  "text": "Jarvis, turn on the desk light.",
+  "category": "positive",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Cherry",
+  "voice_kind": "system",
+  "tempo": 1.0,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 31
+  },
+  "elapsed_seconds": 75.907,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/positive_005.wav",
+  "audio": "wav/positive_005.wav",
+  "duration_seconds": 2.0,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "4485c85d60e63d80ebfc00fb1b1c12d137d3bc5b52655ec55a6d21f8660dc07c",
+  "sha256_audio": "b4aa4505a5d825ccfbc51c51ad388a038296d4459100c93a3e160c3ff4700cf3"
+}

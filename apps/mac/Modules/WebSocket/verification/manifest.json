@@ -1,0 +1,21 @@
+{
+  "algorithm": "sha256",
+  "files": {
+    "README.md": "9e77b1027eec3a320e0a04c0f7b91023ab3123e532a576240503f11544aa659f",
+    "Package.resolved": "373436563516d0baa867d6c0dc58b993a4e7b00544cd7af411f2af716605f604",
+    "Package.swift": "8844698848b0fbbb51f1a812eef4e7882db606dfc8a75c0f691b6ace26814e75",
+    "Tests/Integration/LoopbackClient.swift": "e404c56c91aafb397226de721252d423c3c652cf67b809885e9182cbdcc8f418",
+    "Tests/JarvisWebSocketTests/ClientTests.swift": "e0fbcd53f9fdfb74c9ce02d0e3c5e6627a00c4de9b14204a971a0ffdd02ebd49",
+    "Tests/JarvisWebSocketTests/BehaviorTests.swift": "eeebb04d70a7d07e0219648249f6cfb93bf4c086262909b26358628ee8e90e39",
+    "verification/wscat-results.json": "d52bb8923b31e2cacbcbeead48ac775606cf9087849c28c87911da7a864919da",
+    "verification/integration-results.json": "639368eb9a616aa658ef32c86901b9c00dbed388ef56e5a5adbb3390f7337b4c",
+    "verification/xcodebuild.log": "ea072106ae755e25cfb4b3cb564b104ec72efc749f94b947a5fb4534a2c0797f",
+    "verification/xcode-test-summary.json": "e093cb90a3835c7cdc294de1e8386e4a3a9fee4851709193b804fb081753fd2b",
+    "verification/wscat-transcript.txt": "b14e60a815032999a44e326af39b1d4051e92ec08799a9e749ef69da53a43238",
+    "scripts/test.py": "d88ec1df94a7acdb6450d7dd88de0acf815262295ca83a9e42922e453e747e4b",
+    "scripts/integration.py": "d9f767e2b5a0444fd32d2b80ebf2f57c7122db496981983ba2378ba877f2c81b",
+    "scripts/wscat_acceptance.py": "8a47e82d74c17bf8a46747ea13e9514e06709e8f8beff1d0912980c41c8ff8dc",
+    "Sources/JarvisWebSocket/StarscreamTransport.swift": "0748587bbe345d40a659b0708b1a0224265713a21ee7bbb09ed5cf4d3a5b04b9",
+    "Sources/JarvisWebSocket/JarvisWebSocketClient.swift": "6e371906364ae125be6c68d08a2ad3c53092845ba2d796656bdc51170be05f96"
+  }
+}

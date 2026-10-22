@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "request_key": "inventory-example-001",
+  "task_kind": "inventory.generate",
+  "input": {
+    "root": "/Users/example/Documents"
+  },
+  "output": {
+    "name": "inventory.json"
+  }
+}

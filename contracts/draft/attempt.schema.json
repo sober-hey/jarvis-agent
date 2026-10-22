@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jarvis.invalid/contracts/draft/attempt.schema.json",
+  "schema_version": 1,
+  "status": "DRAFT",
+  "x-approval-status": "NOT_APPROVED",
+  "x-runtime-enabled": false,
+  "title": "attempt structural record (DRAFT)",
+  "description": "Structural domain/DDL projection only, not lifecycle validity or execution permission. Relationships require domain_relationships.yaml. Integer ranges are candidate representation constraints, not schema migration.",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "step_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "operation_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "attempt_no": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "worker_epoch": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "state": {
+      "type": "string",
+      "minLength": 1,
+      "description": "D-02 OPEN: ACTIVE partial uniqueness is known; no terminal/interrupted state enum is approved. Structural acceptance is not lifecycle acceptance."
+    },
+    "started_at_ms": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "finished_at_ms": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    }
+  },
+  "required": [
+    "schema_version",
+    "id",
+    "step_id",
+    "operation_id",
+    "attempt_no",
+    "worker_epoch",
+    "state",
+    "started_at_ms",
+    "finished_at_ms"
+  ],
+  "additionalProperties": false,
+  "x-unresolved": [
+    "D-02: lifecycle enum intentionally not invented",
+    "D-07: no new version column approved",
+    "D-13 / OPEN-10: result/error/recovery carrier unresolved",
+    "D-15: worker identity carrier unresolved; worker_epoch is not worker identity",
+    "OPEN-06: epoch fencing protocol not implemented; historical worker_epoch never grants commit authority"
+  ]
+}

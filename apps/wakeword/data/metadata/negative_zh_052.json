@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_zh_052",
+  "text": "打开客厅的空气净化器。",
+  "category": "negative_zh",
+  "language_type": "Chinese",
+  "split": "calibration",
+  "voice": "Ethan",
+  "voice_kind": "system",
+  "tempo": 1.0,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 21
+  },
+  "elapsed_seconds": 0.83,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_zh_052.wav",
+  "audio": "wav/negative_zh_052.wav",
+  "duration_seconds": 1.84,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "9f10486c6878c3f1d36d04d6c70c0c2c359817ae8ed818fe281ef1dbd17c6fc5",
+  "sha256_audio": "31db5bb848c6ea84a339299bcb224b54d6243c3bc459b7b9cdb90e01394c1d15"
+}

@@ -1,0 +1,25 @@
+{
+  "source_id": "control_027",
+  "text": "Hey Jarvis, start a focus session.",
+  "category": "control",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Ethan",
+  "voice_kind": "system",
+  "tempo": 1.06,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 34
+  },
+  "elapsed_seconds": 76.032,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/control_027.wav",
+  "audio": "wav/control_027.wav",
+  "duration_seconds": 2.1205,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "27a27abaa17313df1ffefd5fba17b9b3c30faafe6e8ecb47c04cca045b4dd71b",
+  "sha256_audio": "5cee91d800436776b7ef66f9789a3568cdce599bdccb469e887ca31a518865a8"
+}

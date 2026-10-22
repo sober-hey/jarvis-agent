@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "product": "JARVIS",
+  "status": "PLAN_ONLY_NOT_BUILT",
+  "scope": "B01 入口检查；不批准核心执行协议或生产发布",
+  "source": {
+    "commit": "d97007c32d6340f7ba79ac1dfb5773cc00846448",
+    "vendor": "components/agent_engine/upstream",
+    "integrity_manifest": "packaging/VENDOR_MANIFEST.json",
+    "lock": "components/agent_engine/upstream/uv.lock",
+    "license": "components/agent_engine/upstream/LICENSE",
+    "upstream_entry": "hermes_cli.main:main",
+    "preserve_vendor_bytes": true
+  },
+  "control": {
+    "python": "3.12",
+    "venv": "packaging/runtime/control-venv",
+    "entry": "packaging/jarvis.py",
+    "implemented_commands": ["version", "check", "--version", "--check", "--help"],
+    "dependencies": "当前入口仅标准库；后续控制服务沿用独立控制端锁，不与引擎合并",
+    "lock_status": "CONTROL_SERVICE_BUILD_NOT_IN_SCOPE"
+  },
+  "engine": {
+    "python": "3.14",
+    "venv": "packaging/runtime/engine-venv",
+    "python_relative": "bin/python3",
+    "include_system_site_packages": false,
+    "base_python": "构建阶段提供非 Hermes 管理、产品独立封装的 CPython；不得回退宿主 Hermes tools 或宿主 venv",
+    "probe": "-I -S -B，标准库版本/前缀/发行包元数据探针；不导入引擎",
+    "runtime_status": "NOT_BUILT_THIS_ROUND",
+    "complete_dependency_acceptance": "后续必须依据真实 uv.lock、目标平台与选定 extras 验证全部依赖；当前只检查核心发行包元数据存在"
+  },
+  "resources": ["LICENSE", "pyproject.toml", "uv.lock", "hermes_bootstrap.py", "hermes_cli/main.py", "hermes_constants.py", "tools", "agent", "skills", "web", "pm"],
+  "home": {
+    "selection": ["显式 --home 绝对路径", "JARVIS_HOME", "~/.jarvis"],
+    "must_not_overlap": ["项目源码", "宿主 Hermes home", "宿主 Hermes 源码"],
+    "resolve_symlinks_before_validation": true,
+    "check_creates_home": false
+  },
+  "runtime_constraints": {
+    "host_venv_fallback": false,
+    "inherit_host_path": false,
+    "inherit_provider_secrets": false,
+    "child_inherited_environment_whitelist": ["LANG", "LC_ALL", "LC_CTYPE", "TZ"],
+    "child_generated_environment": ["HOME=产品home", "JARVIS_HOME=产品home", "HERMES_HOME=产品home", "PATH=独立venv/bin:/usr/bin:/bin", "PYTHONNOUSERSITE=1", "PYTHONDONTWRITEBYTECODE=1", "UV_OFFLINE=1", "PIP_NO_INDEX=1"],
+    "lazy_install": false,
+    "runtime_update": false,
+    "network_install_this_round": false,
+    "upstream_bootstrap_execution": false,
+    "note": "UV_OFFLINE/PIP_NO_INDEX只是检查子进程的附加约束，不宣称可禁用上游全部下载渠道。对话启动前必须审计并隔离上游自动修复/懒安装/更新路径。"
+  },
+  "oci_steps_pending": [
+    "选择并人工批准真实 Linux x86_64 基础镜像及真实 digest；当前不提供虚构镜像标识",
+    "为目标平台准备产品专属 Python 3.12 控制端及 Python 3.14 引擎；不得替换系统 Python",
+    "构建阶段复用 vendor uv.lock，选择实际需要的 extras，使用冻结锁完成依赖及 wheel 兼容性验证；入口运行阶段禁止安装",
+    "分开生成控制端与引擎环境；源码原字节及 MIT 许可随发行保留",
+    "打包固定资源并核验 VENDOR_MANIFEST；构建后禁网运行版本、资源、解释器与完整依赖验收",
+    "在派生适配层审计并关闭上游自动安装/更新/修复；只读源码层加非 root 运行，失败必须可观察",
+    "待窄 RPC 合同批准后连接两进程；分别隔离数据、凭据与写库权限",
+    "执行真实 Linux/OCI、故障与发布验收；记录实际镜像 digest、SBOM 与签名后交可信所有者审批"
+  ],
+  "image": null,
+  "image_digest": null,
+  "launch_ready": false
+}

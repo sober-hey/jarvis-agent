@@ -1,0 +1,50 @@
+[Unit]
+Description=JARVIS 智能体守护进程（内心循环、记忆、复盘）
+Documentation=file:///opt/jarvis/ARCHITECTURE.md
+After=network-online.target
+Wants=network-online.target
+# 启动限速必须写在 [Unit]：写在 [Service] 会被静默忽略，崩溃循环拦不住。
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+[Service]
+# 守护进程目前不发 sd_notify(READY=1)，用 notify 会卡在 activating 直到超时，
+# 所以用 simple + 外部探活（scripts/healthcheck.py）。将来实现 sd_notify 再改回 notify，
+# 并把 WatchdogSec 一起打开。
+Type=simple
+Restart=on-failure
+RestartSec=10
+TimeoutStartSec=180
+TimeoutStopSec=45
+# 不要用 mixed：混合模式下主进程按时退出时可能漏杀子进程，
+# 残留子进程会让单元进入 failed 而 Restart= 不生效。
+KillMode=control-group
+SendSIGKILL=yes
+
+User=jarvis
+Group=jarvis
+WorkingDirectory=/opt/jarvis
+Environment=PYTHONUNBUFFERED=1
+Environment=JARVIS_HOME=/var/lib/jarvis
+# 密钥不进环境变量、不进 /proc/environ：由 systemd 复制进 tmpfs 私有目录，
+# 程序从 $CREDENTIALS_DIRECTORY 读。
+LoadCredential=jarvis-api-key:/etc/jarvis/api.key
+LoadCredential=jarvis-dashscope-key:/etc/jarvis/dashscope.key
+StateDirectory=jarvis
+LogsDirectory=jarvis
+ConfigurationDirectory=jarvis
+
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+NoNewPrivileges=yes
+RestrictSUIDSGID=yes
+RemoveIPC=yes
+ReadWritePaths=/var/lib/jarvis
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX AF_NETLINK
+SystemCallArchitectures=native
+
+ExecStart=/opt/jarvis/.venv/bin/python /opt/jarvis/packaging/jarvis_daemon.py --data-dir /var/lib/jarvis/loop-data
+
+[Install]
+WantedBy=multi-user.target

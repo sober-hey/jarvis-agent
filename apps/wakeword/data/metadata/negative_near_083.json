@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_near_083",
+  "text": "I heard a soft chime from the hallway.",
+  "category": "negative_near",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Chelsie",
+  "voice_kind": "system",
+  "tempo": 1.06,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 38
+  },
+  "elapsed_seconds": 76.167,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_near_083.wav",
+  "audio": "wav/negative_near_083.wav",
+  "duration_seconds": 2.3366,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "7cacb0f19f42d1510407f7e05322f0ef4f7eff650799aae900ca954d5818da6e",
+  "sha256_audio": "74386e7746a3e595ecea47166dd19ac026208452087ed90aa8e972797ea565c3"
+}

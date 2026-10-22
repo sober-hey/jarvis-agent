@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_zh_042",
+  "text": "在购物清单里加上牛奶。",
+  "category": "negative_zh",
+  "language_type": "Chinese",
+  "split": "calibration",
+  "voice": "Ethan",
+  "voice_kind": "system",
+  "tempo": 1.06,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 21
+  },
+  "elapsed_seconds": 0.861,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_zh_042.wav",
+  "audio": "wav/negative_zh_042.wav",
+  "duration_seconds": 1.4486,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "3ecde8aa4b0414968531fe456a3b3a06c9009f7117b6944be9b4909c9fbccd4a",
+  "sha256_audio": "68b23f78c7718e1c11ece8edc270516338735087e814bdf867bd6b4fe222e514"
+}

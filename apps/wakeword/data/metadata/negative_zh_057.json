@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_zh_057",
+  "text": "检查一下明天有没有下雨。",
+  "category": "negative_zh",
+  "language_type": "Chinese",
+  "split": "calibration",
+  "voice": "Ethan",
+  "voice_kind": "system",
+  "tempo": 1.06,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 23
+  },
+  "elapsed_seconds": 0.801,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_zh_057.wav",
+  "audio": "wav/negative_zh_057.wav",
+  "duration_seconds": 1.6695,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "4dbd77104de6c93ca72d46f0e28902752b3f613bbd8596d4e6575b4602c2e038",
+  "sha256_audio": "76a08b211f2fa92d6a20d4d32c4e2e60b4b63658ea69161cf05820828252425f"
+}

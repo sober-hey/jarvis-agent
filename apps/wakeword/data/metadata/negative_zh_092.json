@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_zh_092",
+  "text": "晚上八点提醒我收衣服。",
+  "category": "negative_zh",
+  "language_type": "Chinese",
+  "split": "calibration",
+  "voice": "Ethan",
+  "voice_kind": "system",
+  "tempo": 1.0,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 21
+  },
+  "elapsed_seconds": 0.875,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_zh_092.wav",
+  "audio": "wav/negative_zh_092.wav",
+  "duration_seconds": 1.68,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "d3beb6290c9f01ee6d9d36589167d38279c9fa779e36aa4c8f6cfc5b2afaea24",
+  "sha256_audio": "89aebd4e5aed52070d8e8edf5d9c4331b955e0cec9f42b4d44cf04fd8fef6ce4"
+}

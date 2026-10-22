@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_zh_093",
+  "text": "帮我查一下这本书的作者。",
+  "category": "negative_zh",
+  "language_type": "Chinese",
+  "split": "calibration",
+  "voice": "Chelsie",
+  "voice_kind": "system",
+  "tempo": 0.94,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 23
+  },
+  "elapsed_seconds": 1.188,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_zh_093.wav",
+  "audio": "wav/negative_zh_093.wav",
+  "duration_seconds": 2.4588,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "e6ee4940cfd8e2a484ba8a97a9ff9095b31aae2db952456f1570a6f2f08bfd6c",
+  "sha256_audio": "4d8c7486471aa00ef18eeefc1053efaa1ba4af07a6e3cf67dcff61f12843f0a8"
+}

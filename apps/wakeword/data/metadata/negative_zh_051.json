@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_zh_051",
+  "text": "请告诉我现在的时间。",
+  "category": "negative_zh",
+  "language_type": "Chinese",
+  "split": "calibration",
+  "voice": "Serena",
+  "voice_kind": "system",
+  "tempo": 1.0,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 19
+  },
+  "elapsed_seconds": 0.893,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_zh_051.wav",
+  "audio": "wav/negative_zh_051.wav",
+  "duration_seconds": 1.92,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "af7bd872c74e990854e80e08246f28cbae0c95c4563e4725aaca4e1dc7210bd2",
+  "sha256_audio": "44d3eaca650d1862f3cedcda014e75ecfc231e144417898df26e4db9f0da6942"
+}

@@ -1,0 +1,2 @@
+# Async WebSocket voice gateway transport (no vendor blocking SDK).
+websockets==16.1.1

@@ -1,0 +1,25 @@
+{
+  "source_id": "positive_024",
+  "text": "Jarvis, stop the timer.",
+  "category": "positive",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "cosyvoice-v3.5-flash-jarvis-f7bec1631ddf4725841995ba9c711376",
+  "voice_kind": "clone",
+  "tempo": 0.94,
+  "model": "cosyvoice-v3.5-flash",
+  "usage": {
+    "characters": 23
+  },
+  "elapsed_seconds": 1.273,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/positive_024.mp3",
+  "audio": "wav/positive_024.wav",
+  "duration_seconds": 2.3142,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "537fef1bac58bd8b760a4dd5c6e0f3b40f43e00acdebea1752374f8f1596be61",
+  "sha256_audio": "58cbc3210dc22855b8400202c24a159e61deeb2f1019a307797c37af424b8992"
+}

@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schema_version": 1,
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "operation_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "step_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "operation_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "operation_type": {
+      "const": "file.publish.no_clobber"
+    },
+    "tool_name": {
+      "const": "filesystem.publisher"
+    },
+    "tool_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "arguments_digest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "state": {
+      "enum": [
+        "PREPARED",
+        "PUBLISHING",
+        "NEEDS_RECONCILIATION",
+        "VERIFIED",
+        "BLOCKED",
+        "FAILED"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "operation_id",
+    "step_id",
+    "operation_key",
+    "operation_type",
+    "tool_name",
+    "tool_version",
+    "arguments_digest",
+    "state"
+  ],
+  "additionalProperties": false
+}

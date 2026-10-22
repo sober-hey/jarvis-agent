@@ -1,0 +1,27 @@
+# Template only: replace /opt/jarvis and create dedicated jarvis user/config.
+# Component restart/circuit policy belongs to supervisor; do not Restart=always.
+[Unit]
+Description=JARVIS component supervisor
+After=network.target
+StartLimitIntervalSec=300
+StartLimitBurst=3
+
+[Service]
+Type=simple
+User=jarvis
+Group=jarvis
+WorkingDirectory=/opt/jarvis
+StateDirectory=jarvis
+StateDirectoryMode=0700
+UMask=0077
+ExecStart=/opt/jarvis/.venv/bin/python -B /opt/jarvis/packaging/supervisor.py run --data-root /var/lib/jarvis --config /etc/jarvis/config.json --key-file /etc/jarvis/provider.key --port 8765
+ExecStop=/bin/kill -TERM $MAINPID
+Restart=on-failure
+RestartSec=10
+TimeoutStopSec=180
+KillMode=control-group
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_zh_037",
+  "text": "把书桌上的灯打开。",
+  "category": "negative_zh",
+  "language_type": "Chinese",
+  "split": "calibration",
+  "voice": "Ethan",
+  "voice_kind": "system",
+  "tempo": 1.0,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 17
+  },
+  "elapsed_seconds": 0.963,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_zh_037.wav",
+  "audio": "wav/negative_zh_037.wav",
+  "duration_seconds": 1.68,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "454c7d626e6fdcfc5929b28d7897b12b96ab51b95022ab8d684cd3906c4ddf7a",
+  "sha256_audio": "a58ceb60a642639eefd9d191ffe4e46922614a46f16b61293367effadef713d8"
+}

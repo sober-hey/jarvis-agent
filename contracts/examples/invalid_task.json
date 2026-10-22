@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "request_key": "invalid-example",
+  "task_kind": "shell.execute",
+  "input": {
+    "root": "../outside"
+  },
+  "output": {
+    "name": "overwrite.txt"
+  }
+}

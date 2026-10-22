@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_zh_035",
+  "text": "请开始一段专注时间。",
+  "category": "negative_zh",
+  "language_type": "Chinese",
+  "split": "calibration",
+  "voice": "Cherry",
+  "voice_kind": "system",
+  "tempo": 1.0,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 19
+  },
+  "elapsed_seconds": 0.799,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_zh_035.wav",
+  "audio": "wav/negative_zh_035.wav",
+  "duration_seconds": 1.92,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "f8ddcb7e8cc29c56710075c9ccf4eed99371fe6b61a8be8cab72f66efb0871f6",
+  "sha256_audio": "3a2cac55fffd6f2f5324f0a8c3c837b63b359dc305d010499a876d722aebf04f"
+}

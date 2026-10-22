@@ -1,0 +1,36 @@
+schema_version: 1
+status: DRAFT
+database: SQLite
+
+connection:
+  foreign_keys: ON
+  journal_mode: WAL
+  synchronous: FULL
+  busy_timeout_ms: 5000
+
+tables:
+  - tasks
+  - task_plans
+  - task_steps
+  - step_attempts
+  - operation_intents
+  - file_write_intents
+  - task_events
+  - artifacts
+  - system_control
+
+constraints:
+  - tasks.request_key UNIQUE
+  - task_plans UNIQUE(task_id, plan_version)
+  - one ACTIVE plan per Task
+  - Step Plan must belong to same Task
+  - operation_intents.operation_key UNIQUE
+  - K0 one Intent per Step
+  - one ACTIVE Attempt per Step
+  - Attempt Intent must belong to same Step
+  - active_plan_id must belong to same Task
+  - state transition and event in one transaction
+
+notes:
+  - 这是约束草案，不是数据库迁移
+  - K0-004 必须提供可执行 SQL 和真实测试

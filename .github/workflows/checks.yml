@@ -1,0 +1,47 @@
+name: checks
+
+# 只在能真跑的地方跑：Linux 上跑不需要 Apple 框架的部分。
+# macOS 客户端（apps/mac、apps/ios、apps/watchos）与语音网关的真机链路不在 CI 覆盖内，
+# 不要在这里伪造"已通过"。
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 装依赖
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e . pydantic typer pytest ruff PyYAML jsonschema
+
+      # 检查范围与 scripts/run_quality_checks.sh 一致：src、tests、scripts，外加已隔离的 voice/。
+      # packaging/ 存量 lint 债未清（639 条），先不进 CI，免得红着跑；清理后一并加进来。
+      - name: 静态检查
+        run: ruff check src tests scripts voice
+
+      - name: 格式检查
+        run: ruff format --check src tests scripts voice
+
+      - name: 内核层与契约测试
+        run: python -m pytest tests -q
+
+      - name: 语音子系统测试
+        env:
+          PYTHONPATH: voice:packaging
+        run: python -m pytest voice/tests -q
+
+      # packaging/ 全量需要 engine-venv 与供应商 SDK，CI 里跑会大量跳过或假失败，
+      # 因此只在本地跑：见 docs/FRAMEWORK.md「测试怎么跑」。

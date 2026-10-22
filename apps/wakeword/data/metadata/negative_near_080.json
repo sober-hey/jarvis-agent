@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_near_080",
+  "text": "Harvis was the name in that old story.",
+  "category": "negative_near",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Cherry",
+  "voice_kind": "system",
+  "tempo": 0.94,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 38
+  },
+  "elapsed_seconds": 0.998,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_near_080.wav",
+  "audio": "wav/negative_near_080.wav",
+  "duration_seconds": 2.6296,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "31cc4bd0f6645c20d62c6c424f914d344b02e1ad718bf747c4b5ace54a15b44e",
+  "sha256_audio": "9270ea50d5d417c6cd886800548d17abef188e80b63fcb1d2393333565f802bc"
+}

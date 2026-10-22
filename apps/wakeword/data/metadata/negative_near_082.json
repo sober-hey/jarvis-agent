@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_near_082",
+  "text": "The garden needs water this afternoon.",
+  "category": "negative_near",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Ethan",
+  "voice_kind": "system",
+  "tempo": 0.94,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 38
+  },
+  "elapsed_seconds": 0.846,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_near_082.wav",
+  "audio": "wav/negative_near_082.wav",
+  "duration_seconds": 1.8528,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "b96e1b3f786f74a1b6eaaa6ffd0aa877a2d03468ee8a15617ad38f0b79e1e5fc",
+  "sha256_audio": "c63c648dd2ca1f51b54e55cba9d30754c5987ab2907f4642ace9b7e1c50fecd7"
+}

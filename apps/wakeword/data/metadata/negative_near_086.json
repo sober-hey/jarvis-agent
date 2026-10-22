@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_near_086",
+  "text": "The server is ready for maintenance.",
+  "category": "negative_near",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Serena",
+  "voice_kind": "system",
+  "tempo": 0.94,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 36
+  },
+  "elapsed_seconds": 1.149,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_near_086.wav",
+  "audio": "wav/negative_near_086.wav",
+  "duration_seconds": 2.5355,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "e90a26b09b70e5a62e9f4e0e2dcd20b5d1e452ba11e46382408a4416599cd88a",
+  "sha256_audio": "1f5a286573fc9f4e78376be447aa9d162c49098c8d65c99e4db2435742355b34"
+}

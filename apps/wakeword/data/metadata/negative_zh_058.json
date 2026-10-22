@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_zh_058",
+  "text": "把电视音量调小一点。",
+  "category": "negative_zh",
+  "language_type": "Chinese",
+  "split": "holdout",
+  "voice": "Chelsie",
+  "voice_kind": "system",
+  "tempo": 1.06,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 19
+  },
+  "elapsed_seconds": 0.967,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_zh_058.wav",
+  "audio": "wav/negative_zh_058.wav",
+  "duration_seconds": 1.8934,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "8ea7d69fc9b23e889f9529aca0b225c66ed9d78d58896dbb00c43fcb0163afa5",
+  "sha256_audio": "74a1b59629cf611203d5558a5505ecf5d7811b0cfb42e3ec144dd4d37d8158f8"
+}

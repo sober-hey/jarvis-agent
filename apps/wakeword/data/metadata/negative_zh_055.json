@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_zh_055",
+  "text": "请关闭书房的风扇。",
+  "category": "negative_zh",
+  "language_type": "Chinese",
+  "split": "calibration",
+  "voice": "Cherry",
+  "voice_kind": "system",
+  "tempo": 1.06,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 17
+  },
+  "elapsed_seconds": 0.991,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_zh_055.wav",
+  "audio": "wav/negative_zh_055.wav",
+  "duration_seconds": 1.8173,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "4cba06f48bad0757e511657cc60af525b71f67e9956a8b49a690b5b40dfc800f",
+  "sha256_audio": "b57b3f7466810699ae651241b94b1b6f878ff43d890a2b8d8f59261417c557ad"
+}

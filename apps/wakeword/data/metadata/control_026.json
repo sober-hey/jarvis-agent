@@ -1,0 +1,25 @@
+{
+  "source_id": "control_026",
+  "text": "Hey Jarvis, what is on my schedule?",
+  "category": "control",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Serena",
+  "voice_kind": "system",
+  "tempo": 1.0,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 35
+  },
+  "elapsed_seconds": 76.289,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/control_026.wav",
+  "audio": "wav/control_026.wav",
+  "duration_seconds": 3.04,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "06ab3c4aded0d4d9c9e51a4acb214499b9f733bfe5aecf625224c3375d815acd",
+  "sha256_audio": "93424580eca6298133fcbad22c2ed9930076ac4ac0b06c5cf64cedec44c29132"
+}

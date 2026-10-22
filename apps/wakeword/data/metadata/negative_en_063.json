@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_en_063",
+  "text": "Turn on the desk lamp, please.",
+  "category": "negative_en",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Chelsie",
+  "voice_kind": "system",
+  "tempo": 1.0,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 30
+  },
+  "elapsed_seconds": 1.039,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_en_063.wav",
+  "audio": "wav/negative_en_063.wav",
+  "duration_seconds": 2.24,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "4d989a888d51dcbd7126100939418849685c6b2725f8de1acb635a60e6d5d695",
+  "sha256_audio": "d9b5e567ff9d899f1a763caf39ccc291982904e241285edac8783ac140006f93"
+}

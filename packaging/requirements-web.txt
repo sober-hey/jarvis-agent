@@ -1,0 +1,2 @@
+# Web control interpreter PDF text-layer support; optional for TXT/MD only.
+pypdf==6.20.1

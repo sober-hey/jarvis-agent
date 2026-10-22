@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_near_081",
+  "text": "Please archive the meeting transcript.",
+  "category": "negative_near",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Serena",
+  "voice_kind": "system",
+  "tempo": 1.06,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 38
+  },
+  "elapsed_seconds": 0.939,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_near_081.wav",
+  "audio": "wav/negative_near_081.wav",
+  "duration_seconds": 2.2012,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "dd956ecdf76c8db0b3e0f38d9b536d92642837c005311039e40810ca458e2507",
+  "sha256_audio": "5a1c5d30d0513eeb6b34b254d990c88a53ede5c52351f453666e8ac0beeacf2c"
+}

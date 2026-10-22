@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 560" width="980" height="560" font-family="-apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 z" fill="#6b7a90"/>
+    </marker>
+    <style>
+      .box { fill: #141a22; stroke: #2c3746; stroke-width: 1.5; rx: 10; }
+      .box-hi { fill: #17212e; stroke: #3d7ea6; stroke-width: 1.8; rx: 10; }
+      .label { fill: #d7e0ea; font-size: 15px; font-weight: 600; }
+      .sub { fill: #8b9aad; font-size: 12.5px; }
+      .edge { stroke: #6b7a90; stroke-width: 1.6; fill: none; marker-end: url(#arrow); }
+      .edge-dash { stroke: #4a5a70; stroke-width: 1.4; fill: none; stroke-dasharray: 5 4; marker-end: url(#arrow); }
+      .zone { fill: none; stroke: #26313f; stroke-width: 1.2; stroke-dasharray: 6 5; rx: 14; }
+      .zone-label { fill: #6f8099; font-size: 12px; letter-spacing: .08em; }
+      .title { fill: #eaf1f8; font-size: 20px; font-weight: 700; }
+    </style>
+  </defs>
+
+  <rect width="980" height="560" fill="#0d1117"/>
+  <text x="32" y="42" class="title">JARVIS 运行时结构</text>
+  <text x="32" y="66" class="sub">设备只负责采集与播放；判断、记忆、说话都在本机完成</text>
+
+  <!-- 设备层 -->
+  <rect x="28" y="96" width="196" height="330" class="zone"/>
+  <text x="44" y="120" class="zone-label">设备端</text>
+
+  <rect x="44" y="136" width="164" height="62" class="box"/>
+  <text x="60" y="162" class="label">macOS 菜单栏</text>
+  <text x="60" y="182" class="sub">UtteranceGate 端点检测</text>
+
+  <rect x="44" y="212" width="164" height="62" class="box"/>
+  <text x="60" y="238" class="label">iPhone</text>
+  <text x="60" y="258" class="sub">SpeechGate + 球体界面</text>
+
+  <rect x="44" y="288" width="164" height="62" class="box"/>
+  <text x="60" y="314" class="label">Apple Watch</text>
+  <text x="60" y="334" class="sub">球体 + 令牌导入</text>
+
+  <rect x="44" y="364" width="164" height="46" class="box"/>
+  <text x="60" y="392" class="label">Web 面板</text>
+
+  <!-- 网关 -->
+  <rect x="272" y="150" width="212" height="222" class="box-hi"/>
+  <text x="288" y="178" class="label">语音网关 :8765</text>
+  <text x="288" y="202" class="sub">Bearer 鉴权 · 设备仲裁</text>
+  <text x="288" y="224" class="sub">generation 隔离（打断/换设备）</text>
+  <text x="288" y="246" class="sub">声纹判定 → 他人则让路</text>
+  <text x="288" y="268" class="sub">ASR → 大脑 → 流式 TTS</text>
+  <text x="288" y="290" class="sub">回合收尾：playback_done</text>
+  <text x="288" y="322" class="sub">voice/voice_gateway.py</text>
+  <text x="288" y="344" class="sub">（独立进程，崩了不影响大脑）</text>
+
+  <!-- 大脑 -->
+  <rect x="536" y="96" width="212" height="150" class="box-hi"/>
+  <text x="552" y="124" class="label">守护进程</text>
+  <text x="552" y="148" class="sub">内心循环 · 复盘 · 主动触达</text>
+  <text x="552" y="170" class="sub">packaging/jarvis_daemon.py</text>
+  <text x="552" y="192" class="sub">空闲也在想事</text>
+  <text x="552" y="214" class="sub">语音优先，不抢锁</text>
+
+  <rect x="536" y="266" width="212" height="106" class="box"/>
+  <text x="552" y="294" class="label">模型调用</text>
+  <text x="552" y="318" class="sub">受控子进程 · 预算与配额</text>
+  <text x="552" y="340" class="sub">结果未知则不盲目重试</text>
+
+  <!-- 记忆 -->
+  <rect x="800" y="96" width="152" height="276" class="box"/>
+  <text x="816" y="124" class="label">记忆</text>
+  <text x="816" y="150" class="sub">entries 只追加</text>
+  <text x="816" y="172" class="sub">FTS5 检索投影</text>
+  <text x="816" y="194" class="sub">知识图谱</text>
+  <text x="816" y="216" class="sub">语音账本</text>
+  <text x="816" y="246" class="sub">~/.jarvis/loop-data</text>
+  <text x="816" y="268" class="sub">SQLite + WAL</text>
+
+  <!-- 供应商 -->
+  <rect x="272" y="410" width="212" height="104" class="box"/>
+  <text x="288" y="438" class="label">外部供应商</text>
+  <text x="288" y="462" class="sub">火山 seed-tts-2.0（TTS）</text>
+  <text x="288" y="484" class="sub">百炼 ASR</text>
+  <text x="288" y="506" class="sub">任意 OpenAI 兼容模型网关</text>
+
+  <!-- 连线 -->
+  <path d="M208 167 C 240 167, 246 200, 272 210" class="edge"/>
+  <path d="M208 243 C 240 243, 250 240, 272 238" class="edge"/>
+  <path d="M208 319 C 240 319, 250 280, 272 268" class="edge"/>
+  <path d="M208 387 C 240 387, 250 330, 272 300" class="edge-dash"/>
+
+  <path d="M484 220 L 536 190" class="edge"/>
+  <text x="492" y="200" class="sub">一轮对话</text>
+
+  <path d="M748 180 L 800 180" class="edge"/>
+  <text x="752" y="170" class="sub">读写</text>
+
+  <path d="M642 246 L 642 266" class="edge"/>
+  <path d="M536 320 L 484 340" class="edge"/>
+  <path d="M484 356 C 420 356, 400 400, 380 410" class="edge-dash"/>
+  <text x="360" y="396" class="sub">TTS / ASR 调用</text>
+
+  <text x="32" y="542" class="sub">实线＝主要数据流；虚线＝可选或降级路径。所有凭据都在 ~/.jarvis/*.key（600），不进代码。</text>
+</svg>

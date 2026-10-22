@@ -1,0 +1,25 @@
+{
+  "source_id": "positive_016",
+  "text": "Jarvis, mute the living room speaker.",
+  "category": "positive",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Serena",
+  "voice_kind": "system",
+  "tempo": 1.0,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 37
+  },
+  "elapsed_seconds": 1.055,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/positive_016.wav",
+  "audio": "wav/positive_016.wav",
+  "duration_seconds": 2.8,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "f00f717462bcd15e8845ea714e4d5c460efdc52dda7c0fc822eba656957c9261",
+  "sha256_audio": "08b3584e91e17bd2b7ea9df78a305660e10ab26f170d9569bd1248bc8de5f297"
+}

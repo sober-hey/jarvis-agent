@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_zh_050",
+  "text": "把今天的会议记到日历里。",
+  "category": "negative_zh",
+  "language_type": "Chinese",
+  "split": "calibration",
+  "voice": "Cherry",
+  "voice_kind": "system",
+  "tempo": 1.06,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 23
+  },
+  "elapsed_seconds": 0.901,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_zh_050.wav",
+  "audio": "wav/negative_zh_050.wav",
+  "duration_seconds": 2.0414,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "55704de38a2ddca02cd2466bee64b6a96ea01f6dca58e95bf9f60c2cfffb6c6c",
+  "sha256_audio": "5ea6c9b09dcc15fac531f82dfcbe27736b818f7ef30a5497200ca7e6b1b71358"
+}

@@ -1,0 +1,9 @@
+⠙⠹⠸⠼⠴⠦⠧⠇⠏Listening on port 8765 (press CTRL+C to quit)
+> > Client connected
+> < {"data":"AAD\/fw==","format":"pcm_s16le","sample_rate":16000,"type":"audio"}
+> < {"type":"audio_end"}
+
+CONNECTION true
+RESPONSE 1
+CONNECTION false
+PASS integration exchange

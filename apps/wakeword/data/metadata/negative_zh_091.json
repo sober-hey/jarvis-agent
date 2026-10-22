@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_zh_091",
+  "text": "请把阳台的门关好。",
+  "category": "negative_zh",
+  "language_type": "Chinese",
+  "split": "calibration",
+  "voice": "Serena",
+  "voice_kind": "system",
+  "tempo": 1.0,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 17
+  },
+  "elapsed_seconds": 1.126,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_zh_091.wav",
+  "audio": "wav/negative_zh_091.wav",
+  "duration_seconds": 1.76,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "1966e3cb096bc25daf76daf80b6733eac45417cc224f355c8458e73eb0dcd4e0",
+  "sha256_audio": "e9ac685e49e682e1b43987bc6c9b6e81eaf998764517fdfdcfbf62942677e954"
+}

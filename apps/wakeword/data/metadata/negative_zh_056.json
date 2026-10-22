@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_zh_056",
+  "text": "帮我找一条去车站的路线。",
+  "category": "negative_zh",
+  "language_type": "Chinese",
+  "split": "holdout",
+  "voice": "Serena",
+  "voice_kind": "system",
+  "tempo": 1.06,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 23
+  },
+  "elapsed_seconds": 0.906,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_zh_056.wav",
+  "audio": "wav/negative_zh_056.wav",
+  "duration_seconds": 2.2701,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "a4258446fbf9686127d87df4834a4883dbe64dc813852b1e697c4618b01c9254",
+  "sha256_audio": "9421201e379a06ba525f5da1459ed6bd49c0a4e9d66ed74ec45e075e897c6fed"
+}

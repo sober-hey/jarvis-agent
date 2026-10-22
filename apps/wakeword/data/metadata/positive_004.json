@@ -1,0 +1,25 @@
+{
+  "source_id": "positive_004",
+  "text": "Jarvis, read my latest messages.",
+  "category": "positive",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "cosyvoice-v3.5-flash-jarvis-f7bec1631ddf4725841995ba9c711376",
+  "voice_kind": "clone",
+  "tempo": 0.94,
+  "model": "cosyvoice-v3.5-flash",
+  "usage": {
+    "characters": 32
+  },
+  "elapsed_seconds": 1.38,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/positive_004.mp3",
+  "audio": "wav/positive_004.wav",
+  "duration_seconds": 2.5696,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "29d929180f730fdad959f8a705568f6094ab92ce8b6a5b0dd2f830aa63114613",
+  "sha256_audio": "5e01b403b6be281245eaa9b6a45506a1f0e2b6a34bcc19075492f3cf9d2f49e9"
+}

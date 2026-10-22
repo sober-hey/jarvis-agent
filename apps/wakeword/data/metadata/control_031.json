@@ -1,0 +1,25 @@
+{
+  "source_id": "control_031",
+  "text": "Hey Jarvis, set an alarm for seven.",
+  "category": "control",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Serena",
+  "voice_kind": "system",
+  "tempo": 1.0,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 35
+  },
+  "elapsed_seconds": 1.049,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/control_031.wav",
+  "audio": "wav/control_031.wav",
+  "duration_seconds": 2.88,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "fd5ed26dfc034a7dc4c699e8de7c5c10146a2839063974ea0b8d15f4d29ccd71",
+  "sha256_audio": "d1142de78f3a1586865a0460243412ebabc3ddff51232be7c5a68b52ab002c50"
+}

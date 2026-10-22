@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_en_062",
+  "text": "Could you read my latest messages?",
+  "category": "negative_en",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Ethan",
+  "voice_kind": "system",
+  "tempo": 1.06,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 34
+  },
+  "elapsed_seconds": 0.884,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_en_062.wav",
+  "audio": "wav/negative_en_062.wav",
+  "duration_seconds": 1.9719,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "71e1e2242dcad59dea0672ed1f0a6f2b848254dec0d78cddba485747718bff2c",
+  "sha256_audio": "6a7368594dad54cb0ce1353f1c87adaf4a0b588a1fcb0255a58760d73423a0c1"
+}

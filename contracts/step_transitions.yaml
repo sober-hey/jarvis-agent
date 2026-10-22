@@ -1,0 +1,1088 @@
+schema_version: 1
+status: DRAFT
+object: STEP
+transitions:
+- from: PENDING
+  to: CLAIMED
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - step_in_active_plan
+  - task_running
+  - can_start_work
+  - no_active_attempt
+  - k0_execution_slot_free
+  id: S01
+  approval_status: NOT_APPROVED
+  source_status: SOURCE_IDENTIFIED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S01 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - D-01
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+- from: PENDING
+  to: FAILED
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - failure_safe
+  id: S02
+  approval_status: NOT_APPROVED
+  source_status: SOURCE_IDENTIFIED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S02 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+- from: PENDING
+  to: CANCELED
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - cancellation_complete
+  id: S03
+  approval_status: NOT_APPROVED
+  source_status: SOURCE_IDENTIFIED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S03 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - OPEN-01
+  - OPEN-08
+  - DEC-004
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+- from: CLAIMED
+  to: PREPARING
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - step_in_active_plan
+  - task_running
+  - can_start_work
+  - preconditions_passed
+  id: S04
+  approval_status: NOT_APPROVED
+  source_status: SOURCE_IDENTIFIED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S04 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - D-01
+  - D-08
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+- from: CLAIMED
+  to: PENDING
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - claim_release_authorized
+  - no_started_effect
+  - no_active_attempt
+  - cancel_absent
+  - emergency_stop_inactive
+  id: S05
+  approval_status: NOT_APPROVED
+  source_status: UNRESOLVED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S05 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - D-G1a
+  - OPEN-07
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+- from: CLAIMED
+  to: BLOCKED
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - block_safe
+  id: S06
+  approval_status: NOT_APPROVED
+  source_status: UNRESOLVED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S06 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - D-G1a
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+- from: CLAIMED
+  to: FAILED
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - failure_safe
+  id: S07
+  approval_status: NOT_APPROVED
+  source_status: SOURCE_IDENTIFIED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S07 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+- from: CLAIMED
+  to: CANCELED
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - cancellation_complete
+  id: S08
+  approval_status: NOT_APPROVED
+  source_status: SOURCE_IDENTIFIED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S08 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - OPEN-01
+  - OPEN-08
+  - DEC-004
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+- from: PREPARING
+  to: EXECUTING
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - step_in_active_plan
+  - task_running
+  - can_start_work
+  - preconditions_passed
+  - intent_committed
+  - intent_prepared
+  - prepared_durable
+  - attempt_bound
+  - publish_start_arbitrated
+  id: S09
+  approval_status: NOT_APPROVED
+  source_status: SOURCE_IDENTIFIED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S09 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - D-01
+  - OPEN-01
+  - OPEN-08
+  - DEC-004
+  - D-08
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+- from: PREPARING
+  to: PENDING
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - intent_absent
+  - no_started_effect
+  - no_active_attempt
+  - cancel_absent
+  - emergency_stop_inactive
+  id: S10
+  approval_status: NOT_APPROVED
+  source_status: UNRESOLVED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S10 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - D-G1a
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+- from: PREPARING
+  to: BLOCKED
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - block_safe
+  id: S11
+  approval_status: NOT_APPROVED
+  source_status: UNRESOLVED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S11 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - D-G1a
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+- from: PREPARING
+  to: FAILED
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - failure_safe
+  id: S12
+  approval_status: NOT_APPROVED
+  source_status: SOURCE_IDENTIFIED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S12 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+- from: PREPARING
+  to: CANCELED
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - cancellation_complete
+  id: S13
+  approval_status: NOT_APPROVED
+  source_status: SOURCE_IDENTIFIED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S13 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - OPEN-01
+  - OPEN-08
+  - DEC-004
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+- from: EXECUTING
+  to: VERIFYING
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - result_durable
+  id: S14
+  approval_status: NOT_APPROVED
+  source_status: SOURCE_IDENTIFIED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S14 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - D-13
+  - OPEN-10
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+- from: EXECUTING
+  to: NEEDS_RECONCILIATION
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - reconciliation_needed
+  - observation_bound
+  id: S15
+  approval_status: NOT_APPROVED
+  source_status: SOURCE_IDENTIFIED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S15 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+- from: EXECUTING
+  to: RETRY_WAIT
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - retry_safe
+  - g3_safety_decision_open
+  id: S16
+  approval_status: NOT_APPROVED
+  source_status: UNRESOLVED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S16 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - D-G1a
+  - OPEN-02
+  - OPEN-03
+  - D-05
+  - D-06
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+  candidate_disposition: ALWAYS_DENY_PENDING_SAFETY_DECISION
+- from: EXECUTING
+  to: BLOCKED
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - block_safe
+  - observation_bound
+  - decision_block
+  - g3_safety_decision_open
+  - block_pair
+  id: S17
+  approval_status: NOT_APPROVED
+  source_status: UNRESOLVED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S17 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - D-G1a
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+  candidate_disposition: ALWAYS_DENY_PENDING_SAFETY_DECISION
+- from: EXECUTING
+  to: FAILED
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - failure_safe
+  id: S18
+  approval_status: NOT_APPROVED
+  source_status: SOURCE_IDENTIFIED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S18 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+- from: EXECUTING
+  to: CANCELED
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - cancellation_complete
+  id: S19
+  approval_status: NOT_APPROVED
+  source_status: SOURCE_IDENTIFIED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S19 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - OPEN-01
+  - OPEN-08
+  - DEC-004
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+- from: VERIFYING
+  to: COMPLETED
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - verification_passed
+  - verification_evidence
+  - intent_verified
+  - effects_settled
+  - no_active_attempt
+  id: S20
+  approval_status: NOT_APPROVED
+  source_status: SOURCE_IDENTIFIED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S20 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+- from: VERIFYING
+  to: NEEDS_RECONCILIATION
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - reconciliation_needed
+  - observation_bound
+  id: S21
+  approval_status: NOT_APPROVED
+  source_status: UNRESOLVED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S21 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - D-G1a
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+- from: VERIFYING
+  to: RETRY_WAIT
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - retry_safe
+  - g3_safety_decision_open
+  id: S22
+  approval_status: NOT_APPROVED
+  source_status: UNRESOLVED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S22 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - D-G1a
+  - OPEN-02
+  - OPEN-03
+  - D-05
+  - D-06
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+  candidate_disposition: ALWAYS_DENY_PENDING_SAFETY_DECISION
+- from: VERIFYING
+  to: BLOCKED
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - block_safe
+  - observation_bound
+  - decision_block
+  - block_pair
+  id: S23
+  approval_status: NOT_APPROVED
+  source_status: UNRESOLVED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S23 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - D-G1a
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+- from: VERIFYING
+  to: FAILED
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - failure_safe
+  id: S24
+  approval_status: NOT_APPROVED
+  source_status: SOURCE_IDENTIFIED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S24 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+- from: VERIFYING
+  to: CANCELED
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - cancellation_complete
+  id: S25
+  approval_status: NOT_APPROVED
+  source_status: SOURCE_IDENTIFIED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S25 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - OPEN-01
+  - OPEN-08
+  - DEC-004
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+- from: NEEDS_RECONCILIATION
+  to: VERIFYING
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - verify_reconciled
+  id: S26
+  approval_status: NOT_APPROVED
+  source_status: SOURCE_IDENTIFIED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S26 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+- from: NEEDS_RECONCILIATION
+  to: RETRY_WAIT
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - retry_safe
+  id: S27
+  approval_status: NOT_APPROVED
+  source_status: SOURCE_IDENTIFIED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S27 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - OPEN-02
+  - OPEN-03
+  - D-05
+  - D-06
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+- from: NEEDS_RECONCILIATION
+  to: BLOCKED
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - block_safe
+  - observation_bound
+  - decision_block
+  - block_pair
+  id: S28
+  approval_status: NOT_APPROVED
+  source_status: SOURCE_IDENTIFIED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S28 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+- from: NEEDS_RECONCILIATION
+  to: FAILED
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - failure_safe
+  - observation_bound
+  - decision_fail
+  - fail_decision_policy_open
+  id: S29
+  approval_status: NOT_APPROVED
+  source_status: SOURCE_IDENTIFIED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S29 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - OPEN-12
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+  candidate_disposition: ALWAYS_DENY_PENDING_OPEN_12
+- from: NEEDS_RECONCILIATION
+  to: CANCELED
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - cancellation_complete
+  id: S30
+  approval_status: NOT_APPROVED
+  source_status: SOURCE_IDENTIFIED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S30 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - OPEN-01
+  - OPEN-08
+  - DEC-004
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+- from: RETRY_WAIT
+  to: PENDING
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - retry_safe
+  - retry_schedule_due
+  - step_in_active_plan
+  id: S31
+  approval_status: NOT_APPROVED
+  source_status: UNRESOLVED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S31 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - D-G1a
+  - D-01
+  - OPEN-02
+  - OPEN-03
+  - D-05
+  - D-06
+  - R-3
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+- from: RETRY_WAIT
+  to: BLOCKED
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - block_safe
+  id: S32
+  approval_status: NOT_APPROVED
+  source_status: UNRESOLVED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S32 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - D-G1a
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+- from: RETRY_WAIT
+  to: FAILED
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - failure_safe
+  id: S33
+  approval_status: NOT_APPROVED
+  source_status: SOURCE_IDENTIFIED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S33 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+- from: RETRY_WAIT
+  to: CANCELED
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - cancellation_complete
+  id: S34
+  approval_status: NOT_APPROVED
+  source_status: SOURCE_IDENTIFIED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S34 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - OPEN-01
+  - OPEN-08
+  - DEC-004
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+- from: BLOCKED
+  to: PENDING
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - unblock_authorized
+  - effects_settled
+  - no_active_attempt
+  - cancel_absent
+  - emergency_stop_inactive
+  - step_in_active_plan
+  id: S35
+  approval_status: NOT_APPROVED
+  source_status: SOURCE_IDENTIFIED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S35 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - D-01
+  - OPEN-07
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+- from: BLOCKED
+  to: FAILED
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - failure_safe
+  id: S36
+  approval_status: NOT_APPROVED
+  source_status: SOURCE_IDENTIFIED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S36 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+- from: BLOCKED
+  to: CANCELED
+  guards:
+  - source_state_matches
+  - version_matches
+  - target_state_matches
+  - one_row_cas
+  - event_same_transaction
+  - relationships_consistent
+  - terminal_history_preserved
+  - fenced_commit
+  - cancellation_complete
+  id: S37
+  approval_status: NOT_APPROVED
+  source_status: SOURCE_IDENTIFIED
+  source_refs:
+  - MP-v1.1.1 §8.1–8.3
+  - docs/reports/K0-002_CORE_DECISION_PACKAGE.md §4.2 S37 (candidate only)
+  unresolved_dependencies:
+  - DP-1
+  - DP-5b
+  - OPEN-06
+  - OPEN-01
+  - OPEN-08
+  - DEC-004
+  failure_policy: DENY_KEEP_SOURCE_NO_IMPLICIT_TRANSITION
+notes:
+- DRAFT candidate predicates only; no runtime registration, implementation, approval or freeze.
+- Existing edge set is unchanged; each edge requires every named guard, and unavailable evidence denies.
+- UNRESOLVED sources and dependencies remain approval blockers, not implicit permission.
+- Guard failure never performs a fallback transition. Reconciliation/BLOCKED uses only a separately guarded
+  existing legal edge.
+- All worker result/recovery/associated state writes use current-global-epoch fencing, not old Attempt
+  self-comparison.
+- No-cancel checks or DB CAS do not establish cancellation/publish-start linearization (INV-010 remains
+  NOT_IMPLEMENTED).
+guard_revision: k0002-20261018-draft
+approval_status: NOT_APPROVED
+runtime_enabled: false
+guard_registry: transition_guards.yaml
+guard_combination: ALL
+missing_or_unknown_guard: DENY_KEEP_SOURCE
+on_guard_failure: ROLLBACK_ALL_STATE_RELATED_WRITES_AND_EVENT
+denial_policy:
+  status: DRAFT
+  approval_status: NOT_APPROVED
+  source_refs:
+  - contracts/step_states.yaml
+  - contracts/step_transitions.yaml transitions (existing candidate edge set)
+  semantics: Explicit closed-world classification only; not new rules, safety approval or runtime permission.
+  self_transitions: DENIED
+  terminal_sources: DENIED
+denied_transitions:
+- {from: PENDING, to: PENDING, decision: DENIED, reason: SELF_TRANSITION, approval_status: NOT_APPROVED}
+- {from: PENDING, to: PREPARING, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: PENDING, to: EXECUTING, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: PENDING, to: VERIFYING, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: PENDING, to: NEEDS_RECONCILIATION, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: PENDING, to: RETRY_WAIT, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: PENDING, to: BLOCKED, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: PENDING, to: COMPLETED, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: CLAIMED, to: CLAIMED, decision: DENIED, reason: SELF_TRANSITION, approval_status: NOT_APPROVED}
+- {from: CLAIMED, to: EXECUTING, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: CLAIMED, to: VERIFYING, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: CLAIMED, to: NEEDS_RECONCILIATION, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: CLAIMED, to: RETRY_WAIT, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: CLAIMED, to: COMPLETED, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: PREPARING, to: CLAIMED, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: PREPARING, to: PREPARING, decision: DENIED, reason: SELF_TRANSITION, approval_status: NOT_APPROVED}
+- {from: PREPARING, to: VERIFYING, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: PREPARING, to: NEEDS_RECONCILIATION, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: PREPARING, to: RETRY_WAIT, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: PREPARING, to: COMPLETED, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: EXECUTING, to: PENDING, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: EXECUTING, to: CLAIMED, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: EXECUTING, to: PREPARING, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: EXECUTING, to: EXECUTING, decision: DENIED, reason: SELF_TRANSITION, approval_status: NOT_APPROVED}
+- {from: EXECUTING, to: COMPLETED, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: VERIFYING, to: PENDING, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: VERIFYING, to: CLAIMED, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: VERIFYING, to: PREPARING, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: VERIFYING, to: EXECUTING, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: VERIFYING, to: VERIFYING, decision: DENIED, reason: SELF_TRANSITION, approval_status: NOT_APPROVED}
+- {from: NEEDS_RECONCILIATION, to: PENDING, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: NEEDS_RECONCILIATION, to: CLAIMED, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: NEEDS_RECONCILIATION, to: PREPARING, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: NEEDS_RECONCILIATION, to: EXECUTING, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: NEEDS_RECONCILIATION, to: NEEDS_RECONCILIATION, decision: DENIED, reason: SELF_TRANSITION, approval_status: NOT_APPROVED}
+- {from: NEEDS_RECONCILIATION, to: COMPLETED, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: RETRY_WAIT, to: CLAIMED, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: RETRY_WAIT, to: PREPARING, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: RETRY_WAIT, to: EXECUTING, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: RETRY_WAIT, to: VERIFYING, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: RETRY_WAIT, to: NEEDS_RECONCILIATION, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: RETRY_WAIT, to: RETRY_WAIT, decision: DENIED, reason: SELF_TRANSITION, approval_status: NOT_APPROVED}
+- {from: RETRY_WAIT, to: COMPLETED, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: BLOCKED, to: CLAIMED, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: BLOCKED, to: PREPARING, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: BLOCKED, to: EXECUTING, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: BLOCKED, to: VERIFYING, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: BLOCKED, to: NEEDS_RECONCILIATION, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: BLOCKED, to: RETRY_WAIT, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: BLOCKED, to: BLOCKED, decision: DENIED, reason: SELF_TRANSITION, approval_status: NOT_APPROVED}
+- {from: BLOCKED, to: COMPLETED, decision: DENIED, reason: NOT_IN_DRAFT_EDGE_SET, approval_status: NOT_APPROVED}
+- {from: COMPLETED, to: PENDING, decision: DENIED, reason: TERMINAL_SOURCE, approval_status: NOT_APPROVED}
+- {from: COMPLETED, to: CLAIMED, decision: DENIED, reason: TERMINAL_SOURCE, approval_status: NOT_APPROVED}
+- {from: COMPLETED, to: PREPARING, decision: DENIED, reason: TERMINAL_SOURCE, approval_status: NOT_APPROVED}
+- {from: COMPLETED, to: EXECUTING, decision: DENIED, reason: TERMINAL_SOURCE, approval_status: NOT_APPROVED}
+- {from: COMPLETED, to: VERIFYING, decision: DENIED, reason: TERMINAL_SOURCE, approval_status: NOT_APPROVED}
+- {from: COMPLETED, to: NEEDS_RECONCILIATION, decision: DENIED, reason: TERMINAL_SOURCE, approval_status: NOT_APPROVED}
+- {from: COMPLETED, to: RETRY_WAIT, decision: DENIED, reason: TERMINAL_SOURCE, approval_status: NOT_APPROVED}
+- {from: COMPLETED, to: BLOCKED, decision: DENIED, reason: TERMINAL_SOURCE, approval_status: NOT_APPROVED}
+- {from: COMPLETED, to: COMPLETED, decision: DENIED, reason: TERMINAL_SOURCE, approval_status: NOT_APPROVED}
+- {from: COMPLETED, to: FAILED, decision: DENIED, reason: TERMINAL_SOURCE, approval_status: NOT_APPROVED}
+- {from: COMPLETED, to: CANCELED, decision: DENIED, reason: TERMINAL_SOURCE, approval_status: NOT_APPROVED}
+- {from: FAILED, to: PENDING, decision: DENIED, reason: TERMINAL_SOURCE, approval_status: NOT_APPROVED}
+- {from: FAILED, to: CLAIMED, decision: DENIED, reason: TERMINAL_SOURCE, approval_status: NOT_APPROVED}
+- {from: FAILED, to: PREPARING, decision: DENIED, reason: TERMINAL_SOURCE, approval_status: NOT_APPROVED}
+- {from: FAILED, to: EXECUTING, decision: DENIED, reason: TERMINAL_SOURCE, approval_status: NOT_APPROVED}
+- {from: FAILED, to: VERIFYING, decision: DENIED, reason: TERMINAL_SOURCE, approval_status: NOT_APPROVED}
+- {from: FAILED, to: NEEDS_RECONCILIATION, decision: DENIED, reason: TERMINAL_SOURCE, approval_status: NOT_APPROVED}
+- {from: FAILED, to: RETRY_WAIT, decision: DENIED, reason: TERMINAL_SOURCE, approval_status: NOT_APPROVED}
+- {from: FAILED, to: BLOCKED, decision: DENIED, reason: TERMINAL_SOURCE, approval_status: NOT_APPROVED}
+- {from: FAILED, to: COMPLETED, decision: DENIED, reason: TERMINAL_SOURCE, approval_status: NOT_APPROVED}
+- {from: FAILED, to: FAILED, decision: DENIED, reason: TERMINAL_SOURCE, approval_status: NOT_APPROVED}
+- {from: FAILED, to: CANCELED, decision: DENIED, reason: TERMINAL_SOURCE, approval_status: NOT_APPROVED}
+- {from: CANCELED, to: PENDING, decision: DENIED, reason: TERMINAL_SOURCE, approval_status: NOT_APPROVED}
+- {from: CANCELED, to: CLAIMED, decision: DENIED, reason: TERMINAL_SOURCE, approval_status: NOT_APPROVED}
+- {from: CANCELED, to: PREPARING, decision: DENIED, reason: TERMINAL_SOURCE, approval_status: NOT_APPROVED}
+- {from: CANCELED, to: EXECUTING, decision: DENIED, reason: TERMINAL_SOURCE, approval_status: NOT_APPROVED}
+- {from: CANCELED, to: VERIFYING, decision: DENIED, reason: TERMINAL_SOURCE, approval_status: NOT_APPROVED}
+- {from: CANCELED, to: NEEDS_RECONCILIATION, decision: DENIED, reason: TERMINAL_SOURCE, approval_status: NOT_APPROVED}
+- {from: CANCELED, to: RETRY_WAIT, decision: DENIED, reason: TERMINAL_SOURCE, approval_status: NOT_APPROVED}
+- {from: CANCELED, to: BLOCKED, decision: DENIED, reason: TERMINAL_SOURCE, approval_status: NOT_APPROVED}
+- {from: CANCELED, to: COMPLETED, decision: DENIED, reason: TERMINAL_SOURCE, approval_status: NOT_APPROVED}
+- {from: CANCELED, to: FAILED, decision: DENIED, reason: TERMINAL_SOURCE, approval_status: NOT_APPROVED}
+- {from: CANCELED, to: CANCELED, decision: DENIED, reason: TERMINAL_SOURCE, approval_status: NOT_APPROVED}

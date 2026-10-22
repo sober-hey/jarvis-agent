@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_zh_045",
+  "text": "帮我查一下明天的空气质量。",
+  "category": "negative_zh",
+  "language_type": "Chinese",
+  "split": "calibration",
+  "voice": "Cherry",
+  "voice_kind": "system",
+  "tempo": 1.0,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 25
+  },
+  "elapsed_seconds": 0.837,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_zh_045.wav",
+  "audio": "wav/negative_zh_045.wav",
+  "duration_seconds": 2.08,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "63d7ff44d25c6ccb259dc01a9950b085af3f54a3b5d10388dcbef2eac4650d34",
+  "sha256_audio": "7895b29c9b7d48413bb65a066970776d6e9c641d6ae6502d4bebe660242456f6"
+}

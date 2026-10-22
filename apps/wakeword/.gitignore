@@ -1,0 +1,16 @@
+.venv/
+.build/
+.swiftpm/
+.ios-build/
+.watch-build*/
+__pycache__/
+*.pyc
+# Local downloaded evaluation corpus; manifests and metrics remain tracked.
+data/original/
+data/wav/
+data/stress/
+data/musan/
+data/*.parquet
+data/musan-*.wav
+# Compiled models are platform-specific. Ship mlpackage or build for target.
+models/compiled/

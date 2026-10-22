@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_en_071",
+  "text": "Check the camera by the front door.",
+  "category": "negative_en",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Serena",
+  "voice_kind": "system",
+  "tempo": 1.0,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 35
+  },
+  "elapsed_seconds": 0.866,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_en_071.wav",
+  "audio": "wav/negative_en_071.wav",
+  "duration_seconds": 2.16,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "6df9e38db4bb2f2a5a045293458dc675055e85f25490d159333a999aada7474d",
+  "sha256_audio": "818ee6149dfd0d209c044b6d21666f2bcd1e2c67b835090ebb0191a57edc1559"
+}

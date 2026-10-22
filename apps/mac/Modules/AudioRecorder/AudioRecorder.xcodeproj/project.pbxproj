@@ -1,0 +1,249 @@
+// !$*UTF8*$!
+{
+"archiveVersion" = 1;
+"classes" = {
+
+};
+"objectVersion" = 56;
+"objects" = {
+"000000000000000000000001" = {
+"isa" = "PBXFileReference";
+"lastKnownFileType" = "sourcecode.swift";
+"path" = "Sources/AudioRecorder.swift";
+"sourceTree" = "SOURCE_ROOT";
+};
+"000000000000000000000002" = {
+"isa" = "PBXFileReference";
+"lastKnownFileType" = "sourcecode.swift";
+"path" = "Sources/MicrophoneInput.swift";
+"sourceTree" = "SOURCE_ROOT";
+};
+"000000000000000000000003" = {
+"isa" = "PBXFileReference";
+"lastKnownFileType" = "sourcecode.swift";
+"path" = "Sources/PCMBufferRing.swift";
+"sourceTree" = "SOURCE_ROOT";
+};
+"000000000000000000000004" = {
+"isa" = "PBXFileReference";
+"lastKnownFileType" = "sourcecode.swift";
+"path" = "Sources/PCMConverter.swift";
+"sourceTree" = "SOURCE_ROOT";
+};
+"000000000000000000000005" = {
+"isa" = "PBXFileReference";
+"lastKnownFileType" = "sourcecode.swift";
+"path" = "Tests/main.swift";
+"sourceTree" = "SOURCE_ROOT";
+};
+"000000000000000000000006" = {
+"isa" = "PBXFileReference";
+"lastKnownFileType" = "sourcecode.swift";
+"path" = "CLI/main.swift";
+"sourceTree" = "SOURCE_ROOT";
+};
+"000000000000000000000007" = {
+"isa" = "PBXBuildFile";
+"fileRef" = "000000000000000000000001";
+};
+"000000000000000000000008" = {
+"isa" = "PBXBuildFile";
+"fileRef" = "000000000000000000000002";
+};
+"000000000000000000000009" = {
+"isa" = "PBXBuildFile";
+"fileRef" = "000000000000000000000003";
+};
+"00000000000000000000000A" = {
+"isa" = "PBXBuildFile";
+"fileRef" = "000000000000000000000004";
+};
+"00000000000000000000000B" = {
+"isa" = "PBXBuildFile";
+"fileRef" = "000000000000000000000005";
+};
+"00000000000000000000000C" = {
+"isa" = "PBXSourcesBuildPhase";
+"buildActionMask" = 2147483647;
+"files" = ("000000000000000000000007","000000000000000000000008","000000000000000000000009","00000000000000000000000A","00000000000000000000000B",);
+"runOnlyForDeploymentPostprocessing" = 0;
+};
+"00000000000000000000000D" = {
+"isa" = "PBXFileReference";
+"explicitFileType" = "compiled.mach-o.executable";
+"path" = "AudioRecorderTests";
+"sourceTree" = "BUILT_PRODUCTS_DIR";
+};
+"00000000000000000000000E" = {
+"isa" = "XCBuildConfiguration";
+"name" = "Debug";
+"buildSettings" = {
+"PRODUCT_NAME" = "AudioRecorderTests";
+"SWIFT_VERSION" = "5.0";
+"MACOSX_DEPLOYMENT_TARGET" = "13.0";
+"SDKROOT" = "macosx";
+"CODE_SIGNING_ALLOWED" = "NO";
+"SWIFT_OPTIMIZATION_LEVEL" = "-Onone";
+"CLANG_ENABLE_MODULES" = "YES";
+"ENABLE_HARDENED_RUNTIME" = "NO";
+};
+};
+"00000000000000000000000F" = {
+"isa" = "XCBuildConfiguration";
+"name" = "Release";
+"buildSettings" = {
+"PRODUCT_NAME" = "AudioRecorderTests";
+"SWIFT_VERSION" = "5.0";
+"MACOSX_DEPLOYMENT_TARGET" = "13.0";
+"SDKROOT" = "macosx";
+"CODE_SIGNING_ALLOWED" = "NO";
+"SWIFT_OPTIMIZATION_LEVEL" = "-Onone";
+"CLANG_ENABLE_MODULES" = "YES";
+"ENABLE_HARDENED_RUNTIME" = "NO";
+};
+};
+"000000000000000000000010" = {
+"isa" = "XCConfigurationList";
+"buildConfigurations" = ("00000000000000000000000E","00000000000000000000000F",);
+"defaultConfigurationIsVisible" = 0;
+"defaultConfigurationName" = "Debug";
+};
+"000000000000000000000011" = {
+"isa" = "PBXNativeTarget";
+"name" = "AudioRecorderTests";
+"productName" = "AudioRecorderTests";
+"productType" = "com.apple.product-type.tool";
+"productReference" = "00000000000000000000000D";
+"buildConfigurationList" = "000000000000000000000010";
+"buildPhases" = ("00000000000000000000000C",);
+"buildRules" = ();
+"dependencies" = ();
+};
+"000000000000000000000012" = {
+"isa" = "PBXBuildFile";
+"fileRef" = "000000000000000000000001";
+};
+"000000000000000000000013" = {
+"isa" = "PBXBuildFile";
+"fileRef" = "000000000000000000000002";
+};
+"000000000000000000000014" = {
+"isa" = "PBXBuildFile";
+"fileRef" = "000000000000000000000003";
+};
+"000000000000000000000015" = {
+"isa" = "PBXBuildFile";
+"fileRef" = "000000000000000000000004";
+};
+"000000000000000000000016" = {
+"isa" = "PBXBuildFile";
+"fileRef" = "000000000000000000000006";
+};
+"000000000000000000000017" = {
+"isa" = "PBXSourcesBuildPhase";
+"buildActionMask" = 2147483647;
+"files" = ("000000000000000000000012","000000000000000000000013","000000000000000000000014","000000000000000000000015","000000000000000000000016",);
+"runOnlyForDeploymentPostprocessing" = 0;
+};
+"000000000000000000000018" = {
+"isa" = "PBXFileReference";
+"explicitFileType" = "compiled.mach-o.executable";
+"path" = "AudioRecorderCLI";
+"sourceTree" = "BUILT_PRODUCTS_DIR";
+};
+"000000000000000000000019" = {
+"isa" = "XCBuildConfiguration";
+"name" = "Debug";
+"buildSettings" = {
+"PRODUCT_NAME" = "AudioRecorderCLI";
+"SWIFT_VERSION" = "5.0";
+"MACOSX_DEPLOYMENT_TARGET" = "13.0";
+"SDKROOT" = "macosx";
+"CODE_SIGNING_ALLOWED" = "NO";
+"SWIFT_OPTIMIZATION_LEVEL" = "-Onone";
+"CLANG_ENABLE_MODULES" = "YES";
+"ENABLE_HARDENED_RUNTIME" = "NO";
+"INFOPLIST_FILE" = "Resources/Info.plist";
+"CREATE_INFOPLIST_SECTION_IN_BINARY" = "YES";
+};
+};
+"00000000000000000000001A" = {
+"isa" = "XCBuildConfiguration";
+"name" = "Release";
+"buildSettings" = {
+"PRODUCT_NAME" = "AudioRecorderCLI";
+"SWIFT_VERSION" = "5.0";
+"MACOSX_DEPLOYMENT_TARGET" = "13.0";
+"SDKROOT" = "macosx";
+"CODE_SIGNING_ALLOWED" = "NO";
+"SWIFT_OPTIMIZATION_LEVEL" = "-Onone";
+"CLANG_ENABLE_MODULES" = "YES";
+"ENABLE_HARDENED_RUNTIME" = "NO";
+"INFOPLIST_FILE" = "Resources/Info.plist";
+"CREATE_INFOPLIST_SECTION_IN_BINARY" = "YES";
+};
+};
+"00000000000000000000001B" = {
+"isa" = "XCConfigurationList";
+"buildConfigurations" = ("000000000000000000000019","00000000000000000000001A",);
+"defaultConfigurationIsVisible" = 0;
+"defaultConfigurationName" = "Debug";
+};
+"00000000000000000000001C" = {
+"isa" = "PBXNativeTarget";
+"name" = "AudioRecorderCLI";
+"productName" = "AudioRecorderCLI";
+"productType" = "com.apple.product-type.tool";
+"productReference" = "000000000000000000000018";
+"buildConfigurationList" = "00000000000000000000001B";
+"buildPhases" = ("000000000000000000000017",);
+"buildRules" = ();
+"dependencies" = ();
+};
+"00000000000000000000001D" = {
+"isa" = "PBXGroup";
+"name" = "Products";
+"children" = ("00000000000000000000000D","000000000000000000000018",);
+"sourceTree" = "<group>";
+};
+"00000000000000000000001E" = {
+"isa" = "PBXGroup";
+"children" = ("000000000000000000000001","000000000000000000000002","000000000000000000000003","000000000000000000000004","000000000000000000000005","000000000000000000000006","00000000000000000000001D",);
+"sourceTree" = "<group>";
+};
+"00000000000000000000001F" = {
+"isa" = "XCBuildConfiguration";
+"name" = "Debug";
+"buildSettings" = {
+
+};
+};
+"000000000000000000000020" = {
+"isa" = "XCBuildConfiguration";
+"name" = "Release";
+"buildSettings" = {
+
+};
+};
+"000000000000000000000021" = {
+"isa" = "XCConfigurationList";
+"buildConfigurations" = ("00000000000000000000001F","000000000000000000000020",);
+"defaultConfigurationIsVisible" = 0;
+"defaultConfigurationName" = "Debug";
+};
+"000000000000000000000022" = {
+"isa" = "PBXProject";
+"buildConfigurationList" = "000000000000000000000021";
+"compatibilityVersion" = "Xcode 14.0";
+"developmentRegion" = "en";
+"knownRegions" = ("en",);
+"hasScannedForEncodings" = 0;
+"mainGroup" = "00000000000000000000001E";
+"productRefGroup" = "00000000000000000000001D";
+"projectDirPath" = "";
+"projectRoot" = "";
+"targets" = ("000000000000000000000011","00000000000000000000001C",);
+};
+};
+"rootObject" = "000000000000000000000022";
+}

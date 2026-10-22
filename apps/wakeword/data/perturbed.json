@@ -1,0 +1,139 @@
+{
+  "items": [
+    {
+      "source_id": "bare_0_1_quiet_gain",
+      "parent_source_id": "bare_0_1",
+      "category": "quiet_gain",
+      "split": "holdout_augmented",
+      "audio": "perturbed/bare_0_1_quiet_gain.wav",
+      "error": null,
+      "sha256_audio": "0f4b8924a6787814635509df8371c57965ac4946eddeff36b9259ecc02aa0b26"
+    },
+    {
+      "source_id": "bare_0_1_noise_10db",
+      "parent_source_id": "bare_0_1",
+      "category": "noise_10db",
+      "split": "holdout_augmented",
+      "audio": "perturbed/bare_0_1_noise_10db.wav",
+      "error": null,
+      "sha256_audio": "9d167ef7f19a18175dd457017b835be9894e9ec08cafa66e64234b9ef2fd155c"
+    },
+    {
+      "source_id": "bare_0_1_reverb",
+      "parent_source_id": "bare_0_1",
+      "category": "reverb",
+      "split": "holdout_augmented",
+      "audio": "perturbed/bare_0_1_reverb.wav",
+      "error": null,
+      "sha256_audio": "eba47931b4a70c2f7d033ee73a6492b347c578e8b8baee639c0a190aafcf708a"
+    },
+    {
+      "source_id": "bare_1_1_quiet_gain",
+      "parent_source_id": "bare_1_1",
+      "category": "quiet_gain",
+      "split": "holdout_augmented",
+      "audio": "perturbed/bare_1_1_quiet_gain.wav",
+      "error": null,
+      "sha256_audio": "f71fe24138a0a19937637124dac005c4b96a936a3b980b11651d4f9aeb3f04d0"
+    },
+    {
+      "source_id": "bare_1_1_noise_10db",
+      "parent_source_id": "bare_1_1",
+      "category": "noise_10db",
+      "split": "holdout_augmented",
+      "audio": "perturbed/bare_1_1_noise_10db.wav",
+      "error": null,
+      "sha256_audio": "1e41fb6cbea14b6a9ec44b1aa5ae506e591627040adb36c545849d517cedcc13"
+    },
+    {
+      "source_id": "bare_1_1_reverb",
+      "parent_source_id": "bare_1_1",
+      "category": "reverb",
+      "split": "holdout_augmented",
+      "audio": "perturbed/bare_1_1_reverb.wav",
+      "error": null,
+      "sha256_audio": "5167e979dd57bff9866d432d25ea17339cb63231fe413ca03b03298be1e1277b"
+    },
+    {
+      "source_id": "bare_2_1_quiet_gain",
+      "parent_source_id": "bare_2_1",
+      "category": "quiet_gain",
+      "split": "holdout_augmented",
+      "audio": "perturbed/bare_2_1_quiet_gain.wav",
+      "error": null,
+      "sha256_audio": "650cce1e474817e0bacb8906dff585738bac421cbc1107335e63eb977e1e8a13"
+    },
+    {
+      "source_id": "bare_2_1_noise_10db",
+      "parent_source_id": "bare_2_1",
+      "category": "noise_10db",
+      "split": "holdout_augmented",
+      "audio": "perturbed/bare_2_1_noise_10db.wav",
+      "error": null,
+      "sha256_audio": "22eec502772663be527116ea60713d1ae5054a5381e3b1dec9b235c0f85fc203"
+    },
+    {
+      "source_id": "bare_2_1_reverb",
+      "parent_source_id": "bare_2_1",
+      "category": "reverb",
+      "split": "holdout_augmented",
+      "audio": "perturbed/bare_2_1_reverb.wav",
+      "error": null,
+      "sha256_audio": "ca8537240e7788bba497d644c2be4cf2e1a4e95d1ee594443528dcd8e0117b52"
+    },
+    {
+      "source_id": "bare_3_1_quiet_gain",
+      "parent_source_id": "bare_3_1",
+      "category": "quiet_gain",
+      "split": "holdout_augmented",
+      "audio": "perturbed/bare_3_1_quiet_gain.wav",
+      "error": null,
+      "sha256_audio": "771f3b1cb80787bfc0f5b6d54db8eac41a76bad5d3936f260ab5629dffb29dba"
+    },
+    {
+      "source_id": "bare_3_1_noise_10db",
+      "parent_source_id": "bare_3_1",
+      "category": "noise_10db",
+      "split": "holdout_augmented",
+      "audio": "perturbed/bare_3_1_noise_10db.wav",
+      "error": null,
+      "sha256_audio": "95862bac050e349caff1c2e193ea21bc2a0edb5af976b21dc42baac63655210d"
+    },
+    {
+      "source_id": "bare_3_1_reverb",
+      "parent_source_id": "bare_3_1",
+      "category": "reverb",
+      "split": "holdout_augmented",
+      "audio": "perturbed/bare_3_1_reverb.wav",
+      "error": null,
+      "sha256_audio": "870b44cdb70ba43aecb959ba77e33eac26c0d43d787618f3a9df20e8a9d84e52"
+    },
+    {
+      "source_id": "bare_4_1_quiet_gain",
+      "parent_source_id": "bare_4_1",
+      "category": "quiet_gain",
+      "split": "holdout_augmented",
+      "audio": "perturbed/bare_4_1_quiet_gain.wav",
+      "error": null,
+      "sha256_audio": "90024b2a85e1b4d9a2a1251064dd472edb3683465b214109badf9433ed5347a5"
+    },
+    {
+      "source_id": "bare_4_1_noise_10db",
+      "parent_source_id": "bare_4_1",
+      "category": "noise_10db",
+      "split": "holdout_augmented",
+      "audio": "perturbed/bare_4_1_noise_10db.wav",
+      "error": null,
+      "sha256_audio": "e4dddefa66bdb39af95bbdcc2044ef0ccf207cd1413ad84f51d1bc27591e0049"
+    },
+    {
+      "source_id": "bare_4_1_reverb",
+      "parent_source_id": "bare_4_1",
+      "category": "reverb",
+      "split": "holdout_augmented",
+      "audio": "perturbed/bare_4_1_reverb.wav",
+      "error": null,
+      "sha256_audio": "ea5a2ee2621b8fa7ecac69bcfb96cd787a67231f6a4a6fa709f5865571861af7"
+    }
+  ]
+}

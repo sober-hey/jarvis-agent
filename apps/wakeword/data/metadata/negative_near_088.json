@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_near_088",
+  "text": "The forecast says rain after dinner.",
+  "category": "negative_near",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Chelsie",
+  "voice_kind": "system",
+  "tempo": 0.94,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 36
+  },
+  "elapsed_seconds": 1.139,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_near_088.wav",
+  "audio": "wav/negative_near_088.wav",
+  "duration_seconds": 3.5606,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "cb6e27dc9cdd9eea11a7162d9a7aac027f9b20ce9f7817410d5f65ffbce69ef0",
+  "sha256_audio": "36fb5b5d4203a32c7855834d2a34f71910d0ab26ca81a943a7919074ab80ba7b"
+}

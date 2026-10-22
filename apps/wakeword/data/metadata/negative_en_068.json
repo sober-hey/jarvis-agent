@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_en_068",
+  "text": "Add milk to the shopping list.",
+  "category": "negative_en",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Chelsie",
+  "voice_kind": "system",
+  "tempo": 1.0,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 30
+  },
+  "elapsed_seconds": 0.931,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_en_068.wav",
+  "audio": "wav/negative_en_068.wav",
+  "duration_seconds": 2.24,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "06d2cc7766d92a5e695e240393d97d92cb744e3c3b7b6308b2a489725f4e575d",
+  "sha256_audio": "c391d2b000f2672e18530e8fb8b53a5fd50b1cb91aaa158319aa288b82302952"
+}

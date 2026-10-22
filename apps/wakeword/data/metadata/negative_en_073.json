@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_en_073",
+  "text": "Give me a brief update about the weather.",
+  "category": "negative_en",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Chelsie",
+  "voice_kind": "system",
+  "tempo": 1.06,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 41
+  },
+  "elapsed_seconds": 1.018,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_en_073.wav",
+  "audio": "wav/negative_en_073.wav",
+  "duration_seconds": 2.4893,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "7d12b680f004cb6dd8a0890dbb21d1b85ea4686177a0de11e9e818fadadddd03",
+  "sha256_audio": "f777042fc82f100eb4bb69d4d0481db7be8b2836a7e0a27f84d693e47bc0295c"
+}

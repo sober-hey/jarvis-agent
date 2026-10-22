@@ -1,0 +1,25 @@
+{
+  "source_id": "positive_015",
+  "text": "Jarvis, give me a short weather update.",
+  "category": "positive",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Cherry",
+  "voice_kind": "system",
+  "tempo": 0.94,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 39
+  },
+  "elapsed_seconds": 1.021,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/positive_015.wav",
+  "audio": "wav/positive_015.wav",
+  "duration_seconds": 2.2899,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "65990c635cd7fa2785d7c1e2e86c82e12fd8fb51051464573c79a1f1b7479ac2",
+  "sha256_audio": "3c9f14fabbf6fa4df8431e49f1f6bcb26b5edd5756ec044625822a24484fbd58"
+}

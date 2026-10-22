@@ -1,0 +1,25 @@
+{
+  "source_id": "control_030",
+  "text": "Hey Jarvis, play my evening playlist.",
+  "category": "control",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Cherry",
+  "voice_kind": "system",
+  "tempo": 0.94,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 37
+  },
+  "elapsed_seconds": 1.178,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/control_030.wav",
+  "audio": "wav/control_030.wav",
+  "duration_seconds": 3.8111,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "95c46d10ee4d896504ab73310a9650bb4fd69cf437ccb4d312547e0860c46e0f",
+  "sha256_audio": "0d5bc2dc94db39694e7c3605aeae83e43b4f1095206bfbc6341bde26a9656e49"
+}

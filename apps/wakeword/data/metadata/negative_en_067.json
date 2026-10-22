@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_en_067",
+  "text": "How much time remains before sunset?",
+  "category": "negative_en",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Ethan",
+  "voice_kind": "system",
+  "tempo": 1.06,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 36
+  },
+  "elapsed_seconds": 1.066,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_en_067.wav",
+  "audio": "wav/negative_en_067.wav",
+  "duration_seconds": 2.4937,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "a78d4b060e6b2bea296abebbb6adc78e950aa9517ee64e18442b59599ffd6186",
+  "sha256_audio": "ea7fc5d68dcf59799536ccfc5d388a5759275ee48472ed0b58a784c8a6a40565"
+}

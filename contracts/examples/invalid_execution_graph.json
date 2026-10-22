@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "tasks": [
+    {
+      "schema_version": 1,
+      "id": "task-1",
+      "state": "RUNNING",
+      "active_plan_id": "plan-1",
+      "cancel_requested_at_ms": null,
+      "version": 1
+    }
+  ],
+  "plans": [
+    {
+      "schema_version": 1,
+      "id": "plan-1",
+      "task_id": "task-1",
+      "plan_version": 1,
+      "state": "ACTIVE",
+      "plan_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "created_at_ms": 100
+    }
+  ],
+  "steps": [
+    {
+      "schema_version": 1,
+      "id": "step-1",
+      "task_id": "task-1",
+      "plan_id": "plan-1",
+      "ordinal": 1,
+      "logical_effect_id": "inventory-output",
+      "state": "NEEDS_RECONCILIATION",
+      "required": true,
+      "version": 4
+    }
+  ],
+  "attempts": [
+    {
+      "schema_version": 1,
+      "id": "attempt-1",
+      "step_id": "step-1",
+      "operation_id": "op-1",
+      "attempt_no": 1,
+      "worker_epoch": 1,
+      "state": "INTERRUPTED_CANDIDATE",
+      "started_at_ms": 100,
+      "finished_at_ms": 120
+    },
+    {
+      "schema_version": 1,
+      "id": "attempt-2",
+      "step_id": "step-1",
+      "operation_id": "different-intent-for-retry",
+      "attempt_no": 2,
+      "worker_epoch": 2,
+      "state": "ACTIVE",
+      "started_at_ms": 130,
+      "finished_at_ms": null
+    }
+  ],
+  "intents": [
+    {
+      "schema_version": 1,
+      "operation_id": "op-1",
+      "step_id": "step-1",
+      "operation_key": "stable-task-1-inventory-output",
+      "operation_type": "file.publish.no_clobber",
+      "tool_name": "filesystem.publisher",
+      "tool_version": "1",
+      "arguments_digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "state": "NEEDS_RECONCILIATION"
+    }
+  ],
+  "file_write_intents": [
+    {
+      "schema_version": 1,
+      "operation_id": "op-1",
+      "input_snapshot_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "prepared_relpath": "prepared/inventory.json",
+      "target_relpath": "output/inventory.json",
+      "expected_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "expected_size": 10
+    }
+  ]
+}

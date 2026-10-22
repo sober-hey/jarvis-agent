@@ -1,0 +1,116 @@
+# K0-002 Reconciliation 配对判定表（DRAFT 候选）
+#
+# 效力：DRAFT / NOT_APPROVED / NOT_VERIFIED / NOT_FROZEN，binding:false。
+# 不改 contracts/reconciliation.schema.json，不新增枚举，不关闭 OPEN-02/03/12 或 FS-053/O-5。
+# 与 docs/design/RECONCILIATION_PAIRING_RULES.md 同步；不一致时以该文档 §3 为准并回报缺陷。
+schema_version: 1
+status: DRAFT
+approval: NOT_APPROVED
+verification_status: NOT_VERIFIED
+frozen: false
+binding: false
+authority:
+  doc: docs/design/RECONCILIATION_PAIRING_RULES.md
+  source_registry: docs/design/RECONCILIATION_PAIRING_PROPOSAL.md
+  open_items: [OPEN-02, OPEN-03, OPEN-12, FS-053/O-5]
+  schema: contracts/reconciliation.schema.json
+table_version: draft-2026-10-18
+
+verdicts:
+  - ADMISSIBLE
+  - INADMISSIBLE
+  - UNRESOLVED
+
+runtime_policy:
+  candidate: true
+  approval: NOT_APPROVED
+  admissible_conditions_hold: emit_decision
+  admissible_conditions_unmet: {decision: BLOCK, reason_code: PRECONDITION_UNMET}
+  inadmissible: {decision: BLOCK, reason_code: PAIRING_FORBIDDEN}
+  unresolved: {decision: BLOCK, reason_code: PAIRING_UNRESOLVED}
+  unknown_input: {decision: null, reason_code: INPUT_INVALID, persist: false}
+  default_allow: forbidden
+  missing_cell: INPUT_INVALID
+  evaluation_order: before_persist
+  forbidden_dependencies: [wall_clock, model_output, environment, previous_record]
+
+expected_counts: {ADMISSIBLE: 5, INADMISSIBLE: 4, UNRESOLVED: 7, total: 16}
+
+cells:
+  - {id: R-01, observation: EXPECTED_EFFECT_PRESENT, decision: VERIFY, verdict: ADMISSIBLE, condition: "Intent、哈希、路径均有效", source: "MP §16.3 L1743", open: null}
+  - {id: R-02, observation: EXPECTED_EFFECT_PRESENT, decision: RETRY_SAFE, verdict: UNRESOLVED, condition: null, source: null, open: OPEN-03}
+  - {id: R-03, observation: EXPECTED_EFFECT_PRESENT, decision: BLOCK, verdict: UNRESOLVED, condition: null, source: null, open: OPEN-03}
+  - {id: R-04, observation: EXPECTED_EFFECT_PRESENT, decision: FAIL, verdict: UNRESOLVED, condition: null, source: "MP §16.2 仅定义", open: OPEN-12}
+  - {id: R-05, observation: TARGET_ABSENT, decision: VERIFY, verdict: UNRESOLVED, condition: null, source: null, open: OPEN-03}
+  - {id: R-06, observation: TARGET_ABSENT, decision: RETRY_SAFE, verdict: ADMISSIBLE, condition: "Prepared 完整、允许重试、未取消、未停止", source: "MP §16.3 L1744", open: [OPEN-02, "scope: K0 no-clobber only (L1749-1751)"]}
+  - {id: R-07, observation: TARGET_ABSENT, decision: BLOCK, verdict: ADMISSIBLE, condition: "Prepared 缺失或损坏", source: "MP §16.3 L1745", open: "condition decidability"}
+  - {id: R-08, observation: TARGET_ABSENT, decision: FAIL, verdict: UNRESOLVED, condition: null, source: "MP §16.2 仅定义", open: OPEN-12}
+  - {id: R-09, observation: CONFLICTING_EFFECT_PRESENT, decision: VERIFY, verdict: INADMISSIBLE, condition: "任意 -> BLOCK", source: "MP §16.3 L1746", open: null}
+  - {id: R-10, observation: CONFLICTING_EFFECT_PRESENT, decision: RETRY_SAFE, verdict: INADMISSIBLE, condition: "任意 -> BLOCK", source: "MP §16.3 L1746", open: null}
+  - {id: R-11, observation: CONFLICTING_EFFECT_PRESENT, decision: BLOCK, verdict: ADMISSIBLE, condition: "任意", source: "MP §16.3 L1746", open: "§15.4 no delete/rename/overwrite"}
+  - {id: R-12, observation: CONFLICTING_EFFECT_PRESENT, decision: FAIL, verdict: UNRESOLVED, condition: null, source: "MP §16.2 仅定义", open: [OPEN-12, PR-01]}
+  - {id: R-13, observation: INSUFFICIENT_EVIDENCE, decision: VERIFY, verdict: INADMISSIBLE, condition: "任意 -> BLOCK", source: "MP §16.3 L1747", open: null}
+  - {id: R-14, observation: INSUFFICIENT_EVIDENCE, decision: RETRY_SAFE, verdict: INADMISSIBLE, condition: "任意 -> BLOCK", source: "MP §16.3 L1747", open: null}
+  - {id: R-15, observation: INSUFFICIENT_EVIDENCE, decision: BLOCK, verdict: ADMISSIBLE, condition: "任意", source: "MP §16.3 L1747", open: "§18.4 dangling-reference triple"}
+  - {id: R-16, observation: INSUFFICIENT_EVIDENCE, decision: FAIL, verdict: UNRESOLVED, condition: null, source: "MP §16.2 仅定义", open: [OPEN-12, PR-01]}
+
+tensions:
+  - id: PR-01
+    description: "两行条件列的『任意』字面覆盖 FAIL；本文沿用既有登记 UNRESOLVED，不据此判允许或禁止。"
+    affects: [R-12, R-16]
+    resolution: NOT_DECIDED
+
+retry_preconditions:
+  rule: "全合取；任一 FALSE 或 UNDECIDABLE => 不得产生 RETRY_SAFE"
+  failure_output: {decision: BLOCK, reason_code: RETRY_PRECONDITION_UNDECIDABLE}
+  currently_reachable: false
+  predicates:
+    - {id: RP-P1, statement: "工具恢复策略已证明不产生不允许副作用", evidence: "tool_manifest recovery policy", decidable: false, blocked_by: OPEN-02}
+    - {id: RP-P2, statement: "Prepared 达 DURABLE_PREPARED 且哈希复验通过", evidence: "prepared_relpath + expected_sha256 + measured sha256", decidable: partial, blocked_by: FS-031}
+    - {id: RP-P3, statement: "复用同一 operation_id 与 operation_key", evidence: "operation_key unique", decidable: true, blocked_by: null}
+    - {id: RP-P4, statement: "未取消、未停止、所有权与 epoch 有效", evidence: "cancel_requested_at_ms empty; stop inactive; worker_epoch match", decidable: partial, blocked_by: [OPEN-06, INV-008, INV-009, INV-010]}
+    - {id: RP-P5, statement: "仅适用于 K0 no-clobber 发布", evidence: "operation_type == file.publish.no_clobber", decidable: true, blocked_by: null}
+  cancel_overrides_retry: true
+
+evidence_shape:
+  location: evidence.pairing
+  schema_change_required: false
+  required_keys: [rule_id, verdict, table_version]
+  consistency: "verdict must equal pair(observation, decision); inconsistent record must be rejected before persist"
+
+# 与 ADR-0006 §6.5 的联合约束。两张表互不改判，只约束同一条记录不得自相矛盾。
+cross_checks:
+  - id: XR-01
+    with: docs/adr/ADR-0006-cancel-publish-linearization.md §6.5
+    statement: "已落库记录的 decision 必须落在 ADR-0006 对该结果允许的集合内；PROTOCOL_VIOLATION 不产生 reconciliation 记录"
+    on_violation: {decision: BLOCK, reason_code: PAIRING_FORBIDDEN, persist: false}
+    status: NOT_IMPLEMENTED
+  - id: XR-02
+    with: contracts/draft/cancel_publish_linearization.yaml outcome_table
+    statement: "PUBLISH_WINS 只与 (EXPECTED_EFFECT_PRESENT, VERIFY) 同现；CANCEL_WINS_NO_EFFECT 只与 TARGET_ABSENT 同现；RETRY_SAFE 不在任何结果的允许集内"
+    on_violation: {decision: BLOCK, reason_code: PAIRING_FORBIDDEN, persist: false}
+    status: NOT_IMPLEMENTED
+  - id: XR-03
+    with: docs/adr/ADR-0006-cancel-publish-linearization.md U-8
+    statement: "CANCEL_WINS_EFFECT_RETAINED 的 VERIFY/BLOCK 二选一未裁定，不得在实现中固化为其中之一"
+    status: NOT_IMPLEMENTED
+
+assertions:
+  - {id: RP-01, statement: "schema 顶层字段与枚举不变", check: "逐字段比对 reconciliation.schema.json", status: NOT_IMPLEMENTED}
+  - {id: RP-02, statement: "判定函数为纯函数", check: "相同输入恒等输出", status: NOT_IMPLEMENTED}
+  - {id: RP-03, statement: "16 格各有且仅有一个判定", check: "枚举 4x4 断言匹配数=1", status: NOT_IMPLEMENTED}
+  - {id: RP-04, statement: "判定计数恒为 5/4/7", check: "表驱动计数", status: NOT_IMPLEMENTED}
+  - {id: RP-05, statement: "无 default-allow；缺格 => INPUT_INVALID", check: "删一格变异必须变红", status: NOT_IMPLEMENTED}
+  - {id: RP-06, statement: "INADMISSIBLE 4 格运行时改写为 BLOCK", check: "表驱动负例", status: NOT_IMPLEMENTED}
+  - {id: RP-07, statement: "UNRESOLVED 一律 BLOCK 且不产出 FAIL", check: "表驱动负例", status: NOT_IMPLEMENTED}
+  - {id: RP-08, statement: "任一谓词不可判定 => 无 RETRY_SAFE", check: "谓词桩 + 负例", status: NOT_IMPLEMENTED}
+  - {id: RP-09, statement: "落库 verdict 与表求值一致", check: "写入前后比对", status: NOT_IMPLEMENTED}
+  - {id: RP-10, statement: "判定不读时钟/模型/环境", check: "依赖注入白名单", status: NOT_IMPLEMENTED}
+  - {id: RP-11, statement: "落库 (observation, decision) 与 ADR-0006 结果的允许集不冲突（XR-01/XR-02）", check: "跨文档表驱动联合校验", status: NOT_IMPLEMENTED}
+
+non_claims:
+  - "不认可任何一格为『已批准策略』"
+  - "不为 FAIL 发明产生条件"
+  - "不把 TARGET_ABSENT 当作从未执行"
+  - "不声称 RETRY_SAFE 可达"
+  - "不关闭 OPEN-02/03/12 或 FS-053/O-5"

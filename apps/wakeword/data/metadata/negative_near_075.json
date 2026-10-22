@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_near_075",
+  "text": "Service the car before the weekend.",
+  "category": "negative_near",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Cherry",
+  "voice_kind": "system",
+  "tempo": 0.94,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 35
+  },
+  "elapsed_seconds": 0.905,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_near_075.wav",
+  "audio": "wav/negative_near_075.wav",
+  "duration_seconds": 2.2894,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "d7c2408b083b20b037cb4db174019908cb960ce58d92bfcbac9c8628dd787802",
+  "sha256_audio": "b3a1315d1cd2a5cb1ff85ab55078bdbda0dd90c8113c36464b9f94bcb6552a3a"
+}

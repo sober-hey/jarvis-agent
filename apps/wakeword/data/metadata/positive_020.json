@@ -1,0 +1,25 @@
+{
+  "source_id": "positive_020",
+  "text": "Jarvis, open the calendar.",
+  "category": "positive",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Cherry",
+  "voice_kind": "system",
+  "tempo": 0.94,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 26
+  },
+  "elapsed_seconds": 0.972,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/positive_020.wav",
+  "audio": "wav/positive_020.wav",
+  "duration_seconds": 2.7147,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "724f5f95c32df6e46e61b9c8f23d6609b48600adcdad2937841d24962d5e8c36",
+  "sha256_audio": "0a8afbaf1d3266822a4b6113da269a43d460bc8b842f72be43f7eb9c9b829316"
+}

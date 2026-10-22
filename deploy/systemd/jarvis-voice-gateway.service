@@ -1,0 +1,53 @@
+[Unit]
+Description=JARVIS 语音网关（WebSocket，Apple 设备接入）
+Documentation=file:///opt/jarvis/ARCHITECTURE.md
+After=network-online.target jarvis-daemon.service
+Wants=network-online.target
+PartOf=jarvis-daemon.service
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+[Service]
+# 网关是普通 asyncio 服务，不自带 sd_notify；用 simple + 外部探活，
+# 避免 Type=notify 忘记发 READY=1 导致单元卡在 activating。
+Type=simple
+Restart=on-failure
+RestartSec=5
+TimeoutStartSec=30
+TimeoutStopSec=20
+KillMode=control-group
+SendSIGKILL=yes
+
+User=jarvis
+Group=jarvis
+WorkingDirectory=/opt/jarvis
+Environment=PYTHONUNBUFFERED=1
+Environment=JARVIS_HOME=/var/lib/jarvis
+# 语音子系统隔离在 /opt/jarvis/voice/，同时依赖 packaging/ 里的 inner_loop 等模块。
+Environment=PYTHONPATH=/opt/jarvis/voice:/opt/jarvis/packaging
+LoadCredential=voice-token:/etc/jarvis/voice-gateway.token
+LoadCredential=volc-api-key:/etc/jarvis/volcengine.key
+LoadCredential=dashscope-key:/etc/jarvis/dashscope.key
+StateDirectory=jarvis
+LogsDirectory=jarvis
+
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+NoNewPrivileges=yes
+RestrictSUIDSGID=yes
+RemoveIPC=yes
+ReadWritePaths=/var/lib/jarvis
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX AF_NETLINK
+SystemCallArchitectures=native
+
+# 只监听回环与内网地址；公网入口由 Tailscale 或反代 TLS 终止。
+ExecStart=/opt/jarvis/.venv/bin/python /opt/jarvis/voice/voice_gateway.py \
+  --token-file /etc/jarvis/voice-gateway.token \
+  --config /etc/jarvis/config.json \
+  --brain-key /etc/jarvis/api.key \
+  --data-dir /var/lib/jarvis/loop-data \
+  --log /var/log/jarvis/voice-gateway.log
+
+[Install]
+WantedBy=multi-user.target

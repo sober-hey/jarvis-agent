@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Template only. Replace /ABSOLUTE paths before installing; keep credentials outside source. -->
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.jarvis.supervisor</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/ABSOLUTE/jarvis/.venv/bin/python</string>
+    <string>-B</string>
+    <string>/ABSOLUTE/jarvis/packaging/supervisor.py</string>
+    <string>run</string>
+    <string>--data-root</string><string>/ABSOLUTE/jarvis-data</string>
+    <string>--config</string><string>/ABSOLUTE/jarvis-config/config.json</string>
+    <string>--key-file</string><string>/ABSOLUTE/jarvis-config/provider.key</string>
+    <string>--port</string><string>8765</string>
+  </array>
+  <key>WorkingDirectory</key><string>/ABSOLUTE/jarvis</string>
+  <key>RunAtLoad</key><true/>
+  <key>KeepAlive</key><dict><key>SuccessfulExit</key><false/></dict>
+  <key>ThrottleInterval</key><integer>10</integer>
+  <key>ExitTimeOut</key><integer>180</integer>
+  <key>Umask</key><integer>63</integer>
+  <key>StandardOutPath</key><string>/ABSOLUTE/jarvis-data/launchd.stdout.log</string>
+  <key>StandardErrorPath</key><string>/ABSOLUTE/jarvis-data/launchd.stderr.log</string>
+</dict>
+</plist>

@@ -1,0 +1,25 @@
+{
+  "source_id": "positive_006",
+  "text": "Jarvis, lower the bedroom temperature.",
+  "category": "positive",
+  "language_type": "English",
+  "split": "holdout",
+  "voice": "Serena",
+  "voice_kind": "system",
+  "tempo": 1.06,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 38
+  },
+  "elapsed_seconds": 1.199,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/positive_006.wav",
+  "audio": "wav/positive_006.wav",
+  "duration_seconds": 3.5269,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "c506fc5ff819db699a5a943c2faecf498643ee78bc682cd3ad227fc992003ad4",
+  "sha256_audio": "526cd99ce6210ef999f4d6282400992669febf624a5ec76a245d050a3e6bc998"
+}

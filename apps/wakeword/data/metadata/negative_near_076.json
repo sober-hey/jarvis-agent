@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_near_076",
+  "text": "The harvest report is ready.",
+  "category": "negative_near",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Serena",
+  "voice_kind": "system",
+  "tempo": 1.06,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 28
+  },
+  "elapsed_seconds": 0.877,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_near_076.wav",
+  "audio": "wav/negative_near_076.wav",
+  "duration_seconds": 2.1081,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "8d250494027134e4243b37337cbb3cd4e47ac91bb3d2220dd58403dec649d357",
+  "sha256_audio": "3e41bca13eb1dc9ff2273b07fb2825050ebf55272d49c5d5c52ac517d22d9a84"
+}

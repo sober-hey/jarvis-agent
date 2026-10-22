@@ -1,0 +1,25 @@
+{
+  "source_id": "positive_013",
+  "text": "Jarvis, check the front door camera.",
+  "category": "positive",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Chelsie",
+  "voice_kind": "system",
+  "tempo": 1.06,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 36
+  },
+  "elapsed_seconds": 1.289,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/positive_013.wav",
+  "audio": "wav/positive_013.wav",
+  "duration_seconds": 3.5451,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "c8882f1b3e8ce612c8226dc9edfb1d35060b253a2d1776a5f14b5d56d360bbec",
+  "sha256_audio": "2b133e869aab95015408d84c30ffe35bb9ef7b5fdd40883911ac9fff9527251d"
+}

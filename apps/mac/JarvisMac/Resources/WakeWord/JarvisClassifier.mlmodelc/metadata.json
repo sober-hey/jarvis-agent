@@ -1,0 +1,68 @@
+[
+  {
+    "metadataOutputVersion" : "3.0",
+    "shortDescription" : "Offline Jarvis wake-word JarvisClassifier; openWakeWord-derived frontend; personal noncommercial use only.",
+    "outputSchema" : [
+      {
+        "hasShapeFlexibility" : "0",
+        "isOptional" : "0",
+        "dataType" : "Float32",
+        "formattedType" : "MultiArray (Float32 1 × 1)",
+        "shortDescription" : "",
+        "shape" : "[1, 1]",
+        "name" : "confidence",
+        "type" : "MultiArray"
+      }
+    ],
+    "storagePrecision" : "Float32",
+    "modelParameters" : [
+
+    ],
+    "author" : "JARVIS project; frontend weights dscripka\/openWakeWord \/ Google speech_embedding",
+    "specificationVersion" : 7,
+    "license" : "Frontend: see research\/RESEARCH.md; personal noncommercial only pending upstream model licence clarification.",
+    "mlProgramOperationTypeHistogram" : {
+      "Ios16.relu" : 2,
+      "Ios16.linear" : 3,
+      "Ios16.sigmoid" : 1,
+      "Ios16.reshape" : 1,
+      "Ios16.layerNorm" : 2
+    },
+    "computePrecision" : "Mixed (Float32, Int32)",
+    "stateSchema" : [
+
+    ],
+    "isUpdatable" : "0",
+    "availability" : {
+      "macOS" : "13.0",
+      "tvOS" : "16.0",
+      "visionOS" : "1.0",
+      "watchOS" : "9.0",
+      "iOS" : "16.0",
+      "macCatalyst" : "16.0"
+    },
+    "modelType" : {
+      "name" : "MLModelType_mlProgram"
+    },
+    "inputSchema" : [
+      {
+        "hasShapeFlexibility" : "0",
+        "isOptional" : "0",
+        "dataType" : "Float32",
+        "formattedType" : "MultiArray (Float32 1 × 16 × 96)",
+        "shortDescription" : "",
+        "shape" : "[1, 16, 96]",
+        "name" : "features",
+        "type" : "MultiArray"
+      }
+    ],
+    "userDefinedMetadata" : {
+      "com.github.apple.coremltools.conversion_date" : "2026-10-20",
+      "com.github.apple.coremltools.source" : "torch==2.14.1",
+      "com.github.apple.coremltools.version" : "9.0",
+      "com.github.apple.coremltools.source_dialect" : "TorchScript"
+    },
+    "generatedClassName" : "JarvisClassifier",
+    "method" : "predict"
+  }
+]

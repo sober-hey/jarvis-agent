@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schema_version": 1,
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "operation_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "observation": {
+      "enum": [
+        "EXPECTED_EFFECT_PRESENT",
+        "TARGET_ABSENT",
+        "CONFLICTING_EFFECT_PRESENT",
+        "INSUFFICIENT_EVIDENCE"
+      ]
+    },
+    "decision": {
+      "enum": [
+        "VERIFY",
+        "RETRY_SAFE",
+        "BLOCK",
+        "FAIL"
+      ]
+    },
+    "reason_code": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "operation_id",
+    "observation",
+    "decision",
+    "reason_code",
+    "evidence"
+  ],
+  "additionalProperties": false
+}

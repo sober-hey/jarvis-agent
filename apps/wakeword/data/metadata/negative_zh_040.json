@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_zh_040",
+  "text": "播放我的晚间歌单。",
+  "category": "negative_zh",
+  "language_type": "Chinese",
+  "split": "calibration",
+  "voice": "Cherry",
+  "voice_kind": "system",
+  "tempo": 0.94,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 17
+  },
+  "elapsed_seconds": 0.884,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_zh_040.wav",
+  "audio": "wav/negative_zh_040.wav",
+  "duration_seconds": 1.6039,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "8bd9cb1c0bcd67cbf219d5b46fcb11a0153d7503000d621cd3240a128d5c9a04",
+  "sha256_audio": "55139284a8d5dded01588452cea721383677d793a1372d07e63ac02bbbc97c9e"
+}

@@ -1,0 +1,25 @@
+{
+  "source_id": "positive_021",
+  "text": "Jarvis, begin recording this note.",
+  "category": "positive",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Serena",
+  "voice_kind": "system",
+  "tempo": 1.06,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 34
+  },
+  "elapsed_seconds": 76.135,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/positive_021.wav",
+  "audio": "wav/positive_021.wav",
+  "duration_seconds": 2.5645,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "cc0abdd08bd0a3b7a0fd62e5dd39a5734df5500cf22b8da839e5bcaf2f838dea",
+  "sha256_audio": "128dbf28ce6c0afc16d60b72b36db50bead55ed7dbab75abdea0b9a8d915a423"
+}

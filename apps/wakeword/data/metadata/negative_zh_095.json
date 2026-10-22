@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_zh_095",
+  "text": "打开卧室的加湿器。",
+  "category": "negative_zh",
+  "language_type": "Chinese",
+  "split": "calibration",
+  "voice": "Cherry",
+  "voice_kind": "system",
+  "tempo": 0.94,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 17
+  },
+  "elapsed_seconds": 0.813,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_zh_095.wav",
+  "audio": "wav/negative_zh_095.wav",
+  "duration_seconds": 1.8641,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "8746c5a19bbe407288c592d3586f017c9f9ec5718e8b0ad7df99917e3ed7fe7c",
+  "sha256_audio": "b294ba9c86d39444b1eed4a374ca1a00ef5452d0da0ac2567e2132eac5d2563b"
+}

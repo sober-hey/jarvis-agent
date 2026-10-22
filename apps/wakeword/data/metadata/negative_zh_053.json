@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_zh_053",
+  "text": "晚饭后提醒我取快递。",
+  "category": "negative_zh",
+  "language_type": "Chinese",
+  "split": "calibration",
+  "voice": "Chelsie",
+  "voice_kind": "system",
+  "tempo": 1.0,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 19
+  },
+  "elapsed_seconds": 1.076,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_zh_053.wav",
+  "audio": "wav/negative_zh_053.wav",
+  "duration_seconds": 2.4,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "7be46bf4895ad06ef1e8b8ce13443318d4070623f52c28c60d1d4a1fd3b953d1",
+  "sha256_audio": "14637d493f61b4d793a92b87f27e38794c939096558136dc515e0f5a43c93e2f"
+}

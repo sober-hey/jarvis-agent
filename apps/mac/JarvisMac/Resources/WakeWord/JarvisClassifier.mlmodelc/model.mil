@@ -1,0 +1,29 @@
+program(1.0)
+[buildInfo = dict<tensor<string, []>, tensor<string, []>>({{"coremlc-component-MIL", "3600.16.1"}, {"coremlc-version", "3600.25.1"}, {"coremltools-component-torch", "2.14.1"}, {"coremltools-source-dialect", "TorchScript"}, {"coremltools-version", "9.0"}})]
+{
+    func main<ios16>(tensor<fp32, [1, 16, 96]> features) {
+            tensor<fp32, [128]> net_1_bias = const()[name = tensor<string, []>("net_1_bias"), val = tensor<fp32, [128]>(BLOBFILE(path = tensor<string, []>("@model_path/weights/weight.bin"), offset = tensor<uint64, []>(64)))];
+            tensor<fp32, [128, 1536]> net_1_weight = const()[name = tensor<string, []>("net_1_weight"), val = tensor<fp32, [128, 1536]>(BLOBFILE(path = tensor<string, []>("@model_path/weights/weight.bin"), offset = tensor<uint64, []>(640)))];
+            tensor<fp32, [128]> net_2_bias = const()[name = tensor<string, []>("net_2_bias"), val = tensor<fp32, [128]>(BLOBFILE(path = tensor<string, []>("@model_path/weights/weight.bin"), offset = tensor<uint64, []>(787136)))];
+            tensor<fp32, [128]> net_2_weight = const()[name = tensor<string, []>("net_2_weight"), val = tensor<fp32, [128]>(BLOBFILE(path = tensor<string, []>("@model_path/weights/weight.bin"), offset = tensor<uint64, []>(787712)))];
+            tensor<fp32, [128]> net_4_bias = const()[name = tensor<string, []>("net_4_bias"), val = tensor<fp32, [128]>(BLOBFILE(path = tensor<string, []>("@model_path/weights/weight.bin"), offset = tensor<uint64, []>(788288)))];
+            tensor<fp32, [128, 128]> net_4_weight = const()[name = tensor<string, []>("net_4_weight"), val = tensor<fp32, [128, 128]>(BLOBFILE(path = tensor<string, []>("@model_path/weights/weight.bin"), offset = tensor<uint64, []>(788864)))];
+            tensor<fp32, [128]> net_5_bias = const()[name = tensor<string, []>("net_5_bias"), val = tensor<fp32, [128]>(BLOBFILE(path = tensor<string, []>("@model_path/weights/weight.bin"), offset = tensor<uint64, []>(854464)))];
+            tensor<fp32, [128]> net_5_weight = const()[name = tensor<string, []>("net_5_weight"), val = tensor<fp32, [128]>(BLOBFILE(path = tensor<string, []>("@model_path/weights/weight.bin"), offset = tensor<uint64, []>(855040)))];
+            tensor<fp32, [1]> net_7_bias = const()[name = tensor<string, []>("net_7_bias"), val = tensor<fp32, [1]>([-0x1.e80558p-8])];
+            tensor<fp32, [1, 128]> net_7_weight = const()[name = tensor<string, []>("net_7_weight"), val = tensor<fp32, [1, 128]>(BLOBFILE(path = tensor<string, []>("@model_path/weights/weight.bin"), offset = tensor<uint64, []>(855616)))];
+            tensor<fp32, []> var_4 = const()[name = tensor<string, []>("op_4"), val = tensor<fp32, []>(0x1.4f8b58p-17)];
+            tensor<int32, [2]> concat_0 = const()[name = tensor<string, []>("concat_0"), val = tensor<int32, [2]>([1, 1536])];
+            tensor<fp32, [1, 1536]> input_1 = reshape(shape = concat_0, x = features)[name = tensor<string, []>("input_1")];
+            tensor<fp32, [1, 128]> input_3 = linear(bias = net_1_bias, weight = net_1_weight, x = input_1)[name = tensor<string, []>("linear_0")];
+            tensor<int32, [1]> input_5_axes_0 = const()[name = tensor<string, []>("input_5_axes_0"), val = tensor<int32, [1]>([-1])];
+            tensor<fp32, [1, 128]> input_5 = layer_norm(axes = input_5_axes_0, beta = net_2_bias, epsilon = var_4, gamma = net_2_weight, x = input_3)[name = tensor<string, []>("input_5")];
+            tensor<fp32, [1, 128]> input_7 = relu(x = input_5)[name = tensor<string, []>("input_7")];
+            tensor<fp32, [1, 128]> input_9 = linear(bias = net_4_bias, weight = net_4_weight, x = input_7)[name = tensor<string, []>("linear_1")];
+            tensor<int32, [1]> input_11_axes_0 = const()[name = tensor<string, []>("input_11_axes_0"), val = tensor<int32, [1]>([-1])];
+            tensor<fp32, [1, 128]> input_11 = layer_norm(axes = input_11_axes_0, beta = net_5_bias, epsilon = var_4, gamma = net_5_weight, x = input_9)[name = tensor<string, []>("input_11")];
+            tensor<fp32, [1, 128]> input_13 = relu(x = input_11)[name = tensor<string, []>("input_13")];
+            tensor<fp32, [1, 1]> input = linear(bias = net_7_bias, weight = net_7_weight, x = input_13)[name = tensor<string, []>("linear_2")];
+            tensor<fp32, [1, 1]> confidence = sigmoid(x = input)[name = tensor<string, []>("op_33")];
+        } -> (confidence);
+}

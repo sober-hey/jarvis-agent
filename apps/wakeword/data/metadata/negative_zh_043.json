@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_zh_043",
+  "text": "请把窗帘打开一半。",
+  "category": "negative_zh",
+  "language_type": "Chinese",
+  "split": "holdout",
+  "voice": "Chelsie",
+  "voice_kind": "system",
+  "tempo": 0.94,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 17
+  },
+  "elapsed_seconds": 0.823,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_zh_043.wav",
+  "audio": "wav/negative_zh_043.wav",
+  "duration_seconds": 1.9459,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "24a9e4475a454474e748393dc8f4e442abccd8e8a7e1e7ee1e8c2bb34df068c0",
+  "sha256_audio": "ea3443a1e3509677d826faea451fbfea6a6977c1c3f47b639bfcdb233e85cc6e"
+}

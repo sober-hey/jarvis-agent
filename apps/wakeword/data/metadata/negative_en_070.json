@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_en_070",
+  "text": "Set an alarm for seven thirty.",
+  "category": "negative_en",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Cherry",
+  "voice_kind": "system",
+  "tempo": 1.06,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 30
+  },
+  "elapsed_seconds": 0.955,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_en_070.wav",
+  "audio": "wav/negative_en_070.wav",
+  "duration_seconds": 1.8853,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "59d9cf82869da1be3991a68bfc8b5cd10875b6ee637a8d819391b5a7b394deeb",
+  "sha256_audio": "9d12f3b3fb01ee44868928d75adffe35605c408360bbc83fcdaf9408c456401c"
+}

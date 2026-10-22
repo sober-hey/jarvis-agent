@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schema_version": 1,
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "snapshot_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "files": {
+      "type": "array",
+      "maxItems": 1000,
+      "items": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "schema_version": 1,
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "size_bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        },
+        "required": [
+          "path",
+          "size_bytes",
+          "sha256"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "file_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000
+    },
+    "total_bytes": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 20971520
+    }
+  },
+  "required": [
+    "schema_version",
+    "snapshot_id",
+    "files",
+    "file_count",
+    "total_bytes"
+  ],
+  "additionalProperties": false
+}

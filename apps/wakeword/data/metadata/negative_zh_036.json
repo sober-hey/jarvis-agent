@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_zh_036",
+  "text": "帮我读一下最新的消息。",
+  "category": "negative_zh",
+  "language_type": "Chinese",
+  "split": "calibration",
+  "voice": "Serena",
+  "voice_kind": "system",
+  "tempo": 1.06,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 21
+  },
+  "elapsed_seconds": 0.855,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_zh_036.wav",
+  "audio": "wav/negative_zh_036.wav",
+  "duration_seconds": 1.6566,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "bf5574a93724434219425fb2da1476267949ae35942e2f4ffc2900e747b52cdd",
+  "sha256_audio": "8b98a1206776bbdfd1c6a6287a7d1c9707e7635c8f4a948ce3fe5c1515cd6910"
+}

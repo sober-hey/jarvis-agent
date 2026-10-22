@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark"><title>JARVIS</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" defer></script><script src="./memory.js" defer></script><script src="./tasks.js" defer></script><script src="./avatar.js" defer></script>
+</head>
+<body>
+  <main>
+    <header><div class="brand">JARVIS</div><div class="connection-row"><span id="connection" role="status">服务尚未连接</span><button id="reconnect" type="button" aria-label="检查连接">↻</button></div></header>
+    <section id="avatar-stage" aria-label="JARVIS 展示区">
+      <div id="avatar-figure" role="img" aria-label="JARVIS 动态形象（占位渲染）" data-activity="idle" data-action="normal" data-connection="disconnected">
+        <div class="avatar-halo" aria-hidden="true"></div>
+        <div class="avatar-body" aria-hidden="true">
+          <div class="avatar-shoulders"></div>
+          <div class="avatar-neck"></div>
+          <div class="avatar-head">
+            <div class="avatar-brow avatar-brow-left"></div><div class="avatar-brow avatar-brow-right"></div>
+            <div class="avatar-eye avatar-eye-left"><span class="avatar-pupil"></span></div>
+            <div class="avatar-eye avatar-eye-right"><span class="avatar-pupil"></span></div>
+            <div class="avatar-nose"></div><div class="avatar-mouth"></div>
+          </div>
+        </div>
+      </div>
+      <p id="avatar-status" role="status" aria-live="polite" aria-atomic="true">形象信号未连接</p>
+    </section>
+    <section id="messages" aria-label="连续记录" aria-live="polite" role="log"></section>
+    <form id="composer" novalidate>
+      <button id="composer-toggle" type="button" aria-expanded="false" aria-controls="composer-panel" title="输入">⌨</button>
+      <div id="composer-panel" hidden><label for="prompt">输入</label><textarea id="prompt" maxlength="16000" rows="2" placeholder="写一句话…" aria-describedby="notice"></textarea><div class="composer-footer"><span>Enter 发送 · Shift + Enter 换行</span><div><button id="stop" type="button" hidden>停止</button><button id="query-result" type="button" hidden>查询</button><button id="new-request" type="button" hidden>放弃</button><button id="send" type="submit">发送</button></div></div></div>
+      <p id="notice" role="status" aria-live="polite"></p>
+    </form>
+    <section id="file-tasks" aria-label="资料任务"><h2>资料任务</h2><p>上传后由当前配置的真实模型处理。</p><form id="task-form"><label for="task-file">资料文件</label><input id="task-file" type="file" accept=".txt,.md,.pdf" required><label for="task-processing">处理类型</label><select id="task-processing"><option value="summary">摘要</option><option value="translate">翻译</option><option value="extract">结构化提取</option></select><label for="task-instruction">处理要求</label><input id="task-instruction" maxlength="4096" value="用中文忠实摘要，保留关键数字与不确定性" required><button id="task-submit" type="submit">上传并处理</button></form><p id="task-notice" role="status"></p><div id="task-list"></div></section>
+    <section id="long-term-memory" aria-label="长期记忆"><h2>长期记忆</h2><button id="memory-refresh" type="button">刷新记忆</button><p id="memory-notice" role="status"></p><div id="memory-list"></div></section>
+  </main>
+  <noscript>请启用 JavaScript。</noscript>
+</body>
+</html>

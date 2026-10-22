@@ -1,0 +1,25 @@
+{
+  "source_id": "positive_010",
+  "text": "Jarvis, add milk to my shopping list.",
+  "category": "positive",
+  "language_type": "English",
+  "split": "holdout",
+  "voice": "Cherry",
+  "voice_kind": "system",
+  "tempo": 1.0,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 37
+  },
+  "elapsed_seconds": 1.112,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/positive_010.wav",
+  "audio": "wav/positive_010.wav",
+  "duration_seconds": 3.04,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "76b8d5e1f923c8ac3d400dfce6c6e297c6af6567395061e94f2291ccafd05d6a",
+  "sha256_audio": "669011854413711322ac574684f0a791e4620c0ff4a35a432d484e2b6bfa071a"
+}

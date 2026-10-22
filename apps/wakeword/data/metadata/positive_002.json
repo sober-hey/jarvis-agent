@@ -1,0 +1,25 @@
+{
+  "source_id": "positive_002",
+  "text": "Jarvis, what is on my schedule today?",
+  "category": "positive",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Ethan",
+  "voice_kind": "system",
+  "tempo": 1.0,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 37
+  },
+  "elapsed_seconds": 1.128,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/positive_002.wav",
+  "audio": "wav/positive_002.wav",
+  "duration_seconds": 2.8,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "2d9539cb762dda274c8bcf5e53722ee8a5319f3928df16b1fc0a8615d72a4cbd",
+  "sha256_audio": "764effaecf9be0c14c0868110a3c5717837a5f095357b668ac64711c77ae2b83"
+}

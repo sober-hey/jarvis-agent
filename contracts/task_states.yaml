@@ -1,0 +1,22 @@
+schema_version: 1
+status: DRAFT
+object: TASK
+states:
+  - CREATED
+  - READY
+  - RUNNING
+  - VERIFYING
+  - NEEDS_RECONCILIATION
+  - RETRY_WAIT
+  - BLOCKED
+  - SUCCEEDED
+  - FAILED
+  - CANCELED
+terminal:
+  - SUCCEEDED
+  - FAILED
+  - CANCELED
+notes:
+  - 状态转换必须通过统一服务
+  - 状态更新与审计事件必须同事务
+  - 终态不得重新打开

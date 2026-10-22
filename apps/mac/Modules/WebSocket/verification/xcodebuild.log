@@ -1,0 +1,19 @@
+Writing result bundle at path:
+	/Volumes/扩展硬盘/hermes/.hermes/cache/scratch/jarvis-websocket-final.xcresult
+
+Testing started
+2026-10-20 17:28:13.070 xcodebuild[85728:11940146] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:macOS, arch:arm64, id:00008132-001128DC1AF8801C, name:My Mac }
+{ platform:macOS, arch:arm64, variant:Mac Catalyst, id:00008132-001128DC1AF8801C, name:My Mac }
+{ platform:macOS, arch:arm64, variant:DriverKit, id:00008132-001128DC1AF8801C, name:My Mac }
+{ platform:macOS, arch:arm64, variant:Designed for [iPad,iPhone], id:00008132-001128DC1AF8801C, name:My Mac }
+2026-10-20 17:28:16.347 xcodebuild[85728:11940168]  DVTAssertions: Warning in IDEFrameworks/IDEFoundation/Execution/LaunchSystem/IDELaunchSession.m:395
+Details:  setRunnablePIDWithDiagnostics:logSection:andCompletionHandler: called without a completion handler - blocking until diagnostics setup completes. Callers should migrate to using a completion handler for better performance.
+Object:   <IDELaunchSession: 0x77e8100d80>
+Method:   -setRunnablePIDWithDiagnostics:logSection:andCompletionHandler:
+Thread:   <NSThread: 0x77e7d0e300>{number = 4, name = (null)}
+Please file a bug at https://feedbackassistant.apple.com with this warning message and any useful information you can provide.
+2026-10-20 17:28:18.872 xcodebuild[85728:11940146] [MT] IDETestOperationsObserverDebug: 2.600 elapsed -- Testing started completed.
+2026-10-20 17:28:18.872 xcodebuild[85728:11940146] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-20 17:28:18.872 xcodebuild[85728:11940146] [MT] IDETestOperationsObserverDebug: 2.600 sec, +2.600 sec -- end

@@ -1,0 +1,44 @@
+{
+  "items": [
+    {
+      "source_id": "silence",
+      "category": "stress_silence",
+      "split": "holdout",
+      "audio": "stress/silence.wav",
+      "error": null,
+      "synthetic": true,
+      "seconds": 600,
+      "sha256_audio": "e14ff9e3be3d5257e57c029ea807754eaf22d1104999d69db4ec9e50e7c674d4"
+    },
+    {
+      "source_id": "white_noise",
+      "category": "stress_white_noise",
+      "split": "holdout",
+      "audio": "stress/white_noise.wav",
+      "error": null,
+      "synthetic": true,
+      "seconds": 600,
+      "sha256_audio": "a803c62de34513489241dc680a673fb4d32b7732c2395ae907bb78992bc250ee"
+    },
+    {
+      "source_id": "pink_noise",
+      "category": "stress_pink_noise",
+      "split": "holdout",
+      "audio": "stress/pink_noise.wav",
+      "error": null,
+      "synthetic": true,
+      "seconds": 600,
+      "sha256_audio": "b9dbbfaa623b2431137548af9638153f6c8d7ec190e76cb3f45a2d79a460f946"
+    },
+    {
+      "source_id": "procedural_music",
+      "category": "stress_procedural_music",
+      "split": "holdout",
+      "audio": "stress/procedural_music.wav",
+      "error": null,
+      "synthetic": true,
+      "seconds": 600,
+      "sha256_audio": "c974ce51e1bdc43a550065bceed1a48d9d51a9ec89dcfb56e3803a1691ab5482"
+    }
+  ]
+}

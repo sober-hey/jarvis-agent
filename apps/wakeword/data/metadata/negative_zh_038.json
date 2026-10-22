@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_zh_038",
+  "text": "卧室温度调低两度。",
+  "category": "negative_zh",
+  "language_type": "Chinese",
+  "split": "calibration",
+  "voice": "Chelsie",
+  "voice_kind": "system",
+  "tempo": 1.0,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 17
+  },
+  "elapsed_seconds": 0.887,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_zh_038.wav",
+  "audio": "wav/negative_zh_038.wav",
+  "duration_seconds": 1.92,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "b848f81b6db3aa2d06dcc6bfe1c92bfcf2a7fbc10c719606c366b690060a9dc2",
+  "sha256_audio": "0413256290d15b1b1a725a4d1c03664a0130b5fc5ca6b38496e172c6e87f6c64"
+}

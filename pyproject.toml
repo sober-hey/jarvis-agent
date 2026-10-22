@@ -1,0 +1,57 @@
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "jarvis-kernel"
+version = "0.1.0.dev0"
+description = "JARVIS independent deterministic execution kernel"
+requires-python = ">=3.12,<3.13"
+dependencies = ["pydantic>=2.10,<3", "typer>=0.15,<1"]
+
+# 运行时真实依赖：packaging/ 下的语音网关、搜索、健康分析、声纹、路由校验。
+# 之前只声明了 pydantic/typer，新机器装完跑不起来（例如 ddgs 缺失直接让搜索测试报
+# ModuleNotFoundError）。macOS 专有部分（AppKit/objc，用于 jarvis_ui）放 macos extra。
+[project.optional-dependencies]
+runtime = [
+  "websockets>=15,<17",
+  "httpx>=0.27,<1",
+  "jsonschema>=4.23,<5",
+  "numpy>=2,<3",
+  "pandas>=2.2,<3",
+  "sherpa-onnx>=1.13,<2",
+  "ddgs>=9,<10",
+]
+macos = ["pyobjc-framework-Cocoa>=10,<12"]
+
+[dependency-groups]
+dev = ["pytest>=8.3,<10", "ruff>=0.11,<1", "pyright>=1.1.400,<2", "jsonschema>=4.23,<5", "PyYAML>=6,<7", "types-PyYAML>=6,<7"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/jarvis"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--strict-markers --strict-config"
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+# 语音子系统的 self_evaluate() 里是给人读的自述文字（能力、已知限制、改进方向）。
+# 那些长句拆行后反而难读，且它们是输出内容而不是代码结构，所以这三个文件豁免行长限制。
+# 其它规则照常生效；新增语音模块不要跟着豁免，先按 100 列写。
+[tool.ruff.lint.per-file-ignores]
+"voice/voice.py" = ["E501"]
+"voice/voice_live.py" = ["E501"]
+"voice/voice_port.py" = ["E501"]
+
+[tool.pyright]
+include = ["src", "tests", "scripts/check_environment.py", "scripts/evidence_status.py"]
+pythonVersion = "3.12"
+typeCheckingMode = "strict"
+venvPath = "."
+venv = ".venv"

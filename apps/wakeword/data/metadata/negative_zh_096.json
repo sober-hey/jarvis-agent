@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_zh_096",
+  "text": "请把今天的步数记下来。",
+  "category": "negative_zh",
+  "language_type": "Chinese",
+  "split": "calibration",
+  "voice": "Serena",
+  "voice_kind": "system",
+  "tempo": 1.06,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 21
+  },
+  "elapsed_seconds": 0.996,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_zh_096.wav",
+  "audio": "wav/negative_zh_096.wav",
+  "duration_seconds": 2.2548,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "084a25054b70869dc8fa92d833914744de49499f95ee2448e57f4f4fc634a2a9",
+  "sha256_audio": "f5bebc85a7178da5fca9696f36fc1bc19f784b179c34b5ec445d378ac6e5016f"
+}

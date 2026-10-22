@@ -1,0 +1,25 @@
+{
+  "source_id": "positive_012",
+  "text": "Jarvis, set an alarm for seven thirty.",
+  "category": "positive",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Ethan",
+  "voice_kind": "system",
+  "tempo": 1.0,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 38
+  },
+  "elapsed_seconds": 1.206,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/positive_012.wav",
+  "audio": "wav/positive_012.wav",
+  "duration_seconds": 3.68,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "c320c1f9dd99e0fe9737845dfa91e45f8413eb3ff6d6540d8f08f03bbf1b318b",
+  "sha256_audio": "1854fe8a58547ccdb94b55648985b92c00b322125d7adea3cb6f22db89a32818"
+}

@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_en_065",
+  "text": "Remind me to call my mother at six.",
+  "category": "negative_en",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Cherry",
+  "voice_kind": "system",
+  "tempo": 1.0,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 35
+  },
+  "elapsed_seconds": 1.086,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_en_065.wav",
+  "audio": "wav/negative_en_065.wav",
+  "duration_seconds": 2.16,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "6f005122c9a2e74528d364b6be509de776c0ff9ef109a14bfe8b816c36df72c7",
+  "sha256_audio": "285819c44d9af3a87b5f1edb2d9029fba40fa4e09f54fc2cf5e4c8892efee059"
+}

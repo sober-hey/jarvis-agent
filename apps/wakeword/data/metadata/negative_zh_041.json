@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_zh_041",
+  "text": "现在距离日落还有多久？",
+  "category": "negative_zh",
+  "language_type": "Chinese",
+  "split": "calibration",
+  "voice": "Serena",
+  "voice_kind": "system",
+  "tempo": 1.06,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 21
+  },
+  "elapsed_seconds": 1.217,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_zh_041.wav",
+  "audio": "wav/negative_zh_041.wav",
+  "duration_seconds": 2.7941,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "1bbd8b1558b8a4310260c7ef4c0afe1673cfc6fbac7bdb945d3525583d1c519b",
+  "sha256_audio": "d08c53ae83e437777a31c62fe0a533f83522e6d00780ab12035607ef07ced61f"
+}

@@ -1,0 +1,25 @@
+{
+  "source_id": "positive_019",
+  "text": "Jarvis, what is the battery level?",
+  "category": "positive",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "cosyvoice-v3.5-flash-jarvis-f7bec1631ddf4725841995ba9c711376",
+  "voice_kind": "clone",
+  "tempo": 0.94,
+  "model": "cosyvoice-v3.5-flash",
+  "usage": {
+    "characters": 34
+  },
+  "elapsed_seconds": 2.221,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/positive_019.mp3",
+  "audio": "wav/positive_019.wav",
+  "duration_seconds": 2.5696,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "d16ea4c0ec9f7fb33e22513610c975313a4d7c15672a95631902d2ab2cc49400",
+  "sha256_audio": "e03f5e529d1fa4296f15061bef7a9ba0f1b600df5e6e9d3f73006bc2a2deae04"
+}

@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_zh_046",
+  "text": "把手机调成静音模式。",
+  "category": "negative_zh",
+  "language_type": "Chinese",
+  "split": "calibration",
+  "voice": "Serena",
+  "voice_kind": "system",
+  "tempo": 0.94,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 19
+  },
+  "elapsed_seconds": 0.831,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_zh_046.wav",
+  "audio": "wav/negative_zh_046.wav",
+  "duration_seconds": 2.0334,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "b6b74ed6f2ff349c14388da8b3a3036eb393b0ebaaf8ce32c4f407a1f806418c",
+  "sha256_audio": "921b53742ce107c4827a4e68e4fe40bac2c20b1b7e7003f70c922d34ac6a696b"
+}

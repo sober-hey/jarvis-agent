@@ -1,0 +1,25 @@
+{
+  "source_id": "control_032",
+  "text": "Hey Jarvis, check the front door camera.",
+  "category": "control",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Ethan",
+  "voice_kind": "system",
+  "tempo": 0.94,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 40
+  },
+  "elapsed_seconds": 1.02,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/control_032.wav",
+  "audio": "wav/control_032.wav",
+  "duration_seconds": 2.4613,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "1fda184b7bd6e96df647a260e08bebbbf0235be499699b0a239e2a92ccc7840e",
+  "sha256_audio": "019fd959985ffb46d4ee79c6cfe1198a7f384d6654d9feaf4bdb6137edafa7e3"
+}

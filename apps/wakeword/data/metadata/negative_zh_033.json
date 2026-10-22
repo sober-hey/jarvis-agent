@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_zh_033",
+  "text": "今天早上请打开学习计时器。",
+  "category": "negative_zh",
+  "language_type": "Chinese",
+  "split": "calibration",
+  "voice": "Chelsie",
+  "voice_kind": "system",
+  "tempo": 0.94,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 25
+  },
+  "elapsed_seconds": 0.983,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_zh_033.wav",
+  "audio": "wav/negative_zh_033.wav",
+  "duration_seconds": 2.7945,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "e886fa0c855012eb2fb60258b0ca2cdc9aab9cb5205136e2407fb6c0e01b2ffb",
+  "sha256_audio": "aa4ecabfb81cd437adac04d764e086196758e6b03988452433a33e8525818a4b"
+}

@@ -1,0 +1,122 @@
+{
+  "provenance": {
+    "response_id": "47c45ab127c5440e94ef97b1c3324bad",
+    "note": "Fixed real response shape. Personal text/identifiers replaced; no private context stored. Partial-matrix test explicitly deletes rows and expands synthetic catalog."
+  },
+  "allowed_refs": [
+    "evidence-1",
+    "evidence-2",
+    "evidence-3",
+    "evidence-4",
+    "evidence-5"
+  ],
+  "response": {
+    "relevance": [
+      {
+        "belief_id": "belief-1",
+        "capability_id": "capability-6",
+        "score": 0.3,
+        "reason": "Synthetic source relevance explanation"
+      },
+      {
+        "belief_id": "belief-1",
+        "capability_id": "capability-5",
+        "score": 0.15,
+        "reason": "Synthetic source relevance explanation"
+      },
+      {
+        "belief_id": "belief-1",
+        "capability_id": "capability-4",
+        "score": 0.4,
+        "reason": "Synthetic source relevance explanation"
+      },
+      {
+        "belief_id": "belief-1",
+        "capability_id": "capability-2",
+        "score": 0.45,
+        "reason": "Synthetic source relevance explanation"
+      },
+      {
+        "belief_id": "belief-1",
+        "capability_id": "capability-3",
+        "score": 0.25,
+        "reason": "Synthetic source relevance explanation"
+      },
+      {
+        "belief_id": "belief-1",
+        "capability_id": "capability-1",
+        "score": 0.05,
+        "reason": "Synthetic source relevance explanation"
+      }
+    ],
+    "scheduler_question": null,
+    "thoughts": [
+      {
+        "id": "t1",
+        "kind": "inference",
+        "text": "Synthetic retained thought 1",
+        "refs": [
+          "evidence-1",
+          "evidence-2"
+        ],
+        "question": null
+      },
+      {
+        "id": "t2",
+        "kind": "review",
+        "text": "Synthetic retained thought 2",
+        "refs": [
+          "evidence-2",
+          "evidence-3"
+        ],
+        "question": null
+      },
+      {
+        "id": "t3",
+        "kind": "association",
+        "text": "Synthetic retained thought 3",
+        "refs": [
+          "evidence-4"
+        ],
+        "question": null
+      },
+      {
+        "id": "t4",
+        "kind": "plan",
+        "text": "Synthetic retained thought 4",
+        "refs": [
+          "evidence-4",
+          "evidence-5"
+        ],
+        "question": null
+      }
+    ],
+    "resolved_questions": [],
+    "belief_updates": [
+      {
+        "origin_id": "evidence-1",
+        "belief_id": null,
+        "subject": "Synthetic subject",
+        "attribute": "Synthetic attribute",
+        "value": "Synthetic value",
+        "importance": 0.4,
+        "conflict": false
+      }
+    ],
+    "knowledge_gaps": [
+      {
+        "subject": "Synthetic subject",
+        "attribute": "Synthetic attribute",
+        "importance": 0.6,
+        "reason": "Synthetic gap reason"
+      },
+      {
+        "subject": "Synthetic subject",
+        "attribute": "Synthetic attribute",
+        "importance": 0.55,
+        "reason": "Synthetic gap reason"
+      }
+    ],
+    "outreach_intents": []
+  }
+}

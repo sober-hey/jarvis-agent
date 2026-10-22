@@ -1,0 +1,25 @@
+{
+  "tests": [
+    {
+      "test": "actual_voice_gateway_protocol",
+      "result": "passed",
+      "brain_boundary": "fixture_only_no_timeline_writes"
+    },
+    {
+      "test": "30_second_listener_outage",
+      "result": "passed",
+      "reconnected_after_seconds": 38.025,
+      "uploads_received": 2
+    },
+    {
+      "test": "default_idle_30_second_ping",
+      "result": "passed",
+      "first_ping_seconds": 31.056
+    }
+  ],
+  "count": 3,
+  "source_sha256": {
+    "Sources/JarvisWebSocket/StarscreamTransport.swift": "0748587bbe345d40a659b0708b1a0224265713a21ee7bbb09ed5cf4d3a5b04b9",
+    "Sources/JarvisWebSocket/JarvisWebSocketClient.swift": "6e371906364ae125be6c68d08a2ad3c53092845ba2d796656bdc51170be05f96"
+  }
+}

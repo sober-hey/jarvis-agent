@@ -1,0 +1,18 @@
+{
+  "commit": "d97007c32d6340f7ba79ac1dfb5773cc00846448",
+  "tree_sha256": "ce0a733f5593b4ab45637f353050733999610dc033641f35a02b2e51595598b7",
+  "file_count": 18556,
+  "algorithm": "sha256(sorted relative UTF-8 path + NUL + sha256(file bytes))",
+  "required_metadata": [
+    "openai",
+    "rich",
+    "pydantic",
+    "prompt-toolkit",
+    "python-dotenv",
+    "httpx",
+    "packaging",
+    "fastapi",
+    "uvicorn"
+  ],
+  "scope": "core package metadata presence only, not complete dependency acceptance"
+}

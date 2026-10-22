@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+    <key>CFBundleDevelopmentRegion</key><string>zh_CN</string>
+    <key>CFBundleExecutable</key><string>Jarvis</string>
+    <key>CFBundleIdentifier</key><string>com.jarvis.macos</string>
+    <key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
+    <key>CFBundleName</key><string>Jarvis</string>
+    <key>CFBundleDisplayName</key><string>JARVIS</string>
+    <key>CFBundlePackageType</key><string>APPL</string>
+    <key>CFBundleShortVersionString</key><string>1.0.0</string>
+    <key>CFBundleVersion</key><string>1</string>
+    <key>LSMinimumSystemVersion</key><string>13.0</string>
+    <key>LSUIElement</key><true/>
+    <key>NSHighResolutionCapable</key><true/>
+    <key>NSPrincipalClass</key><string>NSApplication</string>
+    <key>NSMicrophoneUsageDescription</key><string>JARVIS 在你启用语音模块后使用麦克风检测唤醒词并接收语音。</string>
+    <key>NSAccessibilityUsageDescription</key><string>JARVIS 在你授权后使用辅助功能与桌面应用交互。</string>
+    <key>NSAudioCaptureUsageDescription</key><string>仅当你启用系统音频采集功能时，JARVIS 才请求读取系统音频。</string>
+    <key>NSHumanReadableCopyright</key><string>Copyright © 2026 JARVIS contributors.</string>
+</dict></plist>

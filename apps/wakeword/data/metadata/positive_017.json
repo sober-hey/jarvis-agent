@@ -1,0 +1,25 @@
+{
+  "source_id": "positive_017",
+  "text": "Jarvis, find my notes about the meeting.",
+  "category": "positive",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Ethan",
+  "voice_kind": "system",
+  "tempo": 1.06,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 40
+  },
+  "elapsed_seconds": 1.018,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/positive_017.wav",
+  "audio": "wav/positive_017.wav",
+  "duration_seconds": 2.3388,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "1111fb6013b5a7e4fcbcede7517e5694138b42f5ef5f11ac488239096cdbc55d",
+  "sha256_audio": "b38ea76bf0f40a1b47f3a994726ca67cd2b9c74631b6fd68e3490f03bab35eb9"
+}

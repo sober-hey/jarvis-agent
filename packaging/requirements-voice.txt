@@ -1,0 +1,9 @@
+# voice.py needs only the Python standard library in the project .venv.
+# No packages were installed for voice-v1-20261015.
+# Existing read-only external ASR runtime used for acceptance:
+# /Volumes/扩展硬盘/hermes/lifelog/venv/bin/python
+# sherpa-onnx==1.13.8
+# numpy==2.5.4
+# Existing executables: macOS say; ffmpeg 9.0.1.
+# Models: existing lifelog SenseVoice int8 2024-07-17 and Paraformer int8.
+# These comments are inventory, not implicit pip/model download instructions.

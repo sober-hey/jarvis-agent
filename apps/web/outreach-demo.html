@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JARVIS · 来信</title>
+<style>
+:root{color-scheme:dark;font:16px/1.6 system-ui,sans-serif;background:#10151b;color:#e9eef4}body{max-width:760px;margin:64px auto;padding:0 24px}header{display:flex;align-items:center;justify-content:space-between;gap:20px}h1{font-size:28px;font-weight:550;letter-spacing:.04em}#status{color:#9db1c5;font-size:14px}p{color:#b5c0cc}article{margin:20px 0;padding:24px;border:1px solid #2b3949;border-radius:12px;background:#17202b}article h2{font-size:16px;margin:0 0 12px}article time{font-size:13px;color:#98adc1}.text{white-space:pre-wrap;overflow-wrap:anywhere;margin:12px 0}button{color:#b9cce0;background:transparent;border:1px solid #40546a;border-radius:6px;padding:6px 12px;cursor:pointer}.high{border-left:3px solid #dfbf71}.emergency{border-left:3px solid #ee8e8e}footer{font-size:13px;color:#8b9bab;margin-top:32px}
+</style>
+<header><h1>JARVIS · 来信</h1><span id="status" role="status">正在连接…</span></header>
+<p id="empty">有话想找你时，消息会出现在这里。</p>
+<main id="messages" aria-live="polite" aria-relevant="additions"></main>
+<footer>本地演示页 · 邮件保存在发件箱，本轮不实际发送。 <button id="disconnect" type="button">断开连接</button></footer>
+<script>
+'use strict';
+const statusEl = document.querySelector('#status');
+const messagesEl = document.querySelector('#messages');
+const emptyEl = document.querySelector('#empty');
+const seen = new Set();
+const stream = new EventSource('/events');
+stream.onopen = () => { statusEl.textContent = '已连接'; };
+stream.onerror = () => { statusEl.textContent = '连接中断，正在重连…'; };
+stream.addEventListener('outreach', event => {
+  let item;
+  try { item = JSON.parse(event.data); } catch { return; }
+  if (!Number.isInteger(item.id) || seen.has(item.id) || typeof item.text !== 'string') return;
+  seen.add(item.id);
+  const card = document.createElement('article');
+  if (['high', 'emergency'].includes(item.urgency)) card.className = item.urgency;
+  const title = document.createElement('h2');
+  title.textContent = String(item.reason);
+  const text = document.createElement('div');
+  text.className = 'text';
+  text.textContent = item.text;
+  const time = document.createElement('time');
+  time.dateTime = item.created_at;
+  time.textContent = new Date(item.created_at).toLocaleString('zh-CN', {timeZone: 'Asia/Shanghai', hour12: false});
+  card.append(title, text, time);
+  messagesEl.prepend(card);
+  emptyEl.hidden = true;
+});
+document.querySelector('#disconnect').addEventListener('click', event => {
+  stream.close(); statusEl.textContent = '已断开'; event.currentTarget.disabled = true;
+});
+window.addEventListener('pagehide', () => stream.close(), {once: true});
+</script>
+</html>

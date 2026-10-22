@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_near_090",
+  "text": "The market opens at nine o'clock.",
+  "category": "negative_near",
+  "language_type": "English",
+  "split": "calibration",
+  "voice": "Cherry",
+  "voice_kind": "system",
+  "tempo": 1.0,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 33
+  },
+  "elapsed_seconds": 1.123,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_near_090.wav",
+  "audio": "wav/negative_near_090.wav",
+  "duration_seconds": 2.56,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "88809040f33d833633eafe37ec93da51b721cf66162536a9afffa429367cddb0",
+  "sha256_audio": "45d36e360f425409b1e4d9ad8b4f85433219444db647759fb39af79c1a4a63f3"
+}

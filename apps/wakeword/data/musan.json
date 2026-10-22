@@ -1,0 +1,236 @@
+{
+  "source_url": "https://hf-mirror.com/datasets/corypaik/musan/resolve/main/music/train-00000-of-00010.parquet",
+  "source_sha256": "8fd39253ee799d773f216e95fb5fe60f88230da5d450abf7b3633c3bc3326336",
+  "license": "MUSAN dataset CC BY4, individual music rights in upstream licenses; personal research evaluation only; no music product bundle",
+  "items": [
+    {
+      "source_id": "music-fma-0000",
+      "audio": "musan/music-fma-0000.wav",
+      "category": "musan_music",
+      "split": "holdout",
+      "error": null,
+      "original_path": "music/fma/music-fma-0000.wav",
+      "source": "fma",
+      "seconds": 297.97875,
+      "sha256_audio": "0f7abd39d9a044e89966d3ff5a60ca0ccdedd076546068af2fb4226e9f774afc"
+    },
+    {
+      "source_id": "music-fma-0001",
+      "audio": "musan/music-fma-0001.wav",
+      "category": "musan_music",
+      "split": "holdout",
+      "error": null,
+      "original_path": "music/fma/music-fma-0001.wav",
+      "source": "fma",
+      "seconds": 218.0440625,
+      "sha256_audio": "ff51c346d1b8663ce83991dcfafd3b91ed5611ba4b7f33d5dfd01ee2c26e557b"
+    },
+    {
+      "source_id": "music-fma-0002",
+      "audio": "musan/music-fma-0002.wav",
+      "category": "musan_music",
+      "split": "holdout",
+      "error": null,
+      "original_path": "music/fma/music-fma-0002.wav",
+      "source": "fma",
+      "seconds": 249.54775,
+      "sha256_audio": "86e0ea8e63a2a2a07747cfe711e15a8d86c990a2a0035acdb426dc163bbbd320"
+    },
+    {
+      "source_id": "music-fma-0003",
+      "audio": "musan/music-fma-0003.wav",
+      "category": "musan_music",
+      "split": "holdout",
+      "error": null,
+      "original_path": "music/fma/music-fma-0003.wav",
+      "source": "fma",
+      "seconds": 324.7804375,
+      "sha256_audio": "ebb2ef7dbdf7b42c602531529b328474c284557d7c755ef2ec57c7712b670d20"
+    },
+    {
+      "source_id": "music-fma-0004",
+      "audio": "musan/music-fma-0004.wav",
+      "category": "musan_music",
+      "split": "holdout",
+      "error": null,
+      "original_path": "music/fma/music-fma-0004.wav",
+      "source": "fma",
+      "seconds": 322.29875,
+      "sha256_audio": "c06bdd62189d8d385c31835295b42ed18db4193e561333e1555ca517d7c18026"
+    },
+    {
+      "source_id": "music-fma-0005",
+      "audio": "musan/music-fma-0005.wav",
+      "category": "musan_music",
+      "split": "holdout",
+      "error": null,
+      "original_path": "music/fma/music-fma-0005.wav",
+      "source": "fma",
+      "seconds": 302.4979375,
+      "sha256_audio": "4b1f3667339b53ef52e3365aedae5b7378b4caea2da3a1256a4b1a25eef4b002"
+    },
+    {
+      "source_id": "music-fma-0006",
+      "audio": "musan/music-fma-0006.wav",
+      "category": "musan_music",
+      "split": "holdout",
+      "error": null,
+      "original_path": "music/fma/music-fma-0006.wav",
+      "source": "fma",
+      "seconds": 284.656,
+      "sha256_audio": "23860173298b0bcb78424c2a621d5587b1c3526aaae2b6b3ed7c4bc9f2b90fce"
+    },
+    {
+      "source_id": "music-fma-0007",
+      "audio": "musan/music-fma-0007.wav",
+      "category": "musan_music",
+      "split": "holdout",
+      "error": null,
+      "original_path": "music/fma/music-fma-0007.wav",
+      "source": "fma",
+      "seconds": 283.402,
+      "sha256_audio": "8d642bba3bc8037acc75867c286e04cda23a3a53c3eb8a88d71f7f085cf0bb3d"
+    },
+    {
+      "source_id": "music-fma-0008",
+      "audio": "musan/music-fma-0008.wav",
+      "category": "musan_music",
+      "split": "holdout",
+      "error": null,
+      "original_path": "music/fma/music-fma-0008.wav",
+      "source": "fma",
+      "seconds": 182.308,
+      "sha256_audio": "2d7c1b9a8f72d2dbec1dc7be313fe63392a7fabcf8dd5dc6330061b9a167073c"
+    },
+    {
+      "source_id": "music-fma-0009",
+      "audio": "musan/music-fma-0009.wav",
+      "category": "musan_music",
+      "split": "holdout",
+      "error": null,
+      "original_path": "music/fma/music-fma-0009.wav",
+      "source": "fma",
+      "seconds": 360.071,
+      "sha256_audio": "d8d2b00c98aaad9de600ecbf4c576a793417cbc85afd9db8bfc3cb2596797192"
+    },
+    {
+      "source_id": "music-fma-0010",
+      "audio": "musan/music-fma-0010.wav",
+      "category": "musan_music",
+      "split": "holdout",
+      "error": null,
+      "original_path": "music/fma/music-fma-0010.wav",
+      "source": "fma",
+      "seconds": 145.684875,
+      "sha256_audio": "0de07614156fadb4f206242228c0564a9a630f38fa7af0180d22d524d3615b08"
+    },
+    {
+      "source_id": "music-fma-0011",
+      "audio": "musan/music-fma-0011.wav",
+      "category": "musan_music",
+      "split": "holdout",
+      "error": null,
+      "original_path": "music/fma/music-fma-0011.wav",
+      "source": "fma",
+      "seconds": 147.8791875,
+      "sha256_audio": "1775f1f12e979647f13052da1958324e9e88b4a52aadeb1af5eb30ef1b4a5ff8"
+    },
+    {
+      "source_id": "music-fma-0012",
+      "audio": "musan/music-fma-0012.wav",
+      "category": "musan_music",
+      "split": "holdout",
+      "error": null,
+      "original_path": "music/fma/music-fma-0012.wav",
+      "source": "fma",
+      "seconds": 170.031,
+      "sha256_audio": "36ec33a0d5cee31d5096f48bb32ff18a8f7cf64c155d33816b3122bd023e0ded"
+    },
+    {
+      "source_id": "music-fma-0013",
+      "audio": "musan/music-fma-0013.wav",
+      "category": "musan_music",
+      "split": "holdout",
+      "error": null,
+      "original_path": "music/fma/music-fma-0013.wav",
+      "source": "fma",
+      "seconds": 277.2375625,
+      "sha256_audio": "6e0a3926c9ebb4f6dc46cb356655302edb687ebe0f324ea52dadffa8cafa1531"
+    },
+    {
+      "source_id": "music-fma-0014",
+      "audio": "musan/music-fma-0014.wav",
+      "category": "musan_music",
+      "split": "holdout",
+      "error": null,
+      "original_path": "music/fma/music-fma-0014.wav",
+      "source": "fma",
+      "seconds": 318.3020625,
+      "sha256_audio": "bc99e278eed13bd1f12de5dc066fbc1175ae03edff4949e2602d07c2237602a7"
+    },
+    {
+      "source_id": "music-fma-0015",
+      "audio": "musan/music-fma-0015.wav",
+      "category": "musan_music",
+      "split": "holdout",
+      "error": null,
+      "original_path": "music/fma/music-fma-0015.wav",
+      "source": "fma",
+      "seconds": 304.1175625,
+      "sha256_audio": "9caabde66eb113056d3991145c5ebd51861a9c7b0cf2c4bb57f327a7ec1a6bdd"
+    },
+    {
+      "source_id": "music-fma-0016",
+      "audio": "musan/music-fma-0016.wav",
+      "category": "musan_music",
+      "split": "holdout",
+      "error": null,
+      "original_path": "music/fma/music-fma-0016.wav",
+      "source": "fma",
+      "seconds": 308.7935,
+      "sha256_audio": "55d0ac1d24fe23934f1c8a56b8c270d0ac77c46326bcd33e0224d0ec00214886"
+    },
+    {
+      "source_id": "music-fma-0017",
+      "audio": "musan/music-fma-0017.wav",
+      "category": "musan_music",
+      "split": "holdout",
+      "error": null,
+      "original_path": "music/fma/music-fma-0017.wav",
+      "source": "fma",
+      "seconds": 175.281625,
+      "sha256_audio": "c28ed7d75b233ea50c717e8d277e8fab7fc266baddc46af6b817e139a6f819f2"
+    },
+    {
+      "source_id": "music-fma-0018",
+      "audio": "musan/music-fma-0018.wav",
+      "category": "musan_music",
+      "split": "holdout",
+      "error": null,
+      "original_path": "music/fma/music-fma-0018.wav",
+      "source": "fma",
+      "seconds": 224.5746875,
+      "sha256_audio": "372d272b398a1bd5bc58a3ee2b370c1790130e26322a41951ada64776176b9c9"
+    },
+    {
+      "source_id": "music-fma-0019",
+      "audio": "musan/music-fma-0019.wav",
+      "category": "musan_music",
+      "split": "holdout",
+      "error": null,
+      "original_path": "music/fma/music-fma-0019.wav",
+      "source": "fma",
+      "seconds": 238.3935,
+      "sha256_audio": "279aaf9895e865a9d33e41e0ed01ff2dec3b1a64180aad8b463ae6bdaa72c12b"
+    },
+    {
+      "source_id": "musan_noise_0083",
+      "audio": "musan-noise-0083.wav",
+      "category": "musan_noise",
+      "split": "holdout",
+      "error": null,
+      "seconds": 0.59125,
+      "sha256_audio": "5440195706e3438a523811a009a78140e942098e96c367faf8d877839d3dd8dc"
+    }
+  ]
+}

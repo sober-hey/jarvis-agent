@@ -1,0 +1,7 @@
+.build/
+.xcodebuild/
+AudioRecorder.xcodeproj/xcuserdata/
+Evidence/*.pcm
+Evidence/*.pcm.json
+recording.pcm*
+__pycache__/

@@ -1,0 +1,25 @@
+{
+  "source_id": "negative_en_061",
+  "text": "Start a quiet focus session now.",
+  "category": "negative_en",
+  "language_type": "English",
+  "split": "holdout",
+  "voice": "Serena",
+  "voice_kind": "system",
+  "tempo": 0.94,
+  "model": "qwen3-tts-flash",
+  "usage": {
+    "characters": 32
+  },
+  "elapsed_seconds": 76.556,
+  "status": "generated",
+  "error": null,
+  "original_audio": "original/negative_en_061.wav",
+  "audio": "wav/negative_en_061.wav",
+  "duration_seconds": 2.5431,
+  "sample_rate_hz": 16000,
+  "channels": 1,
+  "encoding": "PCM_S16LE",
+  "sha256_original": "2cdbb99bcd915ffd11354d1c3be7fb5e938ae6985e2ace0ac49c1ecfbbfa13c2",
+  "sha256_audio": "ee4f7fb702423c613e78cf02520d72cf60f8c9b05ca6d79c704524d799616468"
+}

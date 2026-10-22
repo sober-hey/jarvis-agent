@@ -1,0 +1,976 @@
+schema_version: 1
+status: DRAFT
+approval_status: NOT_APPROVED
+runtime_enabled: false
+purpose: Reviewable candidate predicates; not a product execution service or authority source for safety
+  approval.
+expression_language:
+  version: 1
+  operators:
+  - all
+  - any
+  - eq
+  - is_null
+  - not_null
+  - fact
+  - literal
+  - guard
+  semantics: fact reads an exact declared flat key; no coercion; booleans are not integers; only literal
+    true permits. Missing, mistyped, unknown, cyclic or unevaluable input is UNKNOWN and denies. all/any
+    use three-valued logic; no eval().
+  phase: same transaction for state/CAS/global epoch and cross-object invariants; prior durable evidence
+    where stated; post-commit success requires actual atomic commit
+  trust_boundary: facts are produced by trusted transaction/verification adapters, never model-supplied
+    or self-attested grants; no such adapters are implemented here
+failure_policy: DENY_KEEP_SOURCE_AND_ROLLBACK_ALL_WRITES
+facts:
+  row.state:
+    type: string
+    meaning: Target row still has the exact source state of this edge (left)
+  expected.from:
+    type: string
+    meaning: Target row still has the exact source state of this edge (right)
+  row.version:
+    type: integer
+    meaning: Target row version equals supplied optimistic version, checked in the write transaction (left)
+  expected.version:
+    type: integer
+    meaning: Target row version equals supplied optimistic version, checked in the write transaction (right)
+  mutation.to:
+    type: string
+    meaning: Mutation targets this edge, not a different destination (left)
+  expected.to:
+    type: string
+    meaning: Mutation targets this edge, not a different destination (right)
+  commit.cas_affects_one_row:
+    type: boolean
+    meaning: Conditional update includes id/source/version, increments version exactly once, affects exactly
+      one row; otherwise roll back
+  commit.event_same_transaction:
+    type: boolean
+    meaning: Matching task/step/from/to/version event, related writes, and state update commit or roll
+      back in the same database transaction; timestamp is not ordering authority
+  commit.relationships_consistent:
+    type: boolean
+    meaning: Post-write graph satisfies domain_relationships.yaml in this same transaction; no nontransactional
+      check-then-write
+  commit.terminal_history_preserved:
+    type: boolean
+    meaning: No terminal Task/Step is reopened and no prior Plan/Step/Intent/Attempt or effect history
+      is deleted or replaced
+  commit.write_set_classified:
+    type: boolean
+    meaning: Actual write set has a trusted authority classification; mixed request/result writes are
+      worker commits, never request-only
+  commit.request_only_authorized:
+    type: boolean
+    meaning: Trusted request handler writes only authorized admission/request data and audit; no Attempt/result/Observation/recovery
+      or execution-state advancement, including advancement based on earlier results
+  commit.is_worker_result_or_advancement:
+    type: boolean
+    meaning: Write set includes Attempt/result/Observation/recovery or associated execution-state advancement,
+      even if result was persisted earlier
+  worker.fixed_lock_fd_held:
+    type: boolean
+    meaning: Current worker owns the one fixed execution flock and retains its fd; lease, worker_id, or
+      historical Attempt epoch is not proof
+  control.global_epoch_present:
+    type: boolean
+    meaning: Singleton global system_control epoch row exists in the committing transaction
+  worker.my_epoch:
+    type: integer
+    meaning: Current submitting worker epoch equals global current epoch in conditional SQL or same-transaction
+      write barrier; never compare only the old Attempt row (left)
+  control.worker_epoch:
+    type: integer
+    meaning: Current submitting worker epoch equals global current epoch in conditional SQL or same-transaction
+      write barrier; never compare only the old Attempt row (right)
+  commit.epoch_barrier_one_row:
+    type: boolean
+    meaning: Current-global-epoch condition is in the same SQL/write transaction, accepts exactly one
+      row, and failure rolls back all result/state/event writes including INSERT
+  task.cancel_requested_at_ms:
+    type: nullable_integer
+    meaning: Persisted cancellation request time on this Task or parent Task, read in the commit transaction
+  control.emergency_stop:
+    type: boolean
+    meaning: Durable global emergency-stop flag
+  effects.new_starts_stopped:
+    type: boolean
+    meaning: New target side-effect starts are stopped and no unarbitrated start is in flight; a flag
+      read alone does not prove cancellation/publish linearization
+  effects.settled:
+    type: boolean
+    meaning: Every started effect has a known reconciled disposition and no uncontrolled active or unresolved
+      dangerous effect remains; an absent target alone proves neither never-published nor settled
+  effects.safe_checkpoint_evidence:
+    type: boolean
+    meaning: Durable safe-checkpoint and reconciled-effect evidence bound to these operations exists;
+      definition and cancellation arbitration remain OPEN-08/OPEN-01
+  failure.confirmed:
+    type: boolean
+    meaning: Durable reason confirms this object cannot complete; transient error/unknown outcome alone
+      is insufficient
+  effects.none_started:
+    type: boolean
+    meaning: Positive durable evidence that no target effect ever started, not inferred from target absence
+  task.spec_valid:
+    type: boolean
+    meaning: TaskSpec validates against task_spec.schema.json and retained request/digest identity matches;
+      digest field set remains D-03
+  worker.k0_slot_free:
+    type: boolean
+    meaning: No other active Task Step executes; one fixed worker lock plus transactional claim, not per-Step
+      uniqueness alone
+  step.preconditions_passed:
+    type: boolean
+    meaning: All declared Step input/type/authorization/path/environment prerequisites passed with evidence
+      bound to the Step; unavailable D-08 carrier denies
+  intent.previously_committed:
+    type: boolean
+    meaning: Exact logical Intent and matching FileWriteIntent were durably committed before any target-effect
+      start, not merely scheduled in the current transaction
+  prepared.durability_verified:
+    type: boolean
+    meaning: Prepared file, manifest, size/hash and required file/directory sync evidence are intact at
+      required durability level before publish; filesystem and SQLite are not atomic together
+  attempt.current_bound:
+    type: boolean
+    meaning: Current ACTIVE Attempt references the exact committed Intent of this Step and is owned by
+      current worker; no second ACTIVE Attempt
+  effects.publish_start_arbitrated:
+    type: boolean
+    meaning: Approved and tested cancel/stop-versus-publish-start arbiter establishes no new start after
+      durable cancel; pre-read/no_cancel, CAS, flock alone do not prove INV-010 (OPEN-01 remains)
+  result.known_and_durable:
+    type: boolean
+    meaning: Current operation has a known checkable persisted Attempt result/evidence bound to this Step/Intent;
+      missing D-13 carrier or unknown outcome denies
+  reconciliation.observation_bound:
+    type: boolean
+    meaning: Durable Observation is one of four reconciliation.schema.json values, bound to exact operation/paths/expected
+      digest and current observation; unknown itself is a valid observation, not success
+  result.unknown_or_mismatch:
+    type: boolean
+    meaning: Execution/verification result is unknown or disagrees with expected effect; retain evidence
+      and prohibit blind retry
+  verification.independent_pass:
+    type: boolean
+    meaning: Independent verifier checked actual output path/type/hash/size against the original Intent;
+      tool success or model text alone is not verification
+  verification.evidence_durable:
+    type: boolean
+    meaning: Matching VERIFICATION_EVIDENCE artifact/evidence record is durable and associated to the
+      original Intent and result
+  task.required_steps_completed:
+    type: boolean
+    meaning: Every required Step of active Plan is COMPLETED and active Plan has required K0 Step; not
+      vacuous empty-plan success
+  task.all_effects_verified:
+    type: boolean
+    meaning: All associated logical effects, including relevant historical Plan effects, have independent
+      VERIFIED evidence; no unresolved Attempt or dangerous effect
+  block.reason_durable:
+    type: boolean
+    meaning: Explicit missing prerequisite/conflict/environment/recovery evidence and nonempty reason
+      are durably recorded; BLOCKED must preserve unresolved effects and prohibit starts
+  block.starts_stopped:
+    type: boolean
+    meaning: Entering BLOCKED stops any new target-effect starts and preserves all unresolved operation/artifact/Attempt
+      evidence; not terminalization
+  block.trusted_release:
+    type: boolean
+    meaning: Trusted explicit unblock authorization and reason match this blocking record and prerequisite
+      repair; model/ordinary parameter cannot self-authorize (OPEN-07)
+  claim.trusted_release:
+    type: boolean
+    meaning: Trusted claim release authorization with nonempty reason exists; no possible started target
+      effect
+  intent.absent_proven:
+    type: boolean
+    meaning: Recovery proves no Intent committed for this preparation and no target effect could start;
+      do not infer from inaccessible DB
+  retry.policy_proved:
+    type: boolean
+    meaning: K0 atomic no-clobber publish recovery strategy proves repeated attempt cannot produce disallowed
+      effects under unchanged original Intent/trust assumptions; unavailable OPEN-02/D-05 evidence denies
+  retry.prepared_intact:
+    type: boolean
+    meaning: Original Prepared file exists, is regular/nonsymlink, and expected size/hash and snapshot/Intent
+      identities match; not regenerated with new arguments
+  retry.original_intent_retained:
+    type: boolean
+    meaning: Reuse the same OperationIntent and FileWriteIntent rows, operation_key/arguments/paths/expected
+      bytes; never one Intent or key per Attempt (INV-004)
+  retry.permitted:
+    type: boolean
+    meaning: Trusted policy allows another Attempt for this exact operation; cannot be self-granted by
+      model
+  retry.schedule_due:
+    type: boolean
+    meaning: Persisted backoff deadline <= current scheduler time, attempts below persisted maximum, no
+      active predecessor; undefined R-3 deadline/budget carrier denies
+  task.reconciled_all_relevant:
+    type: boolean
+    meaning: Task-level reconciliation aggregates every relevant Step/Intent, not a single favorable operation;
+      aggregation subject D-G2 remains unresolved
+  reconciliation.decision:
+    type: string
+    meaning: Decision for the bound original operation
+  reconciliation.observation:
+    type: string
+    meaning: Observation for the bound original operation
+  task.state:
+    type: string
+    meaning: Parent Task persisted state in transition transaction
+  intent.state:
+    type: string
+    meaning: Persisted state of the same single Intent bound to this Step
+  attempts.active_count:
+    type: integer
+    meaning: Transactional count of ACTIVE Attempts in scope; Task includes historical Plans, Step includes
+      its own Attempts
+  task.active_plan_id:
+    type: string
+    meaning: Non-null active Plan pointer on this Task
+  plan.id:
+    type: string
+    meaning: Identity of candidate active Plan
+  task.id:
+    type: string
+    meaning: Identity of parent Task
+  plan.task_id:
+    type: string
+    meaning: Task owning the candidate active Plan
+  plan.state:
+    type: string
+    meaning: Candidate active Plan state, ACTIVE is known from existing partial index
+  plans.active_count:
+    type: integer
+    meaning: Transactional number of ACTIVE Plans for this Task
+  step.plan_id:
+    type: string
+    meaning: Persisted owner Plan of this Step
+  step.task_id:
+    type: string
+    meaning: Persisted owner Task of this Step
+guards:
+  source_state_matches:
+    description: Target row still has the exact source state of this edge
+    predicate:
+    - eq
+    - - fact
+      - row.state
+    - - fact
+      - expected.from
+  version_matches:
+    description: Target row version equals supplied optimistic version, checked in the write transaction
+    predicate:
+    - eq
+    - - fact
+      - row.version
+    - - fact
+      - expected.version
+  target_state_matches:
+    description: Mutation targets this edge, not a different destination
+    predicate:
+    - eq
+    - - fact
+      - mutation.to
+    - - fact
+      - expected.to
+  one_row_cas:
+    description: Conditional update includes id/source/version, increments version exactly once, affects
+      exactly one row; otherwise roll back
+    predicate:
+    - eq
+    - - fact
+      - commit.cas_affects_one_row
+    - - literal
+      - true
+  event_same_transaction:
+    description: Matching task/step/from/to/version event, related writes, and state update commit or
+      roll back in the same database transaction; timestamp is not ordering authority
+    predicate:
+    - eq
+    - - fact
+      - commit.event_same_transaction
+    - - literal
+      - true
+  relationships_consistent:
+    description: Post-write graph satisfies domain_relationships.yaml in this same transaction; no nontransactional
+      check-then-write
+    predicate:
+    - eq
+    - - fact
+      - commit.relationships_consistent
+    - - literal
+      - true
+  terminal_history_preserved:
+    description: No terminal Task/Step is reopened and no prior Plan/Step/Intent/Attempt or effect history
+      is deleted or replaced
+    predicate:
+    - eq
+    - - fact
+      - commit.terminal_history_preserved
+    - - literal
+      - true
+  commit_classified:
+    description: Actual write set has a trusted authority classification; mixed request/result writes
+      are worker commits, never request-only
+    predicate:
+    - eq
+    - - fact
+      - commit.write_set_classified
+    - - literal
+      - true
+  request_only_authorized:
+    description: Trusted request handler writes only authorized admission/request data and audit; no Attempt/result/Observation/recovery
+      or execution-state advancement, including advancement based on earlier results
+    predicate:
+    - eq
+    - - fact
+      - commit.request_only_authorized
+    - - literal
+      - true
+  worker_commit_required:
+    description: Write set includes Attempt/result/Observation/recovery or associated execution-state
+      advancement, even if result was persisted earlier
+    predicate:
+    - eq
+    - - fact
+      - commit.is_worker_result_or_advancement
+    - - literal
+      - true
+  worker_lock_held:
+    description: Current worker owns the one fixed execution flock and retains its fd; lease, worker_id,
+      or historical Attempt epoch is not proof
+    predicate:
+    - eq
+    - - fact
+      - worker.fixed_lock_fd_held
+    - - literal
+      - true
+  global_epoch_present:
+    description: Singleton global system_control epoch row exists in the committing transaction
+    predicate:
+    - eq
+    - - fact
+      - control.global_epoch_present
+    - - literal
+      - true
+  global_epoch_current:
+    description: Current submitting worker epoch equals global current epoch in conditional SQL or same-transaction
+      write barrier; never compare only the old Attempt row
+    predicate:
+    - eq
+    - - fact
+      - worker.my_epoch
+    - - fact
+      - control.worker_epoch
+  epoch_barrier_one_row:
+    description: Current-global-epoch condition is in the same SQL/write transaction, accepts exactly
+      one row, and failure rolls back all result/state/event writes including INSERT
+    predicate:
+    - eq
+    - - fact
+      - commit.epoch_barrier_one_row
+    - - literal
+      - true
+  fenced_worker_commit:
+    description: Every worker result/recovery/associated advancement is fenced by the current global epoch,
+      including new worker recovery of old Attempts
+    predicate:
+    - all
+    - - guard
+      - worker_commit_required
+    - - guard
+      - worker_lock_held
+    - - guard
+      - global_epoch_present
+    - - guard
+      - global_epoch_current
+    - - guard
+      - epoch_barrier_one_row
+  fenced_commit:
+    description: Classify actual writes, then authorized request-only OR fenced worker commit. Unknown/mixed/unclassified
+      never bypass fencing.
+    predicate:
+    - all
+    - - guard
+      - commit_classified
+    - - any
+      - - all
+        - - guard
+          - request_only_authorized
+        - - eq
+          - - fact
+            - commit.is_worker_result_or_advancement
+          - - literal
+            - false
+      - - guard
+        - fenced_worker_commit
+  cancel_absent:
+    description: Task cancellation column is NULL in the committing transaction (parent Task for a Step)
+    predicate:
+    - is_null
+    - - fact
+      - task.cancel_requested_at_ms
+  cancel_persisted:
+    description: Cancellation source is already durable; never require cancel_absent on cancellation-completion
+      edges
+    predicate:
+    - not_null
+    - - fact
+      - task.cancel_requested_at_ms
+  emergency_stop_inactive:
+    description: Global emergency_stop is exactly false at commit/start; unknown/missing control state
+      denies
+    predicate:
+    - eq
+    - - fact
+      - control.emergency_stop
+    - - literal
+      - false
+  new_effects_stopped:
+    description: New target side-effect starts are stopped and no unarbitrated start is in flight; a flag
+      read alone does not prove cancellation/publish linearization
+    predicate:
+    - eq
+    - - fact
+      - effects.new_starts_stopped
+    - - literal
+      - true
+  effects_settled:
+    description: Every started effect has a known reconciled disposition and no uncontrolled active or
+      unresolved dangerous effect remains; an absent target alone proves neither never-published nor settled
+    predicate:
+    - eq
+    - - fact
+      - effects.settled
+    - - literal
+      - true
+  no_active_attempt:
+    description: No ACTIVE Attempt in this transition scope; Task scope includes historical Plans, Step
+      scope its own Attempts
+    predicate:
+    - eq
+    - - fact
+      - attempts.active_count
+    - - literal
+      - 0
+  safe_checkpoint:
+    description: Durable safe-checkpoint and reconciled-effect evidence bound to these operations exists;
+      definition and cancellation arbitration remain OPEN-08/OPEN-01
+    predicate:
+    - eq
+    - - fact
+      - effects.safe_checkpoint_evidence
+    - - literal
+      - true
+  failure_confirmed:
+    description: Durable reason confirms this object cannot complete; transient error/unknown outcome
+      alone is insufficient
+    predicate:
+    - eq
+    - - fact
+      - failure.confirmed
+    - - literal
+      - true
+  no_started_effect:
+    description: Positive durable evidence that no target effect ever started, not inferred from target
+      absence
+    predicate:
+    - eq
+    - - fact
+      - effects.none_started
+    - - literal
+      - true
+  valid_task_spec:
+    description: TaskSpec validates against task_spec.schema.json and retained request/digest identity
+      matches; digest field set remains D-03
+    predicate:
+    - eq
+    - - fact
+      - task.spec_valid
+    - - literal
+      - true
+  active_plan_bound:
+    description: Exactly one ACTIVE Plan exists, belongs to this Task and is referenced by active_plan_id;
+      no cross-Task Plan
+    predicate:
+    - all
+    - - eq
+      - - fact
+        - task.active_plan_id
+      - - fact
+        - plan.id
+    - - eq
+      - - fact
+        - task.id
+      - - fact
+        - plan.task_id
+    - - eq
+      - - fact
+        - plan.state
+      - - literal
+        - ACTIVE
+    - - eq
+      - - fact
+        - plans.active_count
+      - - literal
+        - 1
+  task_running:
+    description: Parent Task state is RUNNING in the transition transaction
+    predicate:
+    - eq
+    - - fact
+      - task.state
+    - - literal
+      - RUNNING
+  step_in_active_plan:
+    description: Step.plan_id equals parent Task.active_plan_id and that Plan belongs to same Task and
+      is ACTIVE
+    predicate:
+    - all
+    - - guard
+      - active_plan_bound
+    - - eq
+      - - fact
+        - step.plan_id
+      - - fact
+        - task.active_plan_id
+    - - eq
+      - - fact
+        - step.task_id
+      - - fact
+        - task.id
+  k0_execution_slot_free:
+    description: No other active Task Step executes; one fixed worker lock plus transactional claim, not
+      per-Step uniqueness alone
+    predicate:
+    - eq
+    - - fact
+      - worker.k0_slot_free
+    - - literal
+      - true
+  preconditions_passed:
+    description: All declared Step input/type/authorization/path/environment prerequisites passed with
+      evidence bound to the Step; unavailable D-08 carrier denies
+    predicate:
+    - eq
+    - - fact
+      - step.preconditions_passed
+    - - literal
+      - true
+  intent_committed:
+    description: Exact logical Intent and matching FileWriteIntent were durably committed before any target-effect
+      start, not merely scheduled in the current transaction
+    predicate:
+    - eq
+    - - fact
+      - intent.previously_committed
+    - - literal
+      - true
+  intent_prepared:
+    description: The single Intent for this Step has PREPARED state; same operation_id and original immutable
+      operation_key/arguments digest
+    predicate:
+    - eq
+    - - fact
+      - intent.state
+    - - literal
+      - PREPARED
+  prepared_durable:
+    description: Prepared file, manifest, size/hash and required file/directory sync evidence are intact
+      at required durability level before publish; filesystem and SQLite are not atomic together
+    predicate:
+    - eq
+    - - fact
+      - prepared.durability_verified
+    - - literal
+      - true
+  attempt_bound:
+    description: Current ACTIVE Attempt references the exact committed Intent of this Step and is owned
+      by current worker; no second ACTIVE Attempt
+    predicate:
+    - eq
+    - - fact
+      - attempt.current_bound
+    - - literal
+      - true
+  publish_start_arbitrated:
+    description: Approved and tested cancel/stop-versus-publish-start arbiter establishes no new start
+      after durable cancel; pre-read/no_cancel, CAS, flock alone do not prove INV-010 (OPEN-01 remains)
+    predicate:
+    - eq
+    - - fact
+      - effects.publish_start_arbitrated
+    - - literal
+      - true
+  result_durable:
+    description: Current operation has a known checkable persisted Attempt result/evidence bound to this
+      Step/Intent; missing D-13 carrier or unknown outcome denies
+    predicate:
+    - eq
+    - - fact
+      - result.known_and_durable
+    - - literal
+      - true
+  observation_bound:
+    description: Durable Observation is one of four reconciliation.schema.json values, bound to exact
+      operation/paths/expected digest and current observation; unknown itself is a valid observation,
+      not success
+    predicate:
+    - eq
+    - - fact
+      - reconciliation.observation_bound
+    - - literal
+      - true
+  reconciliation_needed:
+    description: Execution/verification result is unknown or disagrees with expected effect; retain evidence
+      and prohibit blind retry
+    predicate:
+    - eq
+    - - fact
+      - result.unknown_or_mismatch
+    - - literal
+      - true
+  verification_passed:
+    description: Independent verifier checked actual output path/type/hash/size against the original Intent;
+      tool success or model text alone is not verification
+    predicate:
+    - eq
+    - - fact
+      - verification.independent_pass
+    - - literal
+      - true
+  verification_evidence:
+    description: Matching VERIFICATION_EVIDENCE artifact/evidence record is durable and associated to
+      the original Intent and result
+    predicate:
+    - eq
+    - - fact
+      - verification.evidence_durable
+    - - literal
+      - true
+  intent_verified:
+    description: Single associated Intent is VERIFIED on independent evidence
+    predicate:
+    - eq
+    - - fact
+      - intent.state
+    - - literal
+      - VERIFIED
+  required_steps_completed:
+    description: Every required Step of active Plan is COMPLETED and active Plan has required K0 Step;
+      not vacuous empty-plan success
+    predicate:
+    - eq
+    - - fact
+      - task.required_steps_completed
+    - - literal
+      - true
+  all_effects_verified:
+    description: All associated logical effects, including relevant historical Plan effects, have independent
+      VERIFIED evidence; no unresolved Attempt or dangerous effect
+    predicate:
+    - eq
+    - - fact
+      - task.all_effects_verified
+    - - literal
+      - true
+  block_reason_recorded:
+    description: Explicit missing prerequisite/conflict/environment/recovery evidence and nonempty reason
+      are durably recorded; BLOCKED must preserve unresolved effects and prohibit starts
+    predicate:
+    - eq
+    - - fact
+      - block.reason_durable
+    - - literal
+      - true
+  block_starts_stopped:
+    description: Entering BLOCKED stops any new target-effect starts and preserves all unresolved operation/artifact/Attempt
+      evidence; not terminalization
+    predicate:
+    - eq
+    - - fact
+      - block.starts_stopped
+    - - literal
+      - true
+  unblock_authorized:
+    description: Trusted explicit unblock authorization and reason match this blocking record and prerequisite
+      repair; model/ordinary parameter cannot self-authorize (OPEN-07)
+    predicate:
+    - eq
+    - - fact
+      - block.trusted_release
+    - - literal
+      - true
+  claim_release_authorized:
+    description: Trusted claim release authorization with nonempty reason exists; no possible started
+      target effect
+    predicate:
+    - eq
+    - - fact
+      - claim.trusted_release
+    - - literal
+      - true
+  intent_absent:
+    description: Recovery proves no Intent committed for this preparation and no target effect could start;
+      do not infer from inaccessible DB
+    predicate:
+    - eq
+    - - fact
+      - intent.absent_proven
+    - - literal
+      - true
+  retry_policy_proved:
+    description: K0 atomic no-clobber publish recovery strategy proves repeated attempt cannot produce
+      disallowed effects under unchanged original Intent/trust assumptions; unavailable OPEN-02/D-05 evidence
+      denies
+    predicate:
+    - eq
+    - - fact
+      - retry.policy_proved
+    - - literal
+      - true
+  retry_prepared_intact:
+    description: Original Prepared file exists, is regular/nonsymlink, and expected size/hash and snapshot/Intent
+      identities match; not regenerated with new arguments
+    predicate:
+    - eq
+    - - fact
+      - retry.prepared_intact
+    - - literal
+      - true
+  retry_original_intent:
+    description: Reuse the same OperationIntent and FileWriteIntent rows, operation_key/arguments/paths/expected
+      bytes; never one Intent or key per Attempt (INV-004)
+    predicate:
+    - eq
+    - - fact
+      - retry.original_intent_retained
+    - - literal
+      - true
+  retry_permitted:
+    description: Trusted policy allows another Attempt for this exact operation; cannot be self-granted
+      by model
+    predicate:
+    - eq
+    - - fact
+      - retry.permitted
+    - - literal
+      - true
+  retry_schedule_due:
+    description: Persisted backoff deadline <= current scheduler time, attempts below persisted maximum,
+      no active predecessor; undefined R-3 deadline/budget carrier denies
+    predicate:
+    - eq
+    - - fact
+      - retry.schedule_due
+    - - literal
+      - true
+  reconciled_all:
+    description: Task-level reconciliation aggregates every relevant Step/Intent, not a single favorable
+      operation; aggregation subject D-G2 remains unresolved
+    predicate:
+    - eq
+    - - fact
+      - task.reconciled_all_relevant
+    - - literal
+      - true
+  decision_verify:
+    description: Decision for the bound original operation
+    predicate:
+    - eq
+    - - fact
+      - reconciliation.decision
+    - - literal
+      - VERIFY
+  decision_retry_safe:
+    description: Decision for the bound original operation
+    predicate:
+    - eq
+    - - fact
+      - reconciliation.decision
+    - - literal
+      - RETRY_SAFE
+  decision_block:
+    description: Decision for the bound original operation
+    predicate:
+    - eq
+    - - fact
+      - reconciliation.decision
+    - - literal
+      - BLOCK
+  decision_fail:
+    description: Decision for the bound original operation
+    predicate:
+    - eq
+    - - fact
+      - reconciliation.decision
+    - - literal
+      - FAIL
+  expected_effect_present:
+    description: Observation for the bound original operation
+    predicate:
+    - eq
+    - - fact
+      - reconciliation.observation
+    - - literal
+      - EXPECTED_EFFECT_PRESENT
+  target_absent:
+    description: Observation for the bound original operation
+    predicate:
+    - eq
+    - - fact
+      - reconciliation.observation
+    - - literal
+      - TARGET_ABSENT
+  verify_reconciled:
+    description: EXPECTED_EFFECT_PRESENT/VERIFY with valid Intent/hash/path evidence; still requires independent
+      verification
+    predicate:
+    - all
+    - - guard
+      - observation_bound
+    - - guard
+      - expected_effect_present
+    - - guard
+      - decision_verify
+  retry_safe:
+    description: Only TARGET_ABSENT/RETRY_SAFE for K0 no-clobber publish with all strict prerequisites;
+      target absence alone never permits retry
+    predicate:
+    - all
+    - - guard
+      - observation_bound
+    - - guard
+      - target_absent
+    - - guard
+      - decision_retry_safe
+    - - guard
+      - retry_policy_proved
+    - - guard
+      - retry_prepared_intact
+    - - guard
+      - retry_original_intent
+    - - guard
+      - retry_permitted
+    - - guard
+      - cancel_absent
+    - - guard
+      - emergency_stop_inactive
+    - - guard
+      - no_active_attempt
+    - - guard
+      - effects_settled
+  cancellation_complete:
+    description: Persisted cancel source plus stopped starts, safe checkpoint, all effects accounted for
+      and no active Attempt; emergency stop need not be cleared
+    predicate:
+    - all
+    - - guard
+      - cancel_persisted
+    - - guard
+      - new_effects_stopped
+    - - guard
+      - safe_checkpoint
+    - - guard
+      - effects_settled
+    - - guard
+      - no_active_attempt
+  failure_safe:
+    description: Known irrecoverable failure with no uncontrolled/unreconciled effect or active Attempt
+    predicate:
+    - all
+    - - guard
+      - failure_confirmed
+    - - guard
+      - effects_settled
+    - - guard
+      - no_active_attempt
+  can_start_work:
+    description: Trusted current worker and uncanceled/non-stopped Task, not proof of publish-start linearization
+    predicate:
+    - all
+    - - guard
+      - worker_lock_held
+    - - guard
+      - global_epoch_current
+    - - guard
+      - global_epoch_present
+    - - guard
+      - cancel_absent
+    - - guard
+      - emergency_stop_inactive
+  block_safe:
+    description: Record cause and stop new starts while preserving evidence, not treating BLOCK as a known
+      outcome
+    predicate:
+    - all
+    - - guard
+      - block_reason_recorded
+    - - guard
+      - block_starts_stopped
+  g3_safety_decision_open:
+    description: Always deny S16/S17/S22 while G3 semantic approval is absent. Other hypothetical prerequisites
+      are documented but do not permit this edge. Existing NRC edge is evaluated separately, never implicitly.
+    predicate:
+    - literal
+    - false
+  fail_decision_policy_open:
+    description: 'Always deny reconciliation-to-FAILED while OPEN-12 is open: K0 MP §16.3 produces no
+      FAIL row. Do not invent an Observation/FAIL pairing.'
+    predicate:
+    - literal
+    - false
+  block_pair:
+    description: 'Known K0 conservative BLOCK pairing: TARGET_ABSENT, CONFLICTING_EFFECT_PRESENT or INSUFFICIENT_EVIDENCE
+      with bound BLOCK. Expected effect with invalid identity/hash is insufficient evidence, not a free
+      BLOCK pairing.'
+    predicate:
+    - all
+    - - guard
+      - observation_bound
+    - - guard
+      - decision_block
+    - - any
+      - - eq
+        - - fact
+          - reconciliation.observation
+        - - literal
+          - TARGET_ABSENT
+      - - eq
+        - - fact
+          - reconciliation.observation
+        - - literal
+          - CONFLICTING_EFFECT_PRESENT
+      - - eq
+        - - fact
+          - reconciliation.observation
+        - - literal
+          - INSUFFICIENT_EVIDENCE
+open_safety_items:
+- DP-1
+- D-01
+- D-02
+- D-03
+- D-05
+- D-06
+- D-08
+- D-13
+- D-16
+- D-G1a
+- D-G2
+- OPEN-01
+- OPEN-02
+- OPEN-03
+- OPEN-06
+- OPEN-07
+- OPEN-08
+- OPEN-10
+- OPEN-12
+- R-3
+- DEC-004
