@@ -6,7 +6,7 @@
 
   可选：iMessage 入站/出站需要再注入两个环境变量（不需要就别加）：
     <key>JARVIS_IMESSAGE_ACCOUNT</key><string>E:你的AppleID@example.com</string>
-    <key>JARVIS_IMESSAGE_SIR</key><string>+8610000000000</string>
+    <key>JARVIS_IMESSAGE_SIR</key><string>+8600000000000</string>
 
   注意：守护进程用的是引擎运行环境（Python 3.14），不是仓库里的 .venv。
 -->
