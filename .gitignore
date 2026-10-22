@@ -43,3 +43,6 @@ apps/mac/JarvisMac/Output/
 
 # 系统噪音
 .DS_Store
+
+# 本机构建记录：路径因机器而异，不入库
+packaging/runtime/BUILD_RECORD.json

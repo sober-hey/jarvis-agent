@@ -60,3 +60,37 @@ jobs:
 
       # packaging/ 全量需要 engine-venv 与供应商 SDK，CI 里跑会大量跳过或假失败，
       # 因此只在本地跑：见 docs/FRAMEWORK.md「测试怎么跑」。
+
+  # macOS 客户端：Linux 上跑不了，单独一个 job。不联网、不需要凭据。
+  macos-clients:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # 一句话切分（UtteranceGate）：纯 Swift，不需要 Xcode 工程
+      - name: 端点检测仿真（16 种说话方式）
+        run: |
+          cd apps/mac/JarvisMac
+          swiftc -O Sources/JarvisIntegration/UtteranceGate.swift \
+            Tests/UtteranceSimulation/main.swift -o "$RUNNER_TEMP/gate_sim"
+          "$RUNNER_TEMP/gate_sim"
+
+      # 唤醒词 / 响指 / 连拍阈值回归
+      - name: 手势与唤醒阈值回归
+        run: |
+          cd apps/mac/Modules/Activation
+          swift run -c release activation-regression
+
+      # 客户端能编译就说明工程文件、协议、资源引用是完整的
+      - name: 编译 iOS 客户端
+        run: |
+          cd apps/ios/JarvisVoice
+          xcodebuild -scheme JarvisVoice -destination 'generic/platform=iOS Simulator' \
+            -quiet CODE_SIGNING_ALLOWED=NO build
+
+      - name: 编译 watchOS 客户端
+        run: |
+          cd apps/watchos/JarvisWatch
+          xcodebuild -project JarvisWatch.xcodeproj -scheme JarvisWatch \
+            -destination 'generic/platform=watchOS Simulator' \
+            -quiet CODE_SIGNING_ALLOWED=NO build

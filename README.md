@@ -44,7 +44,7 @@
 - **网关没有 TLS**：只有共享 Bearer 令牌，只适合内网或 Tailscale，不要直接暴露公网。
 - **单人设计**：没有多用户、没有账号体系、没有云端同步。
 - **内核层 K0–K4 是草案**：`src/jarvis/` 里的审批/预算/取消/事件存储尚未全部接线到生产路径。
-- **引擎运行环境没有一键构建脚本**：`packaging/runtime/engine-venv` 是手工建的，换机器要照 `BUILD_MANIFEST.json` 重来。
+- **引擎运行环境要自建**：`packaging/runtime/engine-venv` 不随仓库发布，跑 `scripts/build_engine_runtime.sh` 重建（需要 uv 与上游 agent engine）。
 - **3D 形象子项目未包含**：体积大且含商业第三方 SDK，不在本仓库。
 
 ## 运行前提
@@ -58,7 +58,16 @@
 | ffmpeg | 语音合成后处理需要 |
 
 没有引擎运行环境时：`tests/` 与 `voice/tests/` 大部分能跑，`packaging/` 里依赖真实引擎的用例会失败或跳过。
-这是已知缺口——**目前没有一键构建脚本**，构建步骤是手工的。
+**一键构建**（需要 uv 与上游 agent engine）：
+
+```sh
+scripts/build_engine_runtime.sh          # 建到 packaging/runtime/engine-venv
+scripts/build_engine_runtime.sh --check  # 只检查现有环境
+```
+
+脚本做的事：找 Python 3.14 → `venv --without-pip --copies` → 按上游 `uv.lock` 装 66 个包 →
+补装产品侧依赖（numpy / pandas / sherpa-onnx / websockets / ddgs）→ `uv pip check` →
+导入冒烟 → 写 `packaging/runtime/BUILD_RECORD.json`（本机构建记录，不入库）。
 
 ## 快速开始（macOS）
 

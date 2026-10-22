@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+.pyright/
+.coverage
+htmlcov/
+
+# 运行时与个人数据：绝不入库
+*.db
+*.db-wal
+*.db-shm
+*.wav
+*.mp3
+*.m4a
+*.mp4
+*.mov
+*.npz
+evidence/
+.runs_01/
+logs/
+
+# 凭据（按文件名/后缀拦，不要用 *credentials* —— 会误伤 test_api_credentials.py 这类真代码）
+.env
+.env.*
+*.key
+*.pem
+*.p12
+*.token
+credentials.json
+*_credentials.json
+!.env.example
+
+# Swift / Xcode 构建产物
+.build/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+*.xcresult
+apps/mac/JarvisMac/Output/
+
+# 系统噪音
+.DS_Store
+
+# 本机构建记录：路径因机器而异，不入库
+packaging/runtime/BUILD_RECORD.json
