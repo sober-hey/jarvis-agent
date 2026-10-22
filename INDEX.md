@@ -17,14 +17,16 @@
 | `deploy/` | 部署：systemd 单元、launchd 模板、安装步骤 | `deploy/README.md` |
 | `docs/` | 全部文档（按主题分目录，见下表） | 索引：`docs/README.md` |
 | `scripts/` | 运维与生成脚本（构建引擎、备份、健康检查、令牌轮换） | `scripts/README.md` |
-| `components/agent_engine/upstream/` | 第三方上游 agent engine（MIT，246 MB，**不随库分发**） | 引擎环境的前置条件 |
-| `subprojects/jarvis-avatar/` | 3D 形象工程（Blender，含商业 SDK，**不随库分发**） | `subprojects/jarvis-avatar/PROJECT_STATE.md` |
-| `subprojects/3d-interactive-demo/` | 另一个 AI 生成的「3D 交互演示」独立小项目，与本项目无耦合 | `subprojects/3d-interactive-demo/README.md` |
+| `components/agent_engine/upstream/` | 第三方上游 agent engine（MIT，246 MB，**仅本机，不随库分发**） | 引擎环境的前置条件 |
+| `subprojects/jarvis-avatar/` | 3D 形象工程（Blender，含商业 SDK，**仅本机，不随库分发**） | `subprojects/jarvis-avatar/PROJECT_STATE.md` |
+| `subprojects/3d-interactive-demo/` | 另一个 AI 生成的「3D 交互演示」独立小项目，与本项目无耦合（**仅本机**） | `subprojects/3d-interactive-demo/README.md` |
+| `subprojects/particle-demo/` | 另一个 AI 生成的「粒子形态转换」网页演示（**仅本机**） | `subprojects/particle-demo/README_PARTICLE.md` |
 | `assets/` | 视觉素材：角色设定、三视图、表情表 | `assets/README.md` |
 | `archive/` | 历史快照与遗留产物，**不参与构建** | `archive/README.md` |
-| `.runs_01/` | 历次长跑/验收的原始运行数据（4 G，不进 git） | 只有复查历史结论时才看 |
-| `public-repo/` | 开源镜像（独立 git 仓库，推到 GitHub） | 同步：`scripts/sync_public.sh` |
-| `_backups/` | 本机备份（归档的旧仓库 tarball） | 不进 git |
+| `.runs_01/` | 历次长跑/验收的原始运行数据（**仅本机**，4 G，不进 git） | 只有复查历史结论时才看 |
+| `public-repo/` | 开源镜像（独立 git 仓库，推到 GitHub；**仅本机**，不进主仓库 git） | 同步：`scripts/sync_public.sh` |
+| `_backups/` | 本机备份 tarball（**仅本机**） | 校验和见其中的 `SHA256SUMS` |
+| `.hermes/plans/` | 早期「如何使用 JARVIS」的方案草稿（**仅本机**） | 历史参考，别当规格 |
 
 ## 二、文档目录（`docs/`）
 

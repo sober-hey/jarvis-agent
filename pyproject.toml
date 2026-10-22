@@ -32,11 +32,28 @@ packages = ["src/jarvis"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# 仓库里放着开源镜像与备份（public-repo/、_backups/），它们自带测试目录，
+# pytest 从仓库根跑时必须跳过，否则会重复收集、互相污染。
+norecursedirs = [
+    "public-repo",   # 开源镜像（自带测试，别重复收集）
+    "_backups",      # 备份 tarball
+    "subprojects",   # 3D 子项目
+    "components",    # 第三方上游（几万文件）
+    "archive",       # 历史快照
+    ".runs_01",      # 历史运行数据
+    ".venv",
+    "node_modules",
+    "Evidence",      # 客户端构建/验收日志
+    "Validation",    # 客户端验证快照（里面有旧的 test_*.py）
+    "apps",          # 客户端工程（Swift 为主，里面的 python 是构建/验证脚本，不走 pytest）
+]
 addopts = "--strict-markers --strict-config"
 
 [tool.ruff]
 target-version = "py312"
 line-length = 100
+# 仓库里放着开源镜像、备份和第三方代码；ruff 从仓库根跑时要跳过，别把它们的代码算进来。
+extend-exclude = ["public-repo", "_backups", ".runs_01", "subprojects", "components", "archive"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]

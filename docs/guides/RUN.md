@@ -158,4 +158,5 @@ launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.jarvis.daemon.plist
 | 说话没反应 | 声纹是否把你自己判成"他人"（日志 `speaker_foreign`）；端点检测阈值 |
 | 只有一句就断 | `playback_done` 有没有回；见 [VOICE.md](VOICE.md) |
 | 模型一直失败 | `~/.jarvis/api.key` 与 `config.json`；`scripts/route_compliance_probe.py` |
+| 报 `Fixed vendor manifest mismatch` | 有人在 `components/agent_engine/upstream` 里跑过 Python，写了 `__pycache__`。清掉并自检（见 CONTRIBUTING「一个会把人坑半天的点」） |
 | 守护进程起不来 | `~/.jarvis/daemon.log`；数据根权限是否 0700 |
