@@ -37,13 +37,22 @@ jobs:
       - name: 格式检查
         run: ruff format --check src tests scripts voice
 
+      # 数据根校验要求父目录属于当前用户且非共享（/tmp 会被拒），
+      # 所以测试用 home 下的私有 TMPDIR —— 与本地约定一致。
       - name: 内核层与契约测试
-        run: python -m pytest tests -q
+        env:
+          TMPDIR: ${{ github.workspace }}/.tmp-pytest
+        run: |
+          mkdir -p "$TMPDIR"
+          python -m pytest tests -q
 
       - name: 语音子系统测试
         env:
           PYTHONPATH: voice:packaging
-        run: python -m pytest voice/tests -q
+          TMPDIR: ${{ github.workspace }}/.tmp-pytest
+        run: |
+          mkdir -p "$TMPDIR"
+          python -m pytest voice/tests -q
 
       # packaging/ 全量需要 engine-venv 与供应商 SDK，CI 里跑会大量跳过或假失败，
       # 因此只在本地跑：见 docs/FRAMEWORK.md「测试怎么跑」。

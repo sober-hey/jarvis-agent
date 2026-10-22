@@ -19,6 +19,16 @@ from typing import cast
 from unittest.mock import patch
 
 
+# macOS 专属：live 采集与播放走 AVFoundation/afplay，Linux 上 main() 直接拒绝启动。
+# 这些用例验的是 macOS 那条路径的接线，非 macOS 环境跳过而不是假装通过。
+DARWIN_ONLY = unittest.skipUnless(sys.platform == "darwin", "需要 macOS AVFoundation 采集")
+# 需要引擎运行环境（packaging/runtime/engine-venv）才能起的真实 web 服务。
+ENGINE_VENV = Path(__file__).resolve().parents[2] / "packaging" / "runtime" / "engine-venv"
+NEEDS_ENGINE = unittest.skipUnless(
+    (ENGINE_VENV / "bin" / "python3").exists(), "需要 packaging/runtime/engine-venv"
+)
+
+
 class FakePlayer:
     def __init__(self, *, block: bool = False) -> None:
         self.paths: list[Path] = []
@@ -153,6 +163,7 @@ class VoiceLiveTests(unittest.TestCase):
             AfplayPlayer().start(Path("speech.wav"))
             self.assertEqual(spawn.call_args.args[0], ["/usr/bin/afplay", "speech.wav"])
 
+    @DARWIN_ONLY
     def test_cli_reports_unmatched_device_without_opening_capture(self) -> None:
         import voice_live
 
@@ -166,6 +177,7 @@ class VoiceLiveTests(unittest.TestCase):
         self.assertIn("no unique audio device name match", " ".join(logs.output))
         spawn.assert_not_called()
 
+    @DARWIN_ONLY
     def test_cli_player_override_and_device_status_are_wired(self) -> None:
         import voice_live
 
@@ -347,6 +359,7 @@ class VoiceLiveTests(unittest.TestCase):
         for _ in range(50):
             self.assertFalse(segmenter.feed(struct.pack("<320h", *([328] * 320))).started)
 
+    @DARWIN_ONLY
     def test_cli_status_distinguishes_cold_adaptive_from_explicit_fixed(self) -> None:
         import voice_live
 
@@ -864,6 +877,7 @@ class VoiceLiveTests(unittest.TestCase):
                 server.shutdown()
                 thread.join(2)
 
+    @DARWIN_ONLY
     def test_main_push_mode_without_tty_does_not_open_microphone(self) -> None:
         from voice_live import main
 
@@ -906,6 +920,7 @@ class VoiceLiveTests(unittest.TestCase):
         finally:
             self.assertTrue(session.close())
 
+    @NEEDS_ENGINE
     def test_actual_web_service_retains_voice_in_single_timeline(self) -> None:
         import os
         from http.client import HTTPConnection
