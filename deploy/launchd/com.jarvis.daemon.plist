@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  JARVIS 守护进程 launchd 模板（内心循环、记忆整理、复盘）。
+  用法：把 {{REPO}} 与 {{HOME}} 换成实际路径，存到 ~/Library/LaunchAgents/ 后：
+    launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.jarvis.daemon.plist
+
+  可选：iMessage 入站/出站需要再注入两个环境变量（不需要就别加）：
+    <key>JARVIS_IMESSAGE_ACCOUNT</key><string>E:你的AppleID@example.com</string>
+    <key>JARVIS_IMESSAGE_SIR</key><string>+8610000000000</string>
+
+  注意：守护进程用的是引擎运行环境（Python 3.14），不是仓库里的 .venv。
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.jarvis.daemon</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>{{REPO}}/packaging/runtime/engine-venv/bin/python3</string>
+        <string>-B</string>
+        <string>{{REPO}}/packaging/jarvis_daemon.py</string>
+        <string>--data-root</string>
+        <string>{{HOME}}/.jarvis/loop-data</string>
+        <string>--config</string>
+        <string>{{HOME}}/.jarvis/config.json</string>
+        <string>--key-file</string>
+        <string>{{HOME}}/.jarvis/api.key</string>
+    </array>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PYTHONPATH</key>
+        <string>{{REPO}}/packaging</string>
+    </dict>
+
+    <key>WorkingDirectory</key>
+    <string>{{REPO}}/packaging</string>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>ThrottleInterval</key>
+    <integer>30</integer>
+    <key>ExitTimeOut</key>
+    <integer>60</integer>
+    <key>ProcessType</key>
+    <string>Background</string>
+    <key>StandardOutPath</key>
+    <string>{{HOME}}/.jarvis/daemon.log</string>
+    <key>StandardErrorPath</key>
+    <string>{{HOME}}/.jarvis/daemon.log</string>
+</dict>
+</plist>

@@ -71,13 +71,21 @@ scripts/build_engine_runtime.sh --check  # 只检查现有环境
 补装产品侧依赖（numpy / pandas / sherpa-onnx / websockets / ddgs）→ `uv pip check` →
 导入冒烟 → 写 `packaging/runtime/BUILD_RECORD.json`（本机构建记录，不入库）。
 
-## 快速开始（macOS）
+## 快速开始
+
+装到能说话，跟着 **[docs/guides/RUN.md](docs/guides/RUN.md)** 走：每步都有验证命令，
+包括建引擎运行环境、写配置、起服务、接设备、排错。下面是压缩版。
+
+### 最短路径（macOS）
 
 ```sh
-# 1. 依赖
-uv sync --frozen            # Python 3.12，仓库内 .venv
+# 1. 依赖（Python 3.12，仓库内 .venv）
+uv sync --frozen
 
-# 2. 配置（不写进代码，全部走环境变量或 ~/.jarvis/ 下的文件）
+# 2. 引擎运行环境（模型调用要靠它；需要上游 agent engine 已就位）
+scripts/build_engine_runtime.sh
+
+# 3. 配置与令牌（不写进代码，全部放 ~/.jarvis/）
 mkdir -p ~/.jarvis
 cat > ~/.jarvis/config.json <<'JSON'
 {
@@ -90,13 +98,15 @@ cat > ~/.jarvis/config.json <<'JSON'
 }
 JSON
 printf '%s' '你的模型 API Key' > ~/.jarvis/api.key && chmod 600 ~/.jarvis/api.key
+LC_ALL=C tr -dc 'A-Za-z0-9_-' </dev/urandom | head -c 43 > ~/.jarvis/voice-gateway.token
+chmod 600 ~/.jarvis/voice-gateway.token
 
-# 3. 跑测试，确认环境没问题
+# 4. 跑测试，确认环境没问题
 mkdir -p ~/.tmp-pytest
 TMPDIR=$HOME/.tmp-pytest PYTHONPATH=packaging .venv/bin/python3 -m pytest packaging/ -q
 PYTHONPATH=voice:packaging .venv/bin/python3 -m pytest voice/tests -q
 
-# 4. 起网关（设备接入，默认 8765）
+# 5. 起网关（设备接入，默认 8765）
 PYTHONPATH=voice:packaging .venv/bin/python3 voice/voice_gateway.py \
   --token-file ~/.jarvis/voice-gateway.token \
   --config ~/.jarvis/config.json \
@@ -104,7 +114,7 @@ PYTHONPATH=voice:packaging .venv/bin/python3 voice/voice_gateway.py \
   --data-dir ~/.jarvis/loop-data \
   --log ~/.jarvis/voice-gateway.log
 
-# 5. 起守护进程（内心循环）
+# 6. 起守护进程（内心循环）
 PYTHONPATH=packaging .venv/bin/python3 packaging/jarvis_daemon.py \
   --data-root ~/.jarvis/loop-data \
   --config ~/.jarvis/config.json \

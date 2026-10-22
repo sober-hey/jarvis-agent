@@ -68,6 +68,7 @@ K0 内核层的设计推演在 [design/](design/)：领域契约、文件系统�
 
 | 场景 | 位置 |
 |---|---|
+| **从零装起来能说话** | [guides/RUN.md](guides/RUN.md)：逐步的启动手册，每步带验证命令 |
 | 语音有问题（没反应/只有一句/声音小/别人说话它也答） | [guides/VOICE.md](guides/VOICE.md)：先取证的三条命令、故障对照表、参数与出处 |
 | 语音网关起不来 / 设备连不上 | [guides/VOICE.md](guides/VOICE.md) + `ARCHITECTURE.md` |
 | 改模型、换供应商、配 key | skill `hermes-model-link-config`（Hermes 侧） |
