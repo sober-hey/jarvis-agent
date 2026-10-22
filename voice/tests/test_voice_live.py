@@ -18,7 +18,6 @@ from pathlib import Path
 from typing import cast
 from unittest.mock import patch
 
-
 # macOS 专属：live 采集与播放走 AVFoundation/afplay，Linux 上 main() 直接拒绝启动。
 # 这些用例验的是 macOS 那条路径的接线，非 macOS 环境跳过而不是假装通过。
 DARWIN_ONLY = unittest.skipUnless(sys.platform == "darwin", "需要 macOS AVFoundation 采集")
