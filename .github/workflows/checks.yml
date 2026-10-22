@@ -25,7 +25,9 @@ jobs:
       - name: 装依赖
         run: |
           python -m pip install --upgrade pip
-          python -m pip install -e . pydantic typer pytest ruff PyYAML jsonschema
+          # 语音层要 websockets/numpy 等运行期依赖，装 runtime extra；
+          # 只装核心包会让 voice/tests 在收集阶段就 ImportError。
+          python -m pip install -e ".[runtime]" pytest "ruff==0.17.0" PyYAML jsonschema
 
       # 检查范围与 scripts/run_quality_checks.sh 一致：src、tests、scripts，外加已隔离的 voice/。
       # packaging/ 存量 lint 债未清（639 条），先不进 CI，免得红着跑；清理后一并加进来。
