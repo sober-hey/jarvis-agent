@@ -42,7 +42,21 @@
 - **网关没有 TLS**：只有共享 Bearer 令牌，只适合内网或 Tailscale，不要直接暴露公网。
 - **单人设计**：没有多用户、没有账号体系、没有云端同步。
 - **内核层 K0–K4 是草案**：`src/jarvis/` 里的审批/预算/取消/事件存储尚未全部接线到生产路径。
+- **引擎运行环境没有一键构建脚本**：`packaging/runtime/engine-venv` 是手工建的，换机器要照 `BUILD_MANIFEST.json` 重来。
 - **3D 形象子项目未包含**：体积大且含商业第三方 SDK，不在本仓库。
+
+## 运行前提
+
+| 依赖 | 说明 |
+|---|---|
+| Python 3.12 | 主程序与测试（`uv sync --frozen`） |
+| 引擎运行环境 `packaging/runtime/engine-venv` | 一个独立的 Python 3.14 venv，里面装上游 agent engine。模型调用、内心循环、`packaging/` 的大部分用例都靠它。**本仓库不包含它**（体积大且是第三方代码），要自己建；构建记录见 `packaging/runtime/BUILD_MANIFEST.json` |
+| 上游 agent engine | MIT 许可的 Hermes Agent（Nous Research）。引擎 venv 里装的就是它，需自行获取 |
+| Xcode 16+ | 只在编客户端时需要 |
+| ffmpeg | 语音合成后处理需要 |
+
+没有引擎运行环境时：`tests/` 与 `voice/tests/` 大部分能跑，`packaging/` 里依赖真实引擎的用例会失败或跳过。
+这是已知缺口——**目前没有一键构建脚本**，构建步骤是手工的。
 
 ## 快速开始（macOS）
 
