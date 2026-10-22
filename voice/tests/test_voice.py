@@ -36,12 +36,10 @@ def write_wav(path: Path, seconds: float) -> None:
         stream.writeframes(b"\x00\x00" * int(seconds * 16000))
 
 
-
 # 音频转换走系统 ffmpeg。没有它的机器（CI runner、干净容器）跳过，而不是报失败——
 # 这不是产品缺陷，是环境缺件。
-NEEDS_FFMPEG = unittest.skipUnless(
-    shutil.which("ffmpeg"), "需要系统 ffmpeg 做音频转换"
-)
+NEEDS_FFMPEG = unittest.skipUnless(shutil.which("ffmpeg"), "需要系统 ffmpeg 做音频转换")
+
 
 class FakeASR:
     name: str = "fake-asr"
